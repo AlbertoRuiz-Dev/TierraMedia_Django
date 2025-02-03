@@ -6,4 +6,4 @@ from django.views import View
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Index.")
+    return render(request, 'juego/index.html')
