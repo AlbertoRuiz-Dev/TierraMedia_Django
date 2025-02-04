@@ -41,3 +41,20 @@ class Inventory(models.Model):
     armors = models.ManyToManyField(Armor, blank=True, related_name="inventory_armors")
     def __str__(self):
         return f"Equipo de {self.character.name}"
+
+class Relationship(models.Model):
+    character1 = models.ForeignKey(Character, related_name='relationships1', on_delete=models.CASCADE)
+    character2 = models.ForeignKey(Character, related_name='relationships2', on_delete=models.CASCADE)
+    relationship_type = models.CharField(max_length=50, choices=[
+        ('friend', 'Amigo'),
+        ('enemy', 'Enemigo'),
+        ('ally', 'Aliado'),
+        ('rival', 'Rival'),
+        ('neutral', 'Neutral'),
+    ], default='neutral')
+
+    def __str__(self):
+        return f"{self.character1.name} - {self.character2.name} ({self.get_relationship_type_display()})"
+
+    class Meta:
+        unique_together = ('character1', 'character2')

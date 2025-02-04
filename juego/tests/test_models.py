@@ -1,5 +1,5 @@
 from django.test import TestCase
-from juego.models import Faction, Weapon, Armor, Character, Inventory
+from juego.models import Faction, Weapon, Armor, Character, Inventory, Relationship
 
 class FactionModelTest(TestCase):
     def setUp(self):
@@ -70,3 +70,19 @@ class InventoryModelTest(TestCase):
 
     def test_inventory_armors(self):
         self.assertEqual(list(self.inventory.armors.all()), [self.armor1, self.armor2])
+
+class RelationshipModelTest(TestCase):
+    def setUp(self):
+        self.char1 = Character.objects.create(name="Aragorn", location="Gondor")
+        self.char2 = Character.objects.create(name="Legolas", location="Mirkwood")
+
+    def test_create_relationship(self):
+        relationship = Relationship.objects.create(character1=self.char1, character2=self.char2, relationship_type='friend')
+        self.assertEqual(relationship.character2, self.char2)
+        self.assertEqual(relationship.relationship_type, 'friend')
+
+    def test_access_relationships(self):
+        relationship = Relationship.objects.create(character1=self.char1, character2=self.char2, relationship_type='ally')
+        relationships = self.char1.relationships1.all()
+        self.assertEqual(relationships.count(), 1)
+        self.assertEqual(relationships.first(), relationship)
