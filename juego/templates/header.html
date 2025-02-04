@@ -1,7 +1,36 @@
-<nav>
-    {# Cierre de sesion #}
-    <form method="post">
-        {% csrf_token %}
-        <input type="submit" value="Cerrar sesión">
-    </form>
-</nav>
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            
+            {# Enlace a inicio #}
+            <div class="text-start">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li>
+                        <button class="btn btn-primary m-1 p-1"><a class="nav-link px-2 text-white p-0 m-0" href="#">Inicio</a></button>
+                    </li>
+                </ul>
+            </div>
+            
+            {# Enlaces entre paginas #}
+            <ul class="nav col-12 col-lg-auto me-lg-auto ms-lg-auto mb-2 justify-content-center mb-md-0">
+                <li>
+                    <button class="btn btn-primary m-1 p-1"><a class="nav-link px-2 text-white p-0 m-0" href="#">Personaje</a></button>
+                </li>
+                <li>
+                    <button class="btn btn-primary m-1 p-1"><a class="nav-link px-2 text-white p-0 m-0" href="#">Facción</a></button>
+                </li>
+                <li>
+                    <button class="btn btn-primary m-1 p-1"><a class="nav-link px-2 text-white p-0 m-0" href="#">Batalla</a></button>
+                </li>
+            </ul>
+            
+            {# Cerrar sesion #}
+            <div class="text-end">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Cerrar sesión" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
