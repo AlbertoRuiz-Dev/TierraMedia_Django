@@ -38,9 +38,9 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-class CharacterListView(LoginRequiredMixin, ListView):
+class CharacterListView(ListView):
     model = Character
-    template_name = ''
+    template_name = 'juego/character_list.html'
     context_object_name = 'character_list'
 
 class FactionCharacterListView(LoginRequiredMixin, ListView):
