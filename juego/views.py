@@ -36,7 +36,6 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["now"] = timezone.now()
         return context
 
 class CharacterListView(LoginRequiredMixin, ListView):
@@ -55,8 +54,8 @@ class FactionCharacterListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         pass
 
-class EquipmentCharacterListView(LoginRequiredMixin, ListView):
-    model = Equipment
+class InventoryCharacterListView(LoginRequiredMixin, ListView):
+    model = Character
     template_name = ''
     context_object_name = ''
 
@@ -68,7 +67,7 @@ class BattleView(LoginRequiredMixin, TemplateView):
 
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
-    model = Relation
+    model = Relationship
     fields = ['','']
     template_name = ''
     success_url = ''
@@ -97,8 +96,8 @@ class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     template_name = ''
     success_url = ''
 
-class EquipmentUpdateView(LoginRequiredMixin, UpdateView):
-    model = Equipment
+class InventoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = Inventory
     fields = ['','']
     template_name = ''
     success_url = ''
