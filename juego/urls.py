@@ -14,6 +14,7 @@ urlpatterns = [
     path('character/location', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
     path('character/equipment_update', views.EquipmentUpdateView.as_view(), name='equipmentUpdateView'),
+    path('character/character_detail',views.CharacterDetailView.as_view(), name='characterDetailView'),
 ]
 
 """
