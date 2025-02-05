@@ -6,7 +6,65 @@
 </head>
 <body>
     {% if character_list %}
-        <h1>hola</h1>
+        <h1>Lista de personajes: </h1>
+        {% for character in character_list %}
+            <li> Personaje: {{ character.name }}
+                <ul>
+                    <li>
+                        Localización: {{ character.location }}
+                    </li>
+                    <li>
+                        Facción: {{ character.faction.name }}
+                    </li>
+                    <li>
+                        Inventario:
+                        <ul>
+                            {% if character.inventory.weapons.all or character.inventory.armor.all %}
+                                <li>
+                                Armas:
+                                {% if character.inventory.weapons.all %}
+                                    {% for weapon in character.inventory.weapons.all %}
+                                        - {{ weapon }}
+                                    {% endfor %}
+                                {% else %}
+                                    Vacio
+                                {% endif %}
+                            </li>
+                            <li>
+                                Armaduras:
+                                {% if character.inventory.armors.all %}
+                                    {% for armor in character.inventory.armors.all %}
+                                        - {{ armor }}
+                                    {% endfor %}
+                                {% else %}
+                                    Vacio
+                                {% endif %}
+                            </li>
+                                {% else %}
+                                <li>No hay inventario</li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    <li>
+                        Arma equipada:
+                        {% if character.equipped_weapon %}
+                            {{ character.equipped_weapon.name }}
+                        {% else %}
+                            Vacio
+                        {% endif %}
+                    </li>
+                    <li>
+                        Armadura equipada:
+                        {% if character.equipped_armor %}
+                            {{ character.equipped_armor.name }}
+                        {% else %}
+                            Vacio
+                        {% endif %}
+                    </li>
+                </ul>
+            </li>
+        {% endfor %}
+
     {% endif %}
 </body>
 </html>
