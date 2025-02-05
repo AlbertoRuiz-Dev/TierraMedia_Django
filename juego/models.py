@@ -40,7 +40,7 @@ class Inventory(models.Model):
     weapons = models.ManyToManyField(Weapon, blank=True, related_name="inventory_weapons")
     armors = models.ManyToManyField(Armor, blank=True, related_name="inventory_armors")
     def __str__(self):
-        return f"Equipo de {self.character.name}"
+        return f"Equipo de {self.character.name}, Armas: {[weapon.name for weapon in self.weapons.all()]}, Armadura: {[armor.name for armor in self.armors.all()]}"
 
 class Relationship(models.Model):
     character1 = models.ForeignKey(Character, related_name='relationships1', on_delete=models.CASCADE)
