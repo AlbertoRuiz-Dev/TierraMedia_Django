@@ -93,8 +93,4 @@ class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     template_name = ''
     success_url = ''
 
-class InventoryUpdateView(LoginRequiredMixin, UpdateView):
-    model = Inventory
-    fields = ['','']
-    template_name = ''
-    success_url = ''
+
