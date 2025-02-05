@@ -24,11 +24,20 @@ from juego.models import *
     Pagina para modificar equipamiento
     Pagina para cambiar la localizacion
     Pagina para crear las armas
+    Pagina para mostrar los detalles de un jugador
 
 """
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/index.html'
+
+class CharacterDetailView(LoginRequiredMixin, DetailView):
+    model = Character
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["now"] = timezone.now()
+        return context
 
 class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
