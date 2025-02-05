@@ -41,15 +41,12 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
 class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
     template_name = ''
-    context_object_name = ''
-
-    def get_queryset(self):
-        pass
+    context_object_name = 'character_list'
 
 class FactionCharacterListView(LoginRequiredMixin, ListView):
     model = Faction
     template_name = ''
-    context_object_name = ''
+    context_object_name = 'faction_character_list'
 
     def get_queryset(self):
         pass
@@ -57,7 +54,7 @@ class FactionCharacterListView(LoginRequiredMixin, ListView):
 class InventoryCharacterListView(LoginRequiredMixin, ListView):
     model = Character
     template_name = ''
-    context_object_name = ''
+    context_object_name = 'inventory_character_list'
 
     def get_queryset(self):
         pass
