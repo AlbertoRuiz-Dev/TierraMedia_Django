@@ -1,6 +1,4 @@
 from django import forms
-from django.template.context_processors import request
-
 
 from .models import *
 
@@ -15,4 +13,25 @@ class RelacionesForm(forms.Form):
         widget=forms.Select(),
         label="Personaje2")
 
+class FactionForm(forms.Form):
+    faction = forms.ModelChoiceField(
+        queryset=Faction.objects.all(),
+        widget=forms.Select(),
+        label="Selecciona una facción: ")
 
+class EquipmentForm(forms.Form):
+    # Campo para seleccionar un arma
+        weapon = forms.ModelChoiceField(
+        queryset=Weapon.objects.all(),
+        widget=forms.Select(),
+        label="Selecciona un arma:",
+        required=False  # Hacemos el campo opcional
+    )
+
+    # Campo para seleccionar una armadura
+    armor = forms.ModelChoiceField(
+        queryset=Armor.objects.all(),
+        widget=forms.Select(),
+        label="Selecciona una armadura:",
+        required=False  # Hacemos el campo opcional
+    )
