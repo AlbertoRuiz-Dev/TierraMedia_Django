@@ -51,6 +51,7 @@ class CharacterListView(ListView):
 class FactionCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'faction_character_list.html'
     form_class = FactionForm
+    login_url = '/login/'
 
     def form_valid(self, form):
         faction = form.cleaned_data["faction"] # Obtiene la facción seleccionada
