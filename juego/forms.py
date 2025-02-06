@@ -8,3 +8,10 @@ class FactionForm(forms.Form):
         widget=forms.Select(),
         label="Selecciona una facción"
     )
+
+class EquipmentForm(forms.Form):
+    Equipment = forms.ModelChoiceField(
+        queryset=Weapon.objects.all(),
+        widget=forms.Select(),
+        label="Selecciona un arma o armadura"
+    )

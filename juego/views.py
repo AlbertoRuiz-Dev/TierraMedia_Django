@@ -63,12 +63,15 @@ class FactionCharacterFormView(LoginRequiredMixin, FormView):
         context.setdefault("characters", Character.objects.all())  # Mostrar todos por defecto
         return context
 
-class InventoryCharacterListView(LoginRequiredMixin, ListView):
-    model = Character
+class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
     template_name = ''
-    context_object_name = 'inventory_character_list'
+    form_class = ''
+    login_url = '/login/'
 
-    def get_queryset(self):
+    def form_valid(self, form):
+        pass
+
+    def get_context_data(self, **kwargs):
         pass
 
 class BattleView(LoginRequiredMixin, TemplateView):
