@@ -17,7 +17,6 @@ class EquipmentForm(forms.Form):
         required=False  # Hacemos el campo opcional
     )
 
-
     # Campo para seleccionar una armadura
     armor = forms.ModelChoiceField(
         queryset=Armor.objects.all(),
