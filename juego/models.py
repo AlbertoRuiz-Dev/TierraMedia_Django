@@ -1,5 +1,5 @@
 from django.db import models
-
+import random
 # Create your models here.
 class Faction(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -12,6 +12,15 @@ class Weapon(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, default="Tan vago como siempre... sin descripción")
     damage = models.IntegerField(default=0)
+    critic = models.IntegerField(blank=True, null=True)
+    accuracy = models.IntegerField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.critic is None:  # Solo generar si no tiene valor
+            self.critic = random.randint(0, 90)
+        if self.accuracy is None:
+            self.accuracy = random.randint(40, 100)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} (Daño: {self.damage})"
