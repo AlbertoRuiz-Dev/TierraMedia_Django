@@ -22,8 +22,12 @@ class FaccionView(LoginRequiredMixin, TemplateView):
 class BatallaView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/batalla.html'
 
-class RelacionesView(LoginRequiredMixin, TemplateView):
+class RelacionesFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/relaciones.html'
+
+    def form_valid(self, form):
+        relation = form.cleaned_data["relation"]
+        return self.render_to_response(self.get_context_data(form=form, relation=relation))
 
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):

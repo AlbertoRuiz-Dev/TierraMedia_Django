@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 # Create your models here.
@@ -58,7 +59,7 @@ class Relationship(models.Model):
 
     def clean(self):
         if self.character1 == self.character2:
-            raise ValueError("No se puede realizar una relación con la misma persona")
+            raise ValidationError("No se puede realizar una relación con la misma persona")
 
     class Meta:
         unique_together = [['character1', 'character2']]

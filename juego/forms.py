@@ -1,10 +1,9 @@
 from django import forms
-
 from .models import *
 
-class RelacionesForm(forms.Form):
+class RelationForm(forms.Form):
     relation1 = forms.ModelChoiceField(
-        queryset = Character.objects.all(),
+        queryset=Character.objects.all(),
         widget= forms.Select(),
         label= "Personaje1")
 
@@ -21,7 +20,7 @@ class FactionForm(forms.Form):
 
 class EquipmentForm(forms.Form):
     # Campo para seleccionar un arma
-        weapon = forms.ModelChoiceField(
+    weapon = forms.ModelChoiceField(
         queryset=Weapon.objects.all(),
         widget=forms.Select(),
         label="Selecciona un arma:",
