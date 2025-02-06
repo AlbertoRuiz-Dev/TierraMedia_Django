@@ -1,6 +1,6 @@
 from django import forms
 from juego.models import *
-
+from itertools import chain
 
 class FactionForm(forms.Form):
     faction = forms.ModelChoiceField(
@@ -11,7 +11,7 @@ class FactionForm(forms.Form):
 
 class EquipmentForm(forms.Form):
     Equipment = forms.ModelChoiceField(
-        queryset=Weapon.objects.all(),
+        queryset=chain(Weapon.objects.all(), Armor.objects.all()),
         widget=forms.Select(),
         label="Selecciona un arma o armadura"
     )

@@ -49,7 +49,7 @@ class CharacterListView(ListView):
         return context
 
 class FactionCharacterFormView(LoginRequiredMixin, FormView):
-    template_name = 'faction_character_list.html'
+    template_name = 'juego/faction_character_list.html'
     form_class = FactionForm
     login_url = '/login/'
 
@@ -64,8 +64,8 @@ class FactionCharacterFormView(LoginRequiredMixin, FormView):
         return context
 
 class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
-    template_name = ''
-    form_class = ''
+    template_name = 'juego/equipment_character_list.html'
+    form_class = EquipmentForm
     login_url = '/login/'
 
     def form_valid(self, form):
