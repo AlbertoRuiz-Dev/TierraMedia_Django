@@ -1,11 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django import forms
 
 from juego.models import *
-
+from juego.forms import *
 # Create your views here.
 
 """
@@ -47,13 +48,19 @@ class CharacterListView(ListView):
         context = super().get_context_data(**kwargs)
         return context
 
-class FactionCharacterListView(LoginRequiredMixin, ListView):
-    model = Faction
-    template_name = ''
-    context_object_name = 'faction_character_list'
+class FactionCharacterFormView(LoginRequiredMixin, FormView):
+    template_name = 'faction_character_list.html'
+    form_class = FactionForm
 
-    def get_queryset(self):
-        pass
+    def form_valid(self, form):
+        faction = form.cleaned_data["faction"] # Obtiene la facción seleccionada
+        characters = Character.objects.filter(faction=faction) # Filtra personajes por facción
+        return self.render_to_response(self.get_context_data(form=form, characters=characters))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.setdefault("characters", Character.objects.all())  # Mostrar todos por defecto
+        return context
 
 class InventoryCharacterListView(LoginRequiredMixin, ListView):
     model = Character

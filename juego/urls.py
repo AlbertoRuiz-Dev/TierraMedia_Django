@@ -5,7 +5,7 @@ from juego import views
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('chararcter/characters', views.CharacterListView.as_view(), name='characterListView'),
-    path('faction', views.FactionCharacterListView.as_view(), name='factionPlayersListView'),
+    path('faction/', views.FactionCharacterFormView.as_view(), name='factionPlayersListView'),
     path('character/equipment', views.InventoryCharacterListView.as_view(), name='InventoryPlayersListView'),
     path('relation', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create', views.CharacterCreateView.as_view(), name='playerCreateView'),

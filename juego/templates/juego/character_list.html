@@ -14,7 +14,12 @@
                         Localización: {{ character.location }}
                     </li>
                     <li>
-                        Facción: {{ character.faction.name }}
+                        Facción: 
+                        {% if character.faction %} 
+                            {{ character.faction.name }}
+                            {% else %}
+                            Vacio
+                        {% endif %}
                     </li>
                     <li>
                         Inventario:
