@@ -27,11 +27,11 @@
                 </li>
             </ul>
             
-            {# Cerrar sesion #}
+            {# Iniciar sesion #}
             <div class="text-end">
-                <form method="post" action="{% url 'logout' %}">
+                <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
-                    <input type="submit" value="Cerrar sesión" class="btn btn-primary">
+                    <input type="submit" value="Iniciar sesión" class="btn btn-primary">
                 </form>
             </div>
         </div>
