@@ -1,5 +1,5 @@
 from django.db import models
-
+import random
 # Create your models here.
 class Faction(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -12,6 +12,15 @@ class Weapon(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, default="Tan vago como siempre... sin descripción")
     damage = models.IntegerField(default=0)
+    critic = models.IntegerField(blank=True, null=True)
+    accuracy = models.IntegerField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.critic is None:  # Solo generar si no tiene valor
+            self.critic = random.randint(0, 90)
+        if self.accuracy is None:
+            self.accuracy = random.randint(40, 100)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} (Daño: {self.damage})"
@@ -40,7 +49,7 @@ class Inventory(models.Model):
     weapons = models.ManyToManyField(Weapon, blank=True, related_name="inventory_weapons")
     armors = models.ManyToManyField(Armor, blank=True, related_name="inventory_armors")
     def __str__(self):
-        return f"Equipo de {self.character.name}"
+        return f"Equipo de {self.character.name}, Armas: {[weapon.name for weapon in self.weapons.all()]}, Armadura: {[armor.name for armor in self.armors.all()]}"
 
 class Relationship(models.Model):
     character1 = models.ForeignKey(Character, related_name='relationships1', on_delete=models.CASCADE)
@@ -56,5 +65,10 @@ class Relationship(models.Model):
     def __str__(self):
         return f"{self.character1.name} - {self.character2.name} ({self.get_relationship_type_display()})"
 
+    def clean(self):
+        if self.character1 == self.character2:
+            raise ValueError("No se puede realizar una relación con la misma persona")
+
     class Meta:
-        unique_together = ('character1', 'character2')
+        unique_together = [['character1', 'character2']]
+

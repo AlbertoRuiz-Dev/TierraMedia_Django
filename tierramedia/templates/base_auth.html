@@ -8,10 +8,10 @@
     {% load static %}
 </head>
 <body class="d-flex flex-column min-vh-100" style="background-image: url('{% static 'images/fondo-oscuro.jpg' %}'); background-size: cover; background-repeat: no-repeat; background-position: center">
-    {% include 'header.html' %}
+    {% include 'header_auth.html' %}
     <div class="container-fluid flex-grow-1 text-white">
         {% block content %}{% endblock %}
     </div>
-    {% include 'footer.html' %}
+    {% include 'footer_auth.html' %}
 </body>
 </html>
