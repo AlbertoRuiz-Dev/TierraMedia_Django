@@ -10,8 +10,18 @@ class FactionForm(forms.Form):
     )
 
 class EquipmentForm(forms.Form):
-    Equipment = forms.ModelChoiceField(
-        queryset=chain(Weapon.objects.all(), Armor.objects.all()),
+    # Campo para seleccionar un arma
+    weapon = forms.ModelChoiceField(
+        queryset=Weapon.objects.all(),
         widget=forms.Select(),
-        label="Selecciona un arma o armadura"
+        label="Selecciona un arma",
+        required=False  # Hacemos el campo opcional
+    )
+
+    # Campo para seleccionar una armadura
+    armor = forms.ModelChoiceField(
+        queryset=Armor.objects.all(),
+        widget=forms.Select(),
+        label="Selecciona una armadura",
+        required=False  # Hacemos el campo opcional
     )

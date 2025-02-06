@@ -1,16 +1,43 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django import forms
-
 from juego.models import *
 from juego.forms import *
 # Create your views here.
 
+"""
+
+    Pagina principal donde se muestra un menu con las diferentes funciones
+    Pagina para el login/logout
+
+    Opcion personaje
+    Pagina para crear el personaje
+    Pagina para crear las relaciones
+    Pagina para mostrar los personajes de una faccion
+    Pagina para mostrar los personajes segun un equipamiento
+    Pagina para mostrar todos los personajes
+    Pagina para las batallas
+    Pagina para modificar inventario
+    Pagina para modificar equipamiento
+    Pagina para cambiar la localizacion
+    Pagina para crear las armas
+    Pagina para mostrar los detalles de un jugador
+
+"""
+
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/index.html'
+
+class PersonajeView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/personaje.html'
+
+class EquipamientoView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/equipamiento.html'
+
+class FaccionView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/faccion.html'
+
+class BatallaView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/batalla.html'
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
     model = Character
@@ -31,7 +58,6 @@ class CharacterListView(ListView):
 class FactionCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/faction_character_list.html'
     form_class = FactionForm
-    login_url = '/login/'
 
     def form_valid(self, form):
         faction = form.cleaned_data["faction"] # Obtiene la facción seleccionada
@@ -46,13 +72,28 @@ class FactionCharacterFormView(LoginRequiredMixin, FormView):
 class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/equipment_character_list.html'
     form_class = EquipmentForm
-    login_url = '/login/'
 
     def form_valid(self, form):
-        pass
+        weapon = form.cleaned_data["weapon"]  # Obtiene el arma seleccionada
+        armor = form.cleaned_data["armor"]  # Obtiene la armadura seleccionada
+        characters = Character.objects.all()
+
+        if weapon or armor:
+            if weapon:
+                characters = characters.filter(equipped_weapon=weapon)  # Filtra personajes por arma
+            if armor:
+                characters = characters.filter(equipped_armor=armor) # Filtra personajes por armadura
+        else:
+            return self.render_to_response((self.get_context_data(form=form, error_mensaje="No has seleccionado ningúna opción")))
+
+        return self.render_to_response(self.get_context_data(form=form, characters=characters))
 
     def get_context_data(self, **kwargs):
-        pass
+        context = super().get_context_data(**kwargs)
+        context.setdefault("characters", Character.objects.all())  # Mostrar todos los personajes por defecto
+        context.setdefault("weapons", Weapon.objects.all())  # Mostrar todas las armas por defecto
+        context.setdefault("armors", Armor.objects.all())  # Mostrar todas las armaduras por defecto
+        return context
 
 class BattleView(LoginRequiredMixin, TemplateView):
     template_name = ''
@@ -90,14 +131,3 @@ class InventoryUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-class PersonajeView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/personaje.html'
-
-class EquipamientoView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/equipamiento.html'
-
-class FaccionView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/faccion.html'
-
-class BatallaView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/batalla.html'
