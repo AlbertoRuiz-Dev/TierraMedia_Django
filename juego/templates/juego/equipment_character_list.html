@@ -7,9 +7,9 @@
 {% endif %}
 <form method="post">
     {% csrf_token %}
-    <label for="weapon">Seleccione un arma (Opcional):</label>
+    {{ form.weapon.label }}
     {{ form.weapon }}
-    <label for="armor">Seleccione una armadura (Opcional):</label>
+    {{ form.armor.label }}
     {{ form.armor }}
     <button type="submit">Filtrar</button>
 </form>

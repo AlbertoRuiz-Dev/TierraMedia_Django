@@ -3,7 +3,7 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    <label for="faction">Selecciona una facción:</label>
+    {{ form.faction.label }}
     {{ form.faction }}
     <button type="submit">Filtrar</button>
 </form>
