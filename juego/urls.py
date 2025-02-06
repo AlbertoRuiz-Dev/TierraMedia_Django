@@ -10,4 +10,5 @@ urlpatterns = [
     path('equipamiento/', views.EquipamientoView.as_view(), name='equipamiento'),
     path('faccion/', views.FaccionView.as_view(), name='faccion'),
     path('batalla/', views.BatallaView.as_view(), name='batalla'),
+    path('personaje/relaciones/', views.RelacionesView.as_view(), name='relaciones'),
 ]

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Relaciones / Tierra Media{% endblock %}
+{% block content %}
+    <h1>Relaciones de personajes.</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ forms.relation1.label }}
+        {{ forms.relation1 }}
+        {{ forms.relation2.label }}
+        {{ forms.relation2 }}
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock %}

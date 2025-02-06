@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 
 
 # Create your views here.
@@ -18,3 +18,6 @@ class FaccionView(LoginRequiredMixin, TemplateView):
 
 class BatallaView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/batalla.html'
+
+class RelacionesView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/relaciones.html'
