@@ -56,5 +56,10 @@ class Relationship(models.Model):
     def __str__(self):
         return f"{self.character1.name} - {self.character2.name} ({self.get_relationship_type_display()})"
 
+    def clean(self):
+        if self.character1 == self.character2:
+            raise ValueError("No se puede realizar una relación con la misma persona")
+
     class Meta:
-        unique_together = ('character1', 'character2')
+        unique_together = [['character1', 'character2']]
+
