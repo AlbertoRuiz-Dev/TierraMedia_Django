@@ -9,26 +9,6 @@ from juego.models import *
 from juego.forms import *
 # Create your views here.
 
-"""
-
-    Pagina principal donde se muestra un menu con las diferentes funciones
-    Pagina para el login/logout
-
-    Opcion personaje
-    Pagina para crear el personaje
-    Pagina para crear las relaciones
-    Pagina para mostrar los personajes de una faccion
-    Pagina para mostrar los personajes segun un equipamiento
-    Pagina para mostrar todos los personajes
-    Pagina para las batallas
-    Pagina para modificar inventario
-    Pagina para modificar equipamiento
-    Pagina para cambiar la localizacion
-    Pagina para crear las armas
-    Pagina para mostrar los detalles de un jugador
-
-"""
-
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/index.html'
 
@@ -109,3 +89,15 @@ class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     success_url = ''
 
 
+
+class PersonajeView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/personaje.html'
+
+class EquipamientoView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/equipamiento.html'
+
+class FaccionView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/faccion.html'
+
+class BatallaView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/batalla.html'
