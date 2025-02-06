@@ -1,6 +1,5 @@
 from django import forms
 from juego.models import *
-from itertools import chain
 
 class FactionForm(forms.Form):
     faction = forms.ModelChoiceField(
