@@ -13,6 +13,9 @@ urlpatterns = [
     path('personaje/listar_personajes/', views.CharacterListView.as_view(), name='characters'),
     path('faccion/listar_personajes/', views.FactionCharacterFormView.as_view(), name='faction_players'),
     path('personaje/listar_por_equipamiento/', views.EquipmentCharacterFormView.as_view(), name='inventory_players'),
+    path('faccion/crear/', views.FactionCreateView.as_view(), name='faction_create'),
+    path('faccion/eliminar/<pk>', views.FactionDeleteView.as_view(), name='faction_delete'),
+
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='playerCreateView'),
     path('character/weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),

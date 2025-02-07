@@ -1,7 +1,8 @@
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from juego.models import *
 from juego.forms import *
+from django.urls import reverse_lazy
 # Create your views here.
 
 """
@@ -104,6 +105,17 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
     fields = ['','']
     template_name = ''
     success_url = ''
+
+class FactionCreateView(LoginRequiredMixin, CreateView):
+    model = Faction
+    fields = ['name', 'location']
+    template_name = 'juego/faction_create.html'
+    success_url = reverse_lazy("juego:faccion")
+
+class FactionDeleteView(LoginRequiredMixin, DeleteView):
+    model = Faction
+    template_name = 'juego/faction_delete.html'
+    success_url = reverse_lazy("juego:faccion")
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
