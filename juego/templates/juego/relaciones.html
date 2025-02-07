@@ -2,12 +2,14 @@
 {% block title %}Relaciones / Tierra Media{% endblock %}
 {% block content %}
     <h1>Relaciones de personajes.</h1>
-    <form method="post">
+    <form method="post", action="#">
         {% csrf_token %}
-        {{ forms.relation1.label }}
-        {{ forms.relation1 }}
-        {{ forms.relation2.label }}
-        {{ forms.relation2 }}
+        {{ form.relation1.label }}
+        {{ form.relation1 }}
+        {{ form.relation2.label }}
+        {{ form.relation2 }}
+        {{ form.relation_type.label }}
+        {{ form.relation_type }}
         <button type="submit">Enviar</button>
     </form>
 {% endblock %}

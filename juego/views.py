@@ -24,9 +24,10 @@ class BatallaView(LoginRequiredMixin, TemplateView):
 
 class RelacionesFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/relaciones.html'
+    form_class = RelationForm
 
     def form_valid(self, form):
-        relation = form.cleaned_data["relation"]
+        relation = form.cleaned_data["relation_type"]
         return self.render_to_response(self.get_context_data(form=form, relation=relation))
 
 
