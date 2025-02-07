@@ -1,8 +1,8 @@
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from juego.models import *
 from juego.forms import *
-from django.urls import reverse_lazy
 # Create your views here.
 
 """
@@ -40,12 +40,14 @@ class FaccionView(LoginRequiredMixin, TemplateView):
 class BatallaView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/batalla.html'
 
+
 class CharacterDetailView(LoginRequiredMixin, DetailView):
     model = Character
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 class CharacterListView(ListView):
     model = Character
@@ -56,19 +58,21 @@ class CharacterListView(ListView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class FactionCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/faction_character_list.html'
     form_class = FactionForm
 
     def form_valid(self, form):
-        faction = form.cleaned_data["faction"] # Obtiene la facción seleccionada
-        characters = Character.objects.filter(faction=faction) # Filtra personajes por facción
+        faction = form.cleaned_data["faction"]  # Obtiene la facción seleccionada
+        characters = Character.objects.filter(faction=faction)  # Filtra personajes por facción
         return self.render_to_response(self.get_context_data(form=form, characters=characters))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.setdefault("characters", Character.objects.all())  # Mostrar todos por defecto
         return context
+
 
 class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/equipment_character_list.html'
@@ -83,9 +87,10 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
             if weapon:
                 characters = characters.filter(equipped_weapon=weapon)  # Filtra personajes por arma
             if armor:
-                characters = characters.filter(equipped_armor=armor) # Filtra personajes por armadura
+                characters = characters.filter(equipped_armor=armor)  # Filtra personajes por armadura
         else:
-            return self.render_to_response((self.get_context_data(form=form, error_mensaje="No has seleccionado ningúna opción")))
+            return self.render_to_response(
+                (self.get_context_data(form=form, error_mensaje="No has seleccionado ningúna opción")))
 
         return self.render_to_response(self.get_context_data(form=form, characters=characters))
 
@@ -96,13 +101,14 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         context.setdefault("armors", Armor.objects.all())  # Mostrar todas las armaduras por defecto
         return context
 
+
 class BattleView(LoginRequiredMixin, TemplateView):
     template_name = ''
 
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
-    fields = ['','']
+    fields = ['', '']
     template_name = ''
     success_url = ''
 
@@ -119,27 +125,52 @@ class FactionDeleteView(LoginRequiredMixin, DeleteView):
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
-    fields = ['','']
+    fields = ['', '']
     template_name = ''
     success_url = ''
 
-class WeaponCreateView(LoginRequiredMixin, CreateView):
-    model = Weapon
-    fields = ['','']
-    template_name = ''
-    success_url = ''
+
+
+
 
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
-    fields = ['','']
+    fields = ['', '']
     template_name = ''
     success_url = ''
+
 
 class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
-    fields = ['','']
+    fields = ['', '']
     template_name = ''
     success_url = ''
 
+class WeaponListView(LoginRequiredMixin, ListView):
+    model = Weapon
+    template_name = 'juego/weapon.html'
+    context_object_name = 'weapons'
 
+
+class WeaponDetailView(LoginRequiredMixin, DetailView):
+    model = Weapon
+    template_name = 'juego/weapon_detail.html'
+    context_object_name = 'weapon'
+
+class WeaponCreateView(LoginRequiredMixin, CreateView):
+    model = Weapon
+    fields = ['name', 'description', 'damage',]
+    template_name = 'juego/weapon_create.html'
+    success_url = reverse_lazy('juego:weaponListView')
+
+class WeaponUpdateView(LoginRequiredMixin, UpdateView):
+    model = Weapon
+    fields = ['name', 'description', 'damage',]
+    template_name = 'juego/weapon_form.html'
+    success_url = reverse_lazy('juego:weaponListView')
+
+class WeaponDeleteView(LoginRequiredMixin,DeleteView):
+    model = Weapon
+    template_name = "juego/weapon_delete.html"
+    success_url = reverse_lazy('juego:weaponListView')
 
