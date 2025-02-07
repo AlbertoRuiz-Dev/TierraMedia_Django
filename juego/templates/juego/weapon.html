@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Lista de Armas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Lista de Armas</h2>
+    <a href="{% url 'juego:weaponCreateView' %}" class="btn btn-primary mb-3">➕ Añadir Nueva Arma</a>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Daño</th>
+                    <th>Crítico</th>
+                    <th>Precisión</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for weapon in weapons %}
+                <tr>
+                    <td>{{ weapon.name }}</td>
+                    <td>{{ weapon.damage }}</td>
+                    <td>{{ weapon.critic }}</td>
+                    <td>{{ weapon.accuracy }}</td>
+                    <td>
+                        <a href="{% url 'juego:weaponDetailView' weapon.pk %}" class="btn btn-info btn-sm">👁️ Ver</a>
+                        <a href="{% url 'juego:weaponUpdateView' weapon.pk %}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                        <a href="{% url 'juego:weaponDeleteView' weapon.pk %}" class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay armas disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

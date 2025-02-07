@@ -1,4 +1,5 @@
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from juego.models import *
 from juego.forms import *
@@ -119,11 +120,7 @@ class CharacterCreateView(LoginRequiredMixin, CreateView):
     success_url = ''
 
 
-class WeaponCreateView(LoginRequiredMixin, CreateView):
-    model = Weapon
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
+
 
 
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
@@ -139,5 +136,31 @@ class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     template_name = ''
     success_url = ''
 
+class WeaponListView(LoginRequiredMixin, ListView):
+    model = Weapon
+    template_name = 'juego/weapon.html'
+    context_object_name = 'weapons'
 
+
+class WeaponDetailView(LoginRequiredMixin, DetailView):
+    model = Weapon
+    template_name = 'juego/weapon_detail.html'
+    context_object_name = 'weapon'
+
+class WeaponCreateView(LoginRequiredMixin, CreateView):
+    model = Weapon
+    fields = ['name', 'description', 'damage',]
+    template_name = 'juego/weapon_create.html'
+    success_url = reverse_lazy('juego:weaponListView')
+
+class WeaponUpdateView(LoginRequiredMixin, UpdateView):
+    model = Weapon
+    fields = ['name', 'description', 'damage',]
+    template_name = 'juego/weapon_form.html'
+    success_url = reverse_lazy('juego:weaponListView')
+
+class WeaponDeleteView(LoginRequiredMixin,DeleteView):
+    model = Weapon
+    template_name = "juego/weapon_delete.html"
+    success_url = reverse_lazy('juego:weaponListView')
 
