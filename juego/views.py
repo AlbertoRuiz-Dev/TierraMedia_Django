@@ -132,7 +132,6 @@ class CharacterCreateView(LoginRequiredMixin, CreateView):
 
 
 
-
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
     fields = ['', '']
