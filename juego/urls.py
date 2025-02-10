@@ -15,7 +15,6 @@ urlpatterns = [
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
     path('faction/delete/<pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
-
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
     path('character/weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
