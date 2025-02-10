@@ -25,6 +25,11 @@ class EquipmentForm(forms.Form):
         required=False  # Hacemos el campo opcional
     )
 
+class WeaponForm(forms.Form):
+    class Meta:
+        model = Weapon
+        fields = ['name', 'description', 'damage']
+
 class FactionCreateForm(forms.ModelForm):
     class Meta:
         model = Faction  # Vincula el formulario al modelo Faccion
