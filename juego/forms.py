@@ -24,3 +24,8 @@ class EquipmentForm(forms.Form):
         label="Selecciona una armadura:",
         required=False  # Hacemos el campo opcional
     )
+
+class FactionCreateForm(forms.ModelForm):
+    class Meta:
+        model = Faction  # Vincula el formulario al modelo Faccion
+        fields = ["name", "location"]  # Campos que se incluirán en el formulario

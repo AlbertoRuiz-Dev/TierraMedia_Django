@@ -114,7 +114,7 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
-    fields = ['name', 'location']
+    form_class = FactionCreateForm  # Usamos ModelForm
     template_name = 'juego/faction_create.html'
     success_url = reverse_lazy("juego:faccion")
 
