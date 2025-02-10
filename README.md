@@ -54,8 +54,8 @@ python manage.py runserver
 ## 📌 Estructura del Proyecto
 
 ```bash
-📦 tu_proyecto/
-├── 📂 juego/  # Aplicación principal
+📂 TierraMedia_Django/
+├── 📦 juego/  # Aplicación principal
 │   ├── 📦 migrations/  # 
 │   ├── 📂 static/  # Archivos estáticos (CSS, JS, imágenes)
 │   ├── 📂 templates/  #
