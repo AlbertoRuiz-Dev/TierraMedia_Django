@@ -28,17 +28,17 @@ from juego.forms import *
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/index.html'
 
-class PersonajeView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/personaje.html'
+class CharacterView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/character.html'
 
-class EquipamientoView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/equipamiento.html'
+class EquipmentView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/equipment.html'
 
-class FaccionView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/faccion.html'
+class FactionView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/faction.html'
 
-class BatallaView(LoginRequiredMixin, TemplateView):
-    template_name = 'juego/batalla.html'
+class BattleView(LoginRequiredMixin, TemplateView):
+    template_name = 'juego/battle.html'
 
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
