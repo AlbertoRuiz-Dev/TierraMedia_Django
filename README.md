@@ -75,23 +75,23 @@ python manage.py runserver
 ## 📌 URLs del Proyecto
 
 ```bash
-📦 tierramedia/urls.py #
-├── /admin/ #
-├── /accounts/ #
-│   ├── login/ #
-│   └── logout/ #
-└── / #
-    ├── 📂 juego/urls.py #
-    ├── /  # Página principal
-    ├── /login/  # Vista de inicio de sesión
-    ├── /logout/  # Vista de cierre de sesión
-    ├── /characters/  # Lista de personajes
-    ├── /character/<int:pk>/  # Detalles de un personaje
-    ├── /inventory/<int:character_id>/  # Detalles del inventario
-    ├── /relationships/  # Lista de relaciones
-    ├── /relationship/<int:pk>/  # Detalles de una relación
-    ├── /create_character/  # Crear un nuevo personaje
-    └── /create_inventory/<int:character_id>/  # Crear inventario
+📦 tierramedia/
+└── 📜 urls.py #
+    ├── /admin/ #
+    ├── /accounts/ #
+    │   ├── /login/ #
+    │   └── /logout/ #
+    └── / #
+        └── 📦 juego/
+            ├── 📜 urls.py #
+            ├── /  # Página principal
+            ├── /characters/  # Lista de personajes
+            ├── /character/<int:pk>/  # Detalles de un personaje
+            ├── /inventory/<int:character_id>/  # Detalles del inventario
+            ├── /relationships/  # Lista de relaciones
+            ├── /relationship/<int:pk>/  # Detalles de una relación
+            ├── /create_character/  # Crear un nuevo personaje
+            └── /create_inventory/<int:character_id>/  # Crear inventario
 ```
 
 ## 📌 Modelos
