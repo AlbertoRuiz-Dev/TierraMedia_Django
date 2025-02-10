@@ -1,14 +1,14 @@
 from django import forms
 from juego.models import *
 
-class FactionForm(forms.ModelForm):
+class FactionForm(forms.Form):
     faction = forms.ModelChoiceField(
         queryset=Faction.objects.all(),
         widget=forms.Select(),
         label="Selecciona una facción:"
     )
 
-class EquipmentForm(forms.ModelForm):
+class EquipmentForm(forms.Form):
     # Campo para seleccionar un arma
     weapon = forms.ModelChoiceField(
         queryset=Weapon.objects.all(),

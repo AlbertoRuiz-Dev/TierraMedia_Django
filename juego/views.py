@@ -51,7 +51,7 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class CharacterListView(ListView):
+class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
     template_name = 'juego/character_list.html'
     context_object_name = 'character_list'
