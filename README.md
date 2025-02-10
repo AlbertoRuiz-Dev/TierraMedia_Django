@@ -54,7 +54,7 @@ python manage.py runserver
 ## 📌 Estructura del Proyecto
 
 ```bash
-📂 tu_proyecto/
+📦 tu_proyecto/
 ├── 📂 juego/  # Aplicación principal
 │   ├── 📦 migrations/  # 
 │   ├── 📂 static/  # Archivos estáticos (CSS, JS, imágenes)
@@ -75,17 +75,23 @@ python manage.py runserver
 ## 📌 URLs del Proyecto
 
 ```bash
-📂 juego/urls.py
-├── /  # Página principal
-├── /login/  # Vista de inicio de sesión
-├── /logout/  # Vista de cierre de sesión
-├── /characters/  # Lista de personajes
-├── /character/<int:pk>/  # Detalles de un personaje
-├── /inventory/<int:character_id>/  # Detalles del inventario
-├── /relationships/  # Lista de relaciones
-├── /relationship/<int:pk>/  # Detalles de una relación
-├── /create_character/  # Crear un nuevo personaje
-└── /create_inventory/<int:character_id>/  # Crear inventario
+📦 tierramedia/urls.py #
+├── /admin/ #
+├── /accounts/ #
+│   ├── login/ #
+│   └── logout/ #
+└── / #
+    ├── 📂 juego/urls.py #
+    ├── /  # Página principal
+    ├── /login/  # Vista de inicio de sesión
+    ├── /logout/  # Vista de cierre de sesión
+    ├── /characters/  # Lista de personajes
+    ├── /character/<int:pk>/  # Detalles de un personaje
+    ├── /inventory/<int:character_id>/  # Detalles del inventario
+    ├── /relationships/  # Lista de relaciones
+    ├── /relationship/<int:pk>/  # Detalles de una relación
+    ├── /create_character/  # Crear un nuevo personaje
+    └── /create_inventory/<int:character_id>/  # Crear inventario
 ```
 
 ## 📌 Modelos
