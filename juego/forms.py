@@ -30,6 +30,7 @@ class WeaponForm(forms.Form):
         model = Weapon
         fields = ['name', 'description', 'damage']
 
+
 class FactionCreateForm(forms.ModelForm):
     class Meta:
         model = Faction  # Vincula el formulario al modelo Faccion
