@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if error_mensaje %}
+    <p style="color: red">{{ error_mensaje }}</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.weapon.label }}
+    {{ form.weapon }}
+    {{ form.armor.label }}
+    {{ form.armor }}
+    <button type="submit">Filtrar</button>
+</form>
+
+<h2>Personajes</h2>
+<ul>
+    {% for character in characters %}
+        <li>{{ character.name }} {% if character.equipped_armor or character.equipped_weapon %}
+            {% if character.equipped_weapon %} - {{ character.equipped_weapon }} {% endif %}
+            {% if character.equipped_armor %} - {{ character.equipped_armor }} {% endif %}
+            {% else %}
+            - Vacio
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No hay personajes disponibles.</li>
+    {% endfor %}
+</ul>
+<h2>Armas disponibles</h2>
+<ul>
+     {% if weapons %}
+        {% for weapon in weapons %}
+           <li> {{ weapon }} </li>
+        {% endfor %}
+    {% else %}
+         No hay armas disponibles.
+    {% endif %}
+</ul>
+    <h2>Armaduras disponibles</h2>
+<ul>
+    {% if armors %}
+        {% for armor in armors %}
+            <li>{{ armor }}</li>
+        {% endfor %}
+    {% else %}
+         No hay armaduras disponibles.
+    {% endif %}
+</ul>
+{% endblock %}
