@@ -22,6 +22,25 @@
                         {% endif %}
                     </li>
                     <li>
+                        Relaciones:
+                            <ul>
+                            {% if character.relationships1.all or character.relationships2.all %}
+                                {% if character.relationships1.all %}
+                                    {% for relation in character.relationships1.all %}
+                                        <li>{{ relation }}</li>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if character.relationships2.all %}
+                                    {% for relation in character.relationships2.all %}
+                                        <li>{{ relation }}</li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                <li>No hay relaciones</li>
+                            {% endif %}
+                            </ul>
+                    </li>
+                    <li>
                         Inventario:
                         <ul>
                             {% if character.inventory.weapons.all or character.inventory.armor.all %}

@@ -14,6 +14,8 @@ class Weapon(models.Model):
     damage = models.IntegerField(default=0)
     critic = models.IntegerField(blank=True, null=True)
     accuracy = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to='weapons/', null=True, blank=True, default='weapons/default_weapon.jpg')
+
 
     def save(self, *args, **kwargs):
         if self.critic is None:  # Solo generar si no tiene valor
@@ -29,6 +31,8 @@ class Armor(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, default="Tan vago como siempre... sin descripción")
     defense = models.IntegerField(default=0)
+    image = models.ImageField(upload_to='armors/', null=True, blank=True, default='armors/default_armor.jpg')
+
 
     def __str__(self):
         return f"{self.name} (Defensa: {self.defense})"
@@ -39,6 +43,7 @@ class Character(models.Model):
     faction = models.ForeignKey(Faction, on_delete=models.SET_NULL, null=True, blank=True, related_name="members")
     equipped_weapon = models.ForeignKey(Weapon, on_delete=models.SET_NULL, null=True, blank=True,related_name="equipped_weapon")
     equipped_armor = models.ForeignKey(Armor, on_delete=models.SET_NULL, null=True, blank=True, related_name="equipped_armor")
+    image = models.ImageField(upload_to='characters/', null=True, blank=True, default='characters/default_character.jpg')
 
     def __str__(self):
         faction_name = self.faction.name if self.faction else "Sin Facción"

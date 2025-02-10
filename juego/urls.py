@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from juego import views
@@ -13,10 +15,10 @@ urlpatterns = [
     path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'),
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
-    path('faction/delete/<pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
+    path('faction/delete/<int:pk>/', views.FactionDeleteView.as_view(), name='factionDeleteView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
-    path('character/weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
+    path('equipment/create_weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
@@ -25,7 +27,7 @@ urlpatterns = [
     path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
     path('equipment/weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 """
 
