@@ -24,3 +24,8 @@ class EquipmentForm(forms.Form):
         label="Selecciona una armadura:",
         required=False  # Hacemos el campo opcional
     )
+
+class WeaponForm(forms.Form):
+    class Meta:
+        model = Weapon
+        fields = ['name', 'description', 'damage']
