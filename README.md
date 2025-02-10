@@ -56,15 +56,20 @@ python manage.py runserver
 ```bash
 📂 tu_proyecto/
 ├── 📂 juego/  # Aplicación principal
+│   ├── 📦 migrations/  # 
+│   ├── 📂 static/  # Archivos estáticos (CSS, JS, imágenes)
+│   ├── 📂 templates/  #
+│   ├── 📦 tests/  # 
 │   ├── 📜 models.py  # Modelos de la base de datos
 │   ├── 📜 views.py  # Vistas de la aplicación
 │   ├── 📜 urls.py  # Rutas de la aplicación
 │   ├── 📜 templates/  # Plantillas HTML
 │   └── 📜 tests.py  # Pruebas automatizadas
-├── 📂 static/  # Archivos estáticos (CSS, JS, imágenes)
-├── 📂 media/  # Archivos subidos por usuarios
+├── 📦 tierramedia/ #
 ├── 📜 manage.py  # Script de gestión de Django
-└── 📜 requirements.txt  # Dependencias del proyecto
+├── 📜 requirements.txt  # Dependencias del proyecto
+└── 📜 README.md  # 
+
 ```
 
 ## 📌 URLs del Proyecto
