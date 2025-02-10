@@ -2,7 +2,7 @@
 {% block title %}Relaciones / Tierra Media{% endblock %}
 {% block content %}
     <h1>Relaciones de personajes.</h1>
-    <form method="post", action="#">
+    <form method="post">
         {% csrf_token %}
         {{ form.relation1.label }}
         {{ form.relation1 }}
