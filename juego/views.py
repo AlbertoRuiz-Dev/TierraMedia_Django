@@ -37,6 +37,8 @@ class EquipmentView(LoginRequiredMixin, TemplateView):
 class FactionView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/faction.html'
 
+
+
 class BattleView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/battle.html'
 
@@ -102,9 +104,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         return context
 
 
-class BattleView(LoginRequiredMixin, TemplateView):
-    template_name = ''
-
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
@@ -156,15 +155,11 @@ class WeaponDetailView(LoginRequiredMixin, DetailView):
     template_name = 'juego/weapon_detail.html'
     context_object_name = 'weapon'
 
-class WeaponCreateView(LoginRequiredMixin, CreateView):
-    model = Weapon
-    fields = ['name', 'description', 'damage',]
+class WeaponCreateView(LoginRequiredMixin, CreateView,WeaponForm):
     template_name = 'juego/weapon_create.html'
     success_url = reverse_lazy('juego:weaponListView')
 
-class WeaponUpdateView(LoginRequiredMixin, UpdateView):
-    model = Weapon
-    fields = ['name', 'description', 'damage',]
+class WeaponUpdateView(LoginRequiredMixin, UpdateView, WeaponForm):
     template_name = 'juego/weapon_form.html'
     success_url = reverse_lazy('juego:weaponListView')
 

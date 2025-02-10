@@ -9,7 +9,6 @@ urlpatterns = [
     path('character/', views.CharacterView.as_view(), name='characterView'),
     path('equipment/', views.EquipmentView.as_view(), name='equipmentView'),
     path('faction/', views.FactionView.as_view(), name='factionView'),
-    path('battle/', views.BattleView.as_view(), name='battleView'),
     path('character/list_character/', views.CharacterListView.as_view(), name='characterListView'),
     path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'),
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
@@ -21,10 +20,10 @@ urlpatterns = [
     path('battle/', views.BattleView.as_view(), name='battleView'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
-    path('weapons/', views.WeaponListView.as_view(), name='weaponListView'),
+    path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'),
-    path('weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
-    path('weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'),
+    path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
+    path('equipment/weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'),
 
 ]
 
