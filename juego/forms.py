@@ -1,37 +1,12 @@
-from email.policy import default
-
 from django import forms
-from django.forms.widgets import Select
-
-from .models import *
-
-class RelationForm(forms.ModelForm):
-    relation1 = forms.ModelChoiceField(
-        queryset=Character.objects.all(),
-        widget= forms.Select(),
-        label= "Personaje1 a relacionar: ")
-
-    relation2 = forms.ModelChoiceField(
-        queryset=Character.objects.all(),
-        widget=forms.Select(),
-        label="Personaje2 a relacionar: ")
-
-    RELATIONSHIP_TYPE_CHOICES = [
-        ('friend', 'Amigo'),
-        ('enemy', 'Enemigo'),
-        ('ally', 'Aliado'),
-        ('rival', 'Rival'),
-        ('neutral', 'Neutral'),
-    ]
-
-    relation_type = forms.ChoiceField(choices=RELATIONSHIP_TYPE_CHOICES, label="Selecciona el tipo de relación", widget=Select())
-
+from juego.models import *
 
 class FactionForm(forms.Form):
     faction = forms.ModelChoiceField(
         queryset=Faction.objects.all(),
         widget=forms.Select(),
-        label="Selecciona una facción: ")
+        label="Selecciona una facción:"
+    )
 
 class EquipmentForm(forms.Form):
     # Campo para seleccionar un arma
@@ -49,3 +24,14 @@ class EquipmentForm(forms.Form):
         label="Selecciona una armadura:",
         required=False  # Hacemos el campo opcional
     )
+
+class WeaponForm(forms.ModelForm):
+    class Meta:
+        model = Weapon
+        fields = ['name', 'description', 'damage','image']
+
+
+class FactionCreateForm(forms.ModelForm):
+    class Meta:
+        model = Faction  # Vincula el formulario al modelo Faccion
+        fields = ["name", "location"]  # Campos que se incluirán en el formulario
