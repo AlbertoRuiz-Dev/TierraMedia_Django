@@ -104,7 +104,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         return context
 
 
-
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
     fields = ['', '']
@@ -113,21 +112,20 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
-    fields = ['name', 'location']
+    form_class = FactionCreateForm  # Usamos ModelForm
     template_name = 'juego/faction_create.html'
-    success_url = reverse_lazy("juego:faccion")
+    success_url = reverse_lazy("juego:factionView")
 
 class FactionDeleteView(LoginRequiredMixin, DeleteView):
     model = Faction
     template_name = 'juego/faction_delete.html'
-    success_url = reverse_lazy("juego:faccion")
+    success_url = reverse_lazy("juego:factionView")
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
     fields = ['', '']
     template_name = ''
     success_url = ''
-
 
 
 
@@ -171,4 +169,32 @@ class WeaponDeleteView(LoginRequiredMixin,DeleteView):
     model = Weapon
     template_name = "juego/weapon_delete.html"
     success_url = reverse_lazy('juego:weaponListView')
+
+class ArmorListView(LoginRequiredMixin, ListView):
+    model = Armor
+    template_name = 'juego/armor.html'
+    context_object_name = 'armors'
+
+
+class ArmorDetailView(LoginRequiredMixin, DetailView):
+    model = Armor
+    template_name = 'juego/armor_detail.html'
+    context_object_name = 'armor'
+
+class ArmorCreateView(LoginRequiredMixin, CreateView):
+    model = Armor
+    form_class = WeaponForm
+    template_name = 'juego/armor_create.html'
+    success_url = reverse_lazy('juego:armorListView')
+
+class ArmorUpdateView(LoginRequiredMixin, UpdateView):
+    model = Armor
+    form_class = WeaponForm
+    template_name = 'juego/armor_form.html'
+    success_url = reverse_lazy('juego:armorListView')
+
+class ArmorDeleteView(LoginRequiredMixin,DeleteView):
+    model = Armor
+    template_name = "juego/armor_delete.html"
+    success_url = reverse_lazy('juego:armorListView')
 
