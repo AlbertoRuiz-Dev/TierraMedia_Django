@@ -148,4 +148,3 @@ class FactionCharacterFormViewTest(TestCase):
         self.assertContains(response, "Legolas")  # Personaje
         self.assertNotContains(response, "Gimli")  # Personaje
 
-
