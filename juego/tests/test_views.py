@@ -94,6 +94,8 @@ class ViewTests(TestCase):
         self.assertContains(response, "Prueba3_faccion")  # Facción
 
     class FactionCreateViewTest(TestCase):
+        """Pruebas para la vista de filtrar los personajes por un equipamiento específico"""
+
         def setUp(self):
             """
                 Configuración inicial de los datos de prueba.
