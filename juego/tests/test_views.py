@@ -247,3 +247,4 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.assertNotContains(response, "Legolas")  # Personaje
         self.assertNotContains(response, "Gimli")  # Personaje
 
+
