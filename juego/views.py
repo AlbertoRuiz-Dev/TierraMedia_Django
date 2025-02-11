@@ -104,7 +104,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         return context
 
 
-
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
     fields = ['', '']
