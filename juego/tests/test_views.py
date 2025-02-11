@@ -95,6 +95,11 @@ class ViewTests(TestCase):
 
     class FactionCreateViewTest(TestCase):
         def setUp(self):
+            """
+                Configuración inicial de los datos de prueba.
+                Crea un usuario de prueba
+            """
+
             self.user = User.objects.create_user(username='testuser', password='password123')
             self.faction_create_url = reverse('juego:factionCreateView')
 
