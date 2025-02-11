@@ -180,6 +180,7 @@ class FactionCharacterFormViewTest(TestCase):
 
 class EquipmentCharacterFormViewTest(TestCase):
     """Pruebas para la vista de filtrar los personajes por un equipamiento específico"""
+
     def setUp(self):
         """
             Configuración inicial de los datos de prueba.
@@ -196,7 +197,7 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.equipment_character_form_url = reverse('juego:equipmentCharacterFormView')
 
     def test_redirect_if_not_logged_in(self):
-        """ Verifica que un usuario no autenticado sea redirigido al login """
+        """Verifica que un usuario no autenticado sea redirigido al login """
         response = self.client.get(self.equipment_character_form_url)
         self.assertRedirects(response, f"/accounts/login/?next={self.equipment_character_form_url}")
 
@@ -247,4 +248,61 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.assertNotContains(response, "Legolas")  # Personaje
         self.assertNotContains(response, "Gimli")  # Personaje
 
+class FactionCreateViewTest(TestCase):
+    """Pruebas para la vista de crear facciones"""
 
+    def setUp(self):
+        """
+            Configuración inicial de los datos de prueba.
+            Crea un usuario de prueba
+        """
+
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.faction_create_url = reverse('juego:factionCreateView')
+
+    def test_redirect_if_not_logged_in(self):
+        """Verifica que un usuario no autenticado debe ser redirigido al login """
+        response = self.client.get(self.faction_create_url)
+        self.assertRedirects(response, f"/accounts/login/?next={self.faction_create_url}")
+
+    def test_faction_creation(self):
+        """Verifica que un usuario autenticado puede crear una facción """
+        self.client.login(username='testuser', password='password123')
+        response = self.client.post(self.faction_create_url, {'name': 'Hermandad', 'location': 'Bosque'})
+
+        # Verificar redirección después de la creación
+        self.assertRedirects(response, reverse('juego:factionView'))
+
+        # Verificar que la facción se creó correctamente
+        self.assertEqual(Faction.objects.count(), 1)
+        faction = Faction.objects.first()
+        self.assertEqual(faction.name, 'Hermandad')
+        self.assertEqual(faction.location, 'Bosque')
+
+class FactionDeleteViewTest(TestCase):
+    """Pruebas para la vista de eliminar facciones"""
+
+    def setUp(self):
+        """
+            Configuración inicial de los datos de prueba.
+            Crea una facción y un usuario de prueba
+        """
+        self.faction = Faction.objects.create(name='Hermandad', location='Bosque')
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.faction_create_url = reverse('juego:factionDeleteView', args={self.faction.id})
+
+    def test_redirect_if_not_logged_in(self):
+        """Verifica que un usuario no autenticado debe ser redirigido al login"""
+        response = self.client.get(self.faction_create_url)
+        self.assertRedirects(response, f"/accounts/login/?next={self.faction_create_url}")
+
+    def test_faction_delete(self):
+        """Verifica que un usuario autenticado puede eliminar una facción"""
+        self.client.login(username='testuser', password='password123')
+        response = self.client.post(self.faction_create_url, {'pk': 1})
+
+        # Verificar redirección después de la eliminación
+        self.assertRedirects(response, reverse('juego:factionView'))
+
+        # Verificar que la facción se eliminó correctamente
+        self.assertEqual(Faction.objects.count(), 0)
