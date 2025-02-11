@@ -51,7 +51,7 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class CharacterListView(ListView):
+class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
     template_name = 'juego/character_list.html'
     context_object_name = 'character_list'
@@ -155,11 +155,15 @@ class WeaponDetailView(LoginRequiredMixin, DetailView):
     template_name = 'juego/weapon_detail.html'
     context_object_name = 'weapon'
 
-class WeaponCreateView(LoginRequiredMixin, CreateView,WeaponForm):
+class WeaponCreateView(LoginRequiredMixin, CreateView):
+    model = Weapon
+    form_class = WeaponForm
     template_name = 'juego/weapon_create.html'
     success_url = reverse_lazy('juego:weaponListView')
 
-class WeaponUpdateView(LoginRequiredMixin, UpdateView, WeaponForm):
+class WeaponUpdateView(LoginRequiredMixin, UpdateView):
+    model = Weapon
+    form_class = WeaponForm
     template_name = 'juego/weapon_form.html'
     success_url = reverse_lazy('juego:weaponListView')
 
