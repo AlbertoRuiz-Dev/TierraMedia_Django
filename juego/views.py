@@ -115,12 +115,12 @@ class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
     form_class = FactionCreateForm  # Usamos ModelForm
     template_name = 'juego/faction_create.html'
-    success_url = reverse_lazy("juego:faccion")
+    success_url = reverse_lazy("juego:factionView")
 
 class FactionDeleteView(LoginRequiredMixin, DeleteView):
     model = Faction
     template_name = 'juego/faction_delete.html'
-    success_url = reverse_lazy("juego:faccion")
+    success_url = reverse_lazy("juego:factionView")
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
