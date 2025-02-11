@@ -7,12 +7,15 @@ from django.test import Client
 
 class ViewTests(TestCase):
     def setUp(self):
-        self.faction = Faction.objects.create(name="Aliados", location="Rohan")
+        self.faction1 = Faction.objects.create(name="Aliados", location="Rohan")
+        self.faction2 = Faction.objects.create(name="Prueba2_faccion", location="Prueba2_localizacion")
+        self.faction3 = Faction.objects.create(name="Prueba3_faccion", location="Prueba3_localizacion")
+
         self.weapon1 = Weapon.objects.create(name="Arco", description="Arco largo", damage=12)
         self.weapon2 = Weapon.objects.create(name="Espada corta", description="Espada afilada", damage=8)
         self.armor1 = Armor.objects.create(name="Armadura ligera", description="Armadura de cuero", defense=5)
         self.armor2 = Armor.objects.create(name="Armadura pesada", description="Armadura de placas", defense=15)
-        self.character = Character.objects.create(name="Legolas", location="Rohan", faction=self.faction, equipped_armor=self.armor1, equipped_weapon=self.weapon1)
+        self.character = Character.objects.create(name="Legolas", location="Rohan", faction=self.faction1, equipped_armor=self.armor1, equipped_weapon=self.weapon1)
         self.inventory = Inventory.objects.create(character=self.character)
         self.inventory.weapons.add(self.weapon1, self.weapon2)
         self.inventory.armors.add(self.armor1, self.armor2)
@@ -74,3 +77,20 @@ class ViewTests(TestCase):
         self.assertContains(response, "Gimli")  # Otro personaje sin facción ni inventario
         self.assertContains(response, "Vacio")  # No tiene facción
         self.assertContains(response, "No hay inventario")  # No tiene armas ni armaduras
+
+    def test_faction_character_list_template_render(self):
+        """Verifica que la plantilla se renderiza correctamente y contiene todas las facciones y todos los personajes"""
+        self.client.login(username='testuser', password='password123')
+        response = self.client.get(reverse('juego:factionCharacterFormView'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'juego/faction_character_list.html')
+
+        # Verificar que el personaje "Legolas" aparece en el HTML
+        self.assertContains(response, "Legolas") # Personaje
+        self.assertContains(response, "Gimli")  # Personaje
+        self.assertContains(response, "Aliados")  # Facción
+        self.assertContains(response, "Prueba2_faccion")  # Facción
+        self.assertContains(response, "Prueba3_faccion")  # Facción
+
+
