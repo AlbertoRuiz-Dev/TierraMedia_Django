@@ -226,7 +226,6 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.assertContains(response, "Gimli")  # Personaje
         self.assertContains(response, "Prueba3")  # Personaje
 
-
         response = self.client.post(self.equipment_character_form_url, {'weapon': self.weapon1.id, 'armor': self.armor1.id})
 
         self.assertEqual(response.status_code, 200)
