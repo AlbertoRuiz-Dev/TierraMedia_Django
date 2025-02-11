@@ -106,9 +106,9 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
+    form_class = RelationshipForm
+    template_name = 'juego/relationship.html'
+    success_url = reverse_lazy('juego:relationshipListView')
 
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
@@ -126,9 +126,6 @@ class CharacterCreateView(LoginRequiredMixin, CreateView):
     fields = ['', '']
     template_name = ''
     success_url = ''
-
-
-
 
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
@@ -171,3 +168,12 @@ class WeaponDeleteView(LoginRequiredMixin,DeleteView):
     template_name = "juego/weapon_delete.html"
     success_url = reverse_lazy('juego:weaponListView')
 
+
+class RelationshipListView(LoginRequiredMixin, ListView):
+    model = Relationship
+    template_name = 'juego/relationship_list.html'
+    context_object_name = 'relation_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from juego import views
@@ -10,7 +12,8 @@ urlpatterns = [
     path('equipment/', views.EquipmentView.as_view(), name='equipmentView'),
     path('faction/', views.FactionView.as_view(), name='factionView'),
     path('character/list_character/', views.CharacterListView.as_view(), name='characterListView'),
-    path('character/relationship/', views.RelacionesCreateView.as_view(), name='relaciones'),
+    path('character/relationship/', views.RelationCreateView.as_view(), name='relationCreateView'),
+    path('character/relationship_list', views.RelationshipListView.as_view(), name= 'relationshipListView'),
     path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'),
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),

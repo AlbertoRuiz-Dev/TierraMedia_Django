@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Relaciones / Tierra Media{% endblock %}
+{% block content %}
+   {% if relation_list %}
+       <h1>Lista de relaciones: </h1>
+       {% for relation in relation_list %}
+           <li> Relación:
+               {{ relation.character1 }} -
+               {{ relation.character2 }} -
+               {{ relation.relationship_type }}
+           </li>
+       {% endfor %}
+
+   {% endif %}
+
+{% endblock %}
