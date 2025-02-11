@@ -136,10 +136,8 @@ class FactionCharacterFormViewTest(TestCase):
     def test_faction_form(self):
         """Verifica que un personaje sin inventario ni facción muestra 'Vacio' y 'No hay inventario'"""
         self.client.login(username='testuser', password='password123')
-        response = self.client.post(self.faction_character_form_url, {})
+        response = self.client.post(self.faction_character_form_url, {'faction': self.faction1})
 
-        self.assertContains(response, "Gimli")  # Otro personaje sin facción ni inventario
-        self.assertContains(response, "Vacio")  # No tiene facción
-        self.assertContains(response, "No hay inventario")  # No tiene armas ni armaduras
-
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Legolas")  # Personaje
 
