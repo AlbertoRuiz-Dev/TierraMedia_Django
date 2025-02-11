@@ -5,22 +5,28 @@ from juego import views
 app_name = 'juego'
 
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
-    path('personaje/', views.PersonajeView.as_view(), name='personaje'),
-    path('equipamiento/', views.EquipamientoView.as_view(), name='equipamiento'),
-    path('faccion/', views.FaccionView.as_view(), name='faccion'),
-    path('batalla/', views.BatallaView.as_view(), name='batalla'),
+    path('', views.IndexView.as_view(), name='indexView'),
+    path('character/', views.CharacterView.as_view(), name='characterView'),
+    path('equipment/', views.EquipmentView.as_view(), name='equipmentView'),
+    path('faction/', views.FactionView.as_view(), name='factionView'),
+    path('character/list_character/', views.CharacterListView.as_view(), name='characterListView'),
     path('character/relationship/', views.RelacionesCreateView.as_view(), name='relaciones'),
-    path('personaje/listar_personajes/', views.CharacterListView.as_view(), name='characters'),
-    path('faccion/listar_personajes/', views.FactionCharacterFormView.as_view(), name='faction_players'),
-    path('personaje/listar_por_equipamiento/', views.EquipmentCharacterFormView.as_view(), name='inventory_players'),
+    path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'),
+    path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
+    path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
+    path('faction/delete/<int:pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
-    path('character_create/', views.CharacterCreateView.as_view(), name='playerCreateView'),
-    path('character/weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
-    path('battle/', views.BattleView.as_view(), name='battleCreateView'),
+    path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
+    path('equipment/create_weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
+    path('battle/', views.BattleView.as_view(), name='battleView'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
-]
+    path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),
+    path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'),
+    path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
+    path('equipment/weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 """
 

@@ -7,10 +7,7 @@
 {% endif %}
 <form method="post">
     {% csrf_token %}
-    {{ form.weapon.label }}
-    {{ form.weapon }}
-    {{ form.armor.label }}
-    {{ form.armor }}
+    {{ form.as_p }}
     <button type="submit">Filtrar</button>
 </form>
 
