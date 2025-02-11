@@ -93,4 +93,26 @@ class ViewTests(TestCase):
         self.assertContains(response, "Prueba2_faccion")  # Facción
         self.assertContains(response, "Prueba3_faccion")  # Facción
 
+    class FactionCreateViewTest(TestCase):
+        def setUp(self):
+            self.user = User.objects.create_user(username='testuser', password='password123')
+            self.faction_create_url = reverse('juego:factionCreateView')
 
+        def test_redirect_if_not_logged_in(self):
+            """ Un usuario no autenticado debe ser redirigido al login """
+            response = self.client.get(self.faction_create_url)
+            self.assertRedirects(response, f"/accounts/login/?next={self.faction_create_url}")
+
+        def test_faction_creation(self):
+            """ Un usuario autenticado puede crear una facción """
+            self.client.login(username='testuser', password='password123')
+            response = self.client.post(self.faction_create_url, {'name': 'Hermandad', 'location': 'Bosque'})
+
+            # Verificar redirección después de la creación
+            self.assertRedirects(response, reverse('juego:factionCreateView'))
+
+            # Verificar que la facción se creó correctamente
+            self.assertEqual(Faction.objects.count(), 1)
+            faction = Faction.objects.first()
+            self.assertEqual(faction.name, 'Hermandad')
+            self.assertEqual(faction.location, 'Bosque')
