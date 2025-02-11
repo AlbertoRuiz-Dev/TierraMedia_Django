@@ -5,7 +5,7 @@ from django.forms.widgets import Select
 
 from .models import *
 
-class RelationForm(forms.Form):
+class RelationForm(forms.ModelForm):
     relation1 = forms.ModelChoiceField(
         queryset=Character.objects.all(),
         widget= forms.Select(),

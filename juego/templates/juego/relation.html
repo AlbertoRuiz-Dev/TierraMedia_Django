@@ -4,12 +4,7 @@
     <h1>Relaciones de personajes.</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.relation1.label }}
-        {{ form.relation1 }}
-        {{ form.relation2.label }}
-        {{ form.relation2 }}
-        {{ form.relation_type.label }}
-        {{ form.relation_type }}
-        <button type="submit">Enviar</button>
+        {{ form.as_p }}
+
     </form>
 {% endblock %}
