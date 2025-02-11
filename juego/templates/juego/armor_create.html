@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar Armadura{% else %}Crear Nueva Armadura{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Editar {{ object.name }}{% else %}Crear Nueva Armadura{% endif %}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">{% if object %}Guardar Cambios{% else %}Crear Armadura{% endif %}</button>
+        <a href="{% url 'juego:armorListView' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

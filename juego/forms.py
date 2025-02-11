@@ -30,6 +30,12 @@ class WeaponForm(forms.ModelForm):
         model = Weapon
         fields = ['name', 'description', 'damage','image']
 
+class ArmorForm(forms.ModelForm):
+    class Meta:
+        model = Armor
+        fields = ['name', 'description', 'defense', 'image']
+
+
 
 class FactionCreateForm(forms.ModelForm):
     class Meta:

@@ -171,3 +171,31 @@ class WeaponDeleteView(LoginRequiredMixin,DeleteView):
     template_name = "juego/weapon_delete.html"
     success_url = reverse_lazy('juego:weaponListView')
 
+class ArmorListView(LoginRequiredMixin, ListView):
+    model = Armor
+    template_name = 'juego/armor.html'
+    context_object_name = 'armors'
+
+
+class ArmorDetailView(LoginRequiredMixin, DetailView):
+    model = Armor
+    template_name = 'juego/armor_detail.html'
+    context_object_name = 'armor'
+
+class ArmorCreateView(LoginRequiredMixin, CreateView):
+    model = Armor
+    form_class = WeaponForm
+    template_name = 'juego/armor_create.html'
+    success_url = reverse_lazy('juego:armorListView')
+
+class ArmorUpdateView(LoginRequiredMixin, UpdateView):
+    model = Armor
+    form_class = WeaponForm
+    template_name = 'juego/armor_form.html'
+    success_url = reverse_lazy('juego:armorListView')
+
+class ArmorDeleteView(LoginRequiredMixin,DeleteView):
+    model = Armor
+    template_name = "juego/armor_delete.html"
+    success_url = reverse_lazy('juego:armorListView')
+
