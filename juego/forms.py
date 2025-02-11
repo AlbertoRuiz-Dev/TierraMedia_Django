@@ -35,3 +35,8 @@ class FactionCreateForm(forms.ModelForm):
     class Meta:
         model = Faction  # Vincula el formulario al modelo Faccion
         fields = ["name", "location"]  # Campos que se incluirán en el formulario
+
+class RelationshipForm(forms.ModelForm):
+    class Meta:
+        model = Relationship
+        fields = ["character1", "character2", "relationship_type"]
