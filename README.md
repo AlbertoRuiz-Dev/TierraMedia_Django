@@ -197,7 +197,7 @@ python manage.py test....
 
 ## 📌 Licencia
 
-Este proyecto está libre de licencia.
+Este proyecto está libr**e** de licencia.
 
 ## 📌 Contacto
 
