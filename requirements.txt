@@ -4,3 +4,5 @@ django-extensions
 ipdb
 Pillow
 psycopg2-binary
+django-debug-toolbar
+django-json-widget

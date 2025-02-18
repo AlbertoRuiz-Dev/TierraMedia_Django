@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   web:
     build:
@@ -12,14 +10,14 @@ services:
       - .:/app
     environment:
       - DEBUG=True
-      - DATABASE_URL=postgres://django:password@db:5432/django_db
+      - DATABASE_URL=postgres://postgres:password@db:5432/django_db
       - EMAIL_HOST=mailpit
       - EMAIL_PORT=1025
-    user: "${UID}:${GID}" # Usar el UID y GID del sistema anfitrión
     depends_on:
       - db
       - mailpit
     command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped  # Asegura que el contenedor se reinicie si falla
 
   db:
     image: postgres:16
@@ -31,6 +29,7 @@ services:
       POSTGRES_DB: django_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   mailpit:
     image: axllent/mailpit
@@ -38,13 +37,14 @@ services:
     volumes:
       - ./data:/data
     ports:
-      - "8025:8025" # HTTP
-      - "1025:1025" # SMTP
+      - "8025:8025" # Interfaz web
+      - "1025:1025" # SMTP de prueba
     environment:
       MP_MAX_MESSAGES: 5000
       MP_DATABASE: /data/mailpit.db
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    restart: unless-stopped
 
 volumes:
   postgres_data:
