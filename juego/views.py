@@ -41,6 +41,8 @@ class FactionView(LoginRequiredMixin, TemplateView):
 
 class BattleView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/battle.html'
+    characters = Character.objects.all()
+    context = {'characters': characters}
 
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
