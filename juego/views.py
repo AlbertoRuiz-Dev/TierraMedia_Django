@@ -75,7 +75,6 @@ class FactionCharacterFormView(LoginRequiredMixin, FormView):
         context.setdefault("characters", Character.objects.all())  # Mostrar todos por defecto
         return context
 
-
 class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
     template_name = 'juego/equipment_character_list.html'
     form_class = EquipmentForm
