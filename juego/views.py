@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from juego.models import *
 from juego.forms import *
 # Create your views here.
@@ -171,7 +171,7 @@ class WeaponDeleteView(LoginRequiredMixin,DeleteView):
     template_name = "juego/weapon_delete.html"
     success_url = reverse_lazy('juego:weaponListView')
 
-class ArmorListView(LoginRequiredMixin, ListView):
+class ArmorListView(LoginRequiredMixin, ListView, UserPassesTestMixin):
     model = Armor
     template_name = 'juego/armor.html'
     context_object_name = 'armors'
@@ -184,13 +184,13 @@ class ArmorDetailView(LoginRequiredMixin, DetailView):
 
 class ArmorCreateView(LoginRequiredMixin, CreateView):
     model = Armor
-    form_class = WeaponForm
+    form_class = ArmorForm
     template_name = 'juego/armor_create.html'
     success_url = reverse_lazy('juego:armorListView')
 
 class ArmorUpdateView(LoginRequiredMixin, UpdateView):
     model = Armor
-    form_class = WeaponForm
+    form_class = ArmorForm
     template_name = 'juego/armor_form.html'
     success_url = reverse_lazy('juego:armorListView')
 

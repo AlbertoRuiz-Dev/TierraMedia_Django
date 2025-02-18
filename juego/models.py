@@ -1,6 +1,9 @@
 from django.db import models
 import random
 # Create your models here.
+from django.contrib.auth.models import User
+
+
 class Faction(models.Model):
     name = models.CharField(max_length=100, unique=True)
     location = models.CharField(max_length=100)
