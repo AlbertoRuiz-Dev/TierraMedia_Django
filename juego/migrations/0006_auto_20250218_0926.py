@@ -2,7 +2,11 @@
 from django.contrib.auth.models import User
 from django.db import migrations
 
+from juego.models import *
+
+
 def poblar_datos(apps, schema_editor):
+
     Faction = apps.get_model('juego', 'Faction')
     Weapon = apps.get_model('juego', 'Weapon')
     Armor = apps.get_model('juego', 'Armor')
@@ -10,24 +14,145 @@ def poblar_datos(apps, schema_editor):
     Inventory = apps.get_model('juego', 'Inventory')
     Relationship = apps.get_model('juego', 'Relationship')
 
-    faction1 = Faction.objects.create(name="Aliados", location="Rohan")
-    faction2 = Faction.objects.create(name="Prueba2_faccion", location="Prueba2_localizacion")
-    faction3 = Faction.objects.create(name="Prueba3_faccion", location="Prueba3_localizacion")
-    weapon1 = Weapon.objects.create(name="Arco", description="Arco largo", damage=12)
-    weapon2 = Weapon.objects.create(name="Espada corta", description="Espada afilada", damage=8)
-    armor1 = Armor.objects.create(name="Armadura ligera", description="Armadura de cuero", defense=5)
-    armor2 = Armor.objects.create(name="Armadura pesada", description="Armadura de placas", defense=15)
-    character1 = Character.objects.create(name="Legolas", location="Rohan", faction=faction1, equipped_armor=armor1,
-                             equipped_weapon=weapon1)
-    character2 = Character.objects.create(name="Legolas", location="Rohan", faction=faction3, equipped_armor=armor2,
-                                          equipped_weapon=weapon2)
-    character3 = Character.objects.create(name="Gimli", location="Montañas Nubladas", faction=None)
-    inventory1 = Inventory.objects.create(character=character1)
-    inventory1.weapons.add(weapon1, weapon2)
-    inventory1.armors.add(armor1, armor2)
+    # Crear facciones
+    factions = [
+        Faction(name="Los Chefs Guerreros", location="Cocina Central"),
+        Faction(name="Los Guerreros de la Cocina Molecular", location="Cocina Molecular"),
+        Faction(name="Los Maestros Mediterráneos", location="Cocina Mediterránea"),
+        Faction(name="Los Guardianes del Sabor", location="Cocina Nórdica")
+    ]
 
+    Faction.objects.bulk_create(factions)
 
-    Relationship.objects.create(character1=character1, character2=character2, relationship_type="friend")
+    # Crear armas
+    weapons = [
+        Weapon(name="Cuchillo Gordon Ramsay",
+               description="Cuchillo de alta gama diseñado para cortes finos, inspirado en Gordon Ramsay.", damage=8),
+        Weapon(name="Cuchillo Massimo Bottura",
+               description="Cuchillo ideal para cortes precisos en platos italianos, inspirado por Massimo Bottura.",
+               damage=7),
+        Weapon(name="Cuchillo Joan Roca",
+               description="Cuchillo diseñado para la cocina mediterránea, inspirado en Joan Roca.", damage=6),
+        Weapon(name="Cuchillo René Redzepi",
+               description="Cuchillo de precisión ideal para ingredientes nórdicos, inspirado por René Redzepi.",
+               damage=9),
+        Weapon(name="Cuchillo Heston Blumenthal",
+               description="Cuchillo molecular de precisión, inspirado por Heston Blumenthal.", damage=10)
+    ]
+
+    Weapon.objects.bulk_create(weapons)
+
+    # Crear armaduras
+    armors = [
+        Armor(name="Armadura Gordon Ramsay",
+              description="Armadura de alta resistencia, diseñada para proteger mientras se cocina a fuego intenso, inspirada en Gordon Ramsay.",
+              defense=8),
+        Armor(name="Armadura Massimo Bottura",
+              description="Armadura ligera, ideal para chefs que necesitan agilidad, inspirada por Massimo Bottura.",
+              defense=6),
+        Armor(name="Armadura Joan Roca",
+              description="Armadura perfecta para los platos mediterráneos, combinando tradición y resistencia, inspirada por Joan Roca.",
+              defense=7),
+        Armor(name="Armadura René Redzepi",
+              description="Armadura diseñada para soportar los ingredientes más delicados de la cocina nórdica, inspirada por René Redzepi.",
+              defense=9),
+        Armor(name="Armadura Heston Blumenthal",
+              description="Armadura avanzada y resistente, perfecta para la cocina molecular, inspirada por Heston Blumenthal.",
+              defense=10)
+    ]
+
+    Armor.objects.bulk_create(armors)
+
+    # Suponiendo que ya existen las facciones, armas y armaduras creadas
+    faction1 = Faction.objects.get(name="Los Chefs Guerreros")
+    faction2 = Faction.objects.get(name="Los Guerreros de la Cocina Molecular")
+
+    # Crear personajes
+    characters = [
+        Character(
+            name="Gordon Ramsay",
+            location="Cocina Principal",
+            faction=faction1,
+            equipped_weapon=Weapon.objects.get(name="Cuchillo Gordon Ramsay"),
+            equipped_armor=Armor.objects.get(name="Armadura Gordon Ramsay")
+        ),
+        Character(
+            name="Massimo Bottura",
+            location="Cocina Italiana",
+            faction=faction2,
+            equipped_weapon=Weapon.objects.get(name="Cuchillo Massimo Bottura"),
+            equipped_armor=Armor.objects.get(name="Armadura Massimo Bottura")
+        ),
+        Character(
+            name="Joan Roca",
+            location="Cocina Mediterránea",
+            faction=faction1,
+            equipped_weapon=Weapon.objects.get(name="Cuchillo Joan Roca"),
+            equipped_armor=Armor.objects.get(name="Armadura Joan Roca")
+        ),
+        Character(
+            name="René Redzepi",
+            location="Cocina Nórdica",
+            faction=faction2,
+            equipped_weapon=Weapon.objects.get(name="Cuchillo René Redzepi"),
+            equipped_armor=Armor.objects.get(name="Armadura René Redzepi")
+        ),
+        Character(
+            name="Heston Blumenthal",
+            location="Cocina Molecular",
+            faction=faction1,
+            equipped_weapon=Weapon.objects.get(name="Cuchillo Heston Blumenthal"),
+            equipped_armor=Armor.objects.get(name="Armadura Heston Blumenthal")
+        )
+    ]
+
+    Character.objects.bulk_create(characters)
+
+    # Crear inventarios para los personajes
+    for character in characters:
+        inventory = Inventory(character=character)
+        inventory.save()
+        inventory.weapons.add(character.equipped_weapon)
+        inventory.armors.add(character.equipped_armor)
+
+    # Crear relaciones entre personajes
+    relationships = [
+        Relationship(character1=characters[0], character2=characters[1], relationship_type='friend'),
+        Relationship(character1=characters[1], character2=characters[2], relationship_type='enemy'),
+        Relationship(character1=characters[2], character2=characters[3], relationship_type='ally'),
+        Relationship(character1=characters[3], character2=characters[4], relationship_type='rival'),
+        Relationship(character1=characters[4], character2=characters[0], relationship_type='neutral')
+    ]
+
+    Relationship.objects.bulk_create(relationships)
+
+    # Crear personajes sin inventario, armas equipadas ni relaciones
+    characters_simple = [
+        Character(
+            name="Gordon Ramsay",
+            location="Cocina Principal",
+        ),
+        Character(
+            name="Massimo Bottura",
+            location="Cocina Italiana",
+        ),
+        Character(
+            name="Joan Roca",
+            location="Cocina Mediterránea",
+        ),
+        Character(
+            name="René Redzepi",
+            location="Cocina Nórdica",
+        ),
+        Character(
+            name="Heston Blumenthal",
+            location="Cocina Molecular",
+        )
+    ]
+
+    Character.objects.bulk_create(characters_simple)
+
+    # Creación de usuarios
     User.objects.create_user(username='prueba', password='prueba')
     User.objects.create_superuser(username='admin', email='admin@example.com', password='admin')
 
