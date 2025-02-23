@@ -4,6 +4,36 @@ from django.db import migrations
 
 from juego.models import *
 
+def eliminar_datos(apps, schema_editor):
+    # Obtener los modelos
+    Faction = apps.get_model('juego', 'Faction')
+    Weapon = apps.get_model('juego', 'Weapon')
+    Armor = apps.get_model('juego', 'Armor')
+    Character = apps.get_model('juego', 'Character')
+    Inventory = apps.get_model('juego', 'Inventory')
+    Relationship = apps.get_model('juego', 'Relationship')
+    User = apps.get_model('auth', 'User')  # Para eliminar usuarios también
+
+    # Eliminar relaciones primero para evitar dependencias
+    Relationship.objects.all().delete()
+
+    # Eliminar inventarios
+    Inventory.objects.all().delete()
+
+    # Eliminar personajes
+    Character.objects.all().delete()
+
+    # Eliminar armas
+    Weapon.objects.all().delete()
+
+    # Eliminar armaduras
+    Armor.objects.all().delete()
+
+    # Eliminar facciones
+    Faction.objects.all().delete()
+
+    # Eliminar usuarios
+    User.objects.filter(username__in=['prueba', 'admin']).delete()
 
 def poblar_datos(apps, schema_editor):
 
@@ -16,93 +46,84 @@ def poblar_datos(apps, schema_editor):
 
     # Crear facciones
     factions = [
-        Faction(name="Los Chefs Guerreros", location="Cocina Central"),
-        Faction(name="Los Guerreros de la Cocina Molecular", location="Cocina Molecular"),
-        Faction(name="Los Maestros Mediterráneos", location="Cocina Mediterránea"),
-        Faction(name="Los Guardianes del Sabor", location="Cocina Nórdica")
+        Faction(name="La Hermandad de Acero", location="Fortaleza del Hierro"),
+        Faction(name="Los Asesinos Fantasma", location="Ciudad Sombría"),
+        Faction(name="Los Renegados del Desierto", location="Tierras Áridas"),
+        Faction(name="Los Centinelas del Caos", location="Ruinas Olvidadas")
     ]
 
     Faction.objects.bulk_create(factions)
 
     # Crear armas
     weapons = [
-        Weapon(name="Cuchillo Gordon Ramsay",
-               description="Cuchillo de alta gama diseñado para cortes finos, inspirado en Gordon Ramsay.", damage=8),
-        Weapon(name="Cuchillo Massimo Bottura",
-               description="Cuchillo ideal para cortes precisos en platos italianos, inspirado por Massimo Bottura.",
-               damage=7),
-        Weapon(name="Cuchillo Joan Roca",
-               description="Cuchillo diseñado para la cocina mediterránea, inspirado en Joan Roca.", damage=6),
-        Weapon(name="Cuchillo René Redzepi",
-               description="Cuchillo de precisión ideal para ingredientes nórdicos, inspirado por René Redzepi.",
+        Weapon(name="Espada del Apocalipsis", description="Una espada legendaria capaz de partir el acero en dos.",
+               damage=12),
+        Weapon(name="Rifle de Asalto Fantasma", description="Un rifle silencioso usado por los asesinos más letales.",
+               damage=10),
+        Weapon(name="Martillo del Juicio", description="Un martillo pesado que aplasta a los enemigos con furia.",
+               damage=14),
+        Weapon(name="Arco del Cazador Nocturno", description="Un arco ligero con flechas que perforan la armadura.",
                damage=9),
-        Weapon(name="Cuchillo Heston Blumenthal",
-               description="Cuchillo molecular de precisión, inspirado por Heston Blumenthal.", damage=10)
+        Weapon(name="Dagas de la Sombra", description="Un par de dagas envenenadas, perfectas para ataques rápidos.",
+               damage=11)
     ]
 
     Weapon.objects.bulk_create(weapons)
 
     # Crear armaduras
     armors = [
-        Armor(name="Armadura Gordon Ramsay",
-              description="Armadura de alta resistencia, diseñada para proteger mientras se cocina a fuego intenso, inspirada en Gordon Ramsay.",
+        Armor(name="Armadura del Titán", description="Una armadura pesada que ofrece máxima protección.", defense=15),
+        Armor(name="Traje de Sigilo Fantasma", description="Un traje ligero que permite moverse sin ser detectado.",
               defense=8),
-        Armor(name="Armadura Massimo Bottura",
-              description="Armadura ligera, ideal para chefs que necesitan agilidad, inspirada por Massimo Bottura.",
-              defense=6),
-        Armor(name="Armadura Joan Roca",
-              description="Armadura perfecta para los platos mediterráneos, combinando tradición y resistencia, inspirada por Joan Roca.",
-              defense=7),
-        Armor(name="Armadura René Redzepi",
-              description="Armadura diseñada para soportar los ingredientes más delicados de la cocina nórdica, inspirada por René Redzepi.",
-              defense=9),
-        Armor(name="Armadura Heston Blumenthal",
-              description="Armadura avanzada y resistente, perfecta para la cocina molecular, inspirada por Heston Blumenthal.",
-              defense=10)
+        Armor(name="Coraza del Renegado", description="Una coraza resistente forjada en las arenas del desierto.",
+              defense=12),
+        Armor(name="Manto del Caos", description="Un manto que absorbe parte del daño mágico.", defense=10),
+        Armor(name="Armadura del Cazador",
+              description="Una armadura flexible que ofrece equilibrio entre defensa y agilidad.", defense=11)
     ]
 
     Armor.objects.bulk_create(armors)
 
     # Suponiendo que ya existen las facciones, armas y armaduras creadas
-    faction1 = Faction.objects.get(name="Los Chefs Guerreros")
-    faction2 = Faction.objects.get(name="Los Guerreros de la Cocina Molecular")
+    faction1 = Faction.objects.get(name="La Hermandad de Acero")
+    faction2 = Faction.objects.get(name="Los Asesinos Fantasma")
 
     # Crear personajes
     characters = [
         Character(
-            name="Gordon Ramsay",
-            location="Cocina Principal",
+            name="Darius, el Destructor",
+            location="Fortaleza del Hierro",
             faction=faction1,
-            equipped_weapon=Weapon.objects.get(name="Cuchillo Gordon Ramsay"),
-            equipped_armor=Armor.objects.get(name="Armadura Gordon Ramsay")
+            equipped_weapon=Weapon.objects.get(name="Espada del Apocalipsis"),
+            equipped_armor=Armor.objects.get(name="Armadura del Titán")
         ),
         Character(
-            name="Massimo Bottura",
-            location="Cocina Italiana",
+            name="Nyx, la Sombra",
+            location="Ciudad Sombría",
             faction=faction2,
-            equipped_weapon=Weapon.objects.get(name="Cuchillo Massimo Bottura"),
-            equipped_armor=Armor.objects.get(name="Armadura Massimo Bottura")
+            equipped_weapon=Weapon.objects.get(name="Dagas de la Sombra"),
+            equipped_armor=Armor.objects.get(name="Traje de Sigilo Fantasma")
         ),
         Character(
-            name="Joan Roca",
-            location="Cocina Mediterránea",
+            name="Kael, el Martillo",
+            location="Tierras Áridas",
             faction=faction1,
-            equipped_weapon=Weapon.objects.get(name="Cuchillo Joan Roca"),
-            equipped_armor=Armor.objects.get(name="Armadura Joan Roca")
+            equipped_weapon=Weapon.objects.get(name="Martillo del Juicio"),
+            equipped_armor=Armor.objects.get(name="Coraza del Renegado")
         ),
         Character(
-            name="René Redzepi",
-            location="Cocina Nórdica",
+            name="Selene, la Cazadora",
+            location="Ruinas Olvidadas",
             faction=faction2,
-            equipped_weapon=Weapon.objects.get(name="Cuchillo René Redzepi"),
-            equipped_armor=Armor.objects.get(name="Armadura René Redzepi")
+            equipped_weapon=Weapon.objects.get(name="Arco del Cazador Nocturno"),
+            equipped_armor=Armor.objects.get(name="Armadura del Cazador")
         ),
         Character(
-            name="Heston Blumenthal",
-            location="Cocina Molecular",
+            name="Malek, el Caótico",
+            location="Ruinas Olvidadas",
             faction=faction1,
-            equipped_weapon=Weapon.objects.get(name="Cuchillo Heston Blumenthal"),
-            equipped_armor=Armor.objects.get(name="Armadura Heston Blumenthal")
+            equipped_weapon=Weapon.objects.get(name="Rifle de Asalto Fantasma"),
+            equipped_armor=Armor.objects.get(name="Manto del Caos")
         )
     ]
 
@@ -128,26 +149,11 @@ def poblar_datos(apps, schema_editor):
 
     # Crear personajes sin inventario, armas equipadas ni relaciones
     characters_simple = [
-        Character(
-            name="Gordon Ramsay",
-            location="Cocina Principal",
-        ),
-        Character(
-            name="Massimo Bottura",
-            location="Cocina Italiana",
-        ),
-        Character(
-            name="Joan Roca",
-            location="Cocina Mediterránea",
-        ),
-        Character(
-            name="René Redzepi",
-            location="Cocina Nórdica",
-        ),
-        Character(
-            name="Heston Blumenthal",
-            location="Cocina Molecular",
-        )
+        Character(name="Rogar, el Errante", location="Bosques Perdidos"),
+        Character(name="Lyra, la Vengadora", location="Ciudad Sombría"),
+        Character(name="Thalor, el Exiliado", location="Tierras Áridas"),
+        Character(name="Eryndor, el Hechicero", location="Ruinas Olvidadas"),
+        Character(name="Astra, la Guardiana", location="Fortaleza del Hierro")
     ]
 
     Character.objects.bulk_create(characters_simple)
@@ -164,5 +170,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(poblar_datos),
+        migrations.RunPython(poblar_datos, reverse_code=eliminar_datos),
     ]
