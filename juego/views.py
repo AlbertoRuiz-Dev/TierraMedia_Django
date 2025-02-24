@@ -50,10 +50,9 @@ def get_data(request):
     return Response(serializer.data)
 
 
-class BattleView(LoginRequiredMixin, TemplateView):
+class BattleView(LoginRequiredMixin, FormView):
     template_name = 'juego/battle.html'
-    characters = Character.objects.all()
-    context = {'characters': characters}
+    form_class = CharacterBattleForm
 
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
