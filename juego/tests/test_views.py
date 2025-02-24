@@ -127,8 +127,28 @@ class CharacterListViewTest(TestCase):
         self.assertContains(response, "No hay inventario")  # No tiene armas ni armaduras
 
     def tearDown(self):
-        # Limpia después de cada prueba (opcional)
-        pass
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+        # Eliminar relaciones
+        Relationship.objects.all().delete()
+
+        # Eliminar inventarios
+        Inventory.objects.all().delete()
+
+        # Eliminar personajes
+        Character.objects.all().delete()
+
+        # Eliminar armas y armaduras
+        Weapon.objects.all().delete()
+        Armor.objects.all().delete()
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
 
 
 class FactionCharacterFormViewTest(TestCase):
@@ -184,8 +204,20 @@ class FactionCharacterFormViewTest(TestCase):
         self.assertNotContains(response, "Gimli")  # Personaje
 
     def tearDown(self):
-        # Limpia después de cada prueba (opcional)
-        pass
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+
+        # Eliminar personajes
+        Character.objects.all().delete()
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
+
 
 class EquipmentCharacterFormViewTest(TestCase):
     """Pruebas para la vista de filtrar los personajes por un equipamiento específico"""
@@ -257,8 +289,20 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.assertNotContains(response, "Gimli")  # Personaje
 
     def tearDown(self):
-        # Limpia después de cada prueba (opcional)
-        pass
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+
+        # Eliminar personajes
+        Character.objects.all().delete()
+
+        # Eliminar armas y armaduras
+        Weapon.objects.all().delete()
+        Armor.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
 
 class FactionCreateViewTest(TestCase):
     """Pruebas para la vista de crear facciones"""
@@ -268,9 +312,11 @@ class FactionCreateViewTest(TestCase):
             Configuración inicial de los datos de prueba.
             Crea un usuario de prueba
         """
-
+        # Eliminar facciones
+        Faction.objects.all().delete()
         self.user = User.objects.create_user(username='testuser', password='password123')
         self.faction_create_url = reverse('juego:factionCreateView')
+
 
     def test_redirect_if_not_logged_in(self):
         """Verifica que un usuario no autenticado debe ser redirigido al login """
@@ -292,8 +338,16 @@ class FactionCreateViewTest(TestCase):
         self.assertEqual(faction.location, 'Bosque')
 
     def tearDown(self):
-        # Limpia después de cada prueba (opcional)
-        pass
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
 
 class FactionDeleteViewTest(TestCase):
     """Pruebas para la vista de eliminar facciones"""
@@ -303,9 +357,12 @@ class FactionDeleteViewTest(TestCase):
             Configuración inicial de los datos de prueba.
             Crea una facción y un usuario de prueba
         """
+        # Eliminar facciones
+        Faction.objects.all().delete()
         self.faction = Faction.objects.create(name='Hermandad', location='Bosque')
         self.user = User.objects.create_user(username='testuser', password='password123')
         self.faction_create_url = reverse('juego:factionDeleteView', args={self.faction.id})
+
 
     def test_redirect_if_not_logged_in(self):
         """Verifica que un usuario no autenticado debe ser redirigido al login"""
@@ -324,5 +381,13 @@ class FactionDeleteViewTest(TestCase):
         self.assertEqual(Faction.objects.count(), 0)
 
     def tearDown(self):
-        # Limpia después de cada prueba (opcional)
-        pass
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()

@@ -86,7 +86,7 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         weapon = form.cleaned_data["weapon"]  # Obtiene el arma seleccionada
         armor = form.cleaned_data["armor"]  # Obtiene la armadura seleccionada
         characters = Character.objects.select_related('equipped_weapon', 'equipped_armor', 'faction').prefetch_related(
-            'inventory_weapons', 'inventory_armors'  # Relaciones de muchos a muchos
+            'inventory__weapons', 'inventory__armors'  # Relaciones de muchos a muchos
         ).all()
 
         if weapon or armor:
