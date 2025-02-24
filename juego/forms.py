@@ -43,13 +43,13 @@ class CharacterForm(forms.ModelForm):
 
 class CharacterBattleForm(forms.Form):
     character = forms.ModelChoiceField(
-        queryset=Character.objects.all(),
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
         widget=forms.Select(),
         label="Selecciona un personaje:"
     )
 
     character2 = forms.ModelChoiceField(
-        queryset=Character.objects.all(),
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
         widget=forms.Select(),
         label="Selecciona otro personaje:"
     )

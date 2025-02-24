@@ -45,7 +45,7 @@ class FactionView(LoginRequiredMixin, TemplateView):
 
 @api_view(['GET'])
 def get_data(request):
-    datos = Character.objects.all()
+    datos = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all()
     serializer = CharacterSerializer(datos, many=True)
     return Response(serializer.data)
 

@@ -13,7 +13,7 @@ fetch('/api/datos/')
     })
     .catch(error => console.error('Error:', error));
 
-
+// Función que se ejecuta al pulsar el botón "Batalla!"
 function pelea() {
     event.preventDefault();
 
@@ -49,7 +49,8 @@ function pelea() {
         defensa: personaje2.equipped_armor ? personaje2.equipped_armor.defense : 0
     };
 
-    let turno = 1; // Empieza el primer personaje
+    // Asignamos el turno
+    let turno = 1;
 
     // Mostrar la interfaz de la batalla
     document.getElementById("battle_arena").style.display = "block";
