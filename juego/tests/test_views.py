@@ -349,6 +349,52 @@ class FactionCreateViewTest(TestCase):
         # Eliminar usuario
         User.objects.all().delete()
 
+class FactionUpdateViewTest(TestCase):
+    """Pruebas para la vista de actualizar facciones"""
+
+    def setUp(self):
+        """
+            Configuración inicial de los datos de prueba.
+            Crea un usuario y una facción de prueba
+        """
+        # Eliminar facciones
+        Faction.objects.all().delete()
+        self.faction = Faction.objects.create(name='Hermandad', location='Bosque')
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.faction_update_url = reverse('juego:factionUpdateView', args={self.faction.id})
+
+
+    def test_redirect_if_not_logged_in(self):
+        """Verifica que un usuario no autenticado debe ser redirigido al login """
+        response = self.client.get(self.faction_update_url)
+        self.assertRedirects(response, f"/accounts/login/?next={self.faction_update_url}")
+
+    def test_faction_update(self):
+        """Verifica que un usuario autenticado puede actualizar una facción """
+        self.client.login(username='testuser', password='password123')
+        response = self.client.post(self.faction_update_url, {'name': 'Actualizado', 'location': 'Actualizado'})
+
+        # Verificar redirección después de la modificación
+        self.assertRedirects(response, reverse('juego:factionView'))
+
+        # Verificar que la facción se modificó correctamente
+        self.assertEqual(Faction.objects.count(), 1)
+        faction = Faction.objects.first()
+        self.assertEqual(faction.name, 'Actualizado')
+        self.assertEqual(faction.location, 'Actualizado')
+
+    def tearDown(self):
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+        """
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
+
 class FactionDeleteViewTest(TestCase):
     """Pruebas para la vista de eliminar facciones"""
 

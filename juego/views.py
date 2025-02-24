@@ -63,6 +63,11 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+class CharacterUpdateView(LoginRequiredMixin, UpdateView):
+    model = Character
+    form_class = CharacterForm
+    template_name = 'juego/character_update.html'
+    success_url = reverse_lazy("juego:characterView")
 
 class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
@@ -131,8 +136,14 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
-    form_class = FactionCreateForm  # Usamos ModelForm
+    form_class = FactionDefaultForm  # Usamos ModelForm
     template_name = 'juego/faction_create.html'
+    success_url = reverse_lazy("juego:factionView")
+
+class FactionUpdateView(LoginRequiredMixin, UpdateView):
+    model = Faction
+    form_class = FactionDefaultForm
+    template_name = 'juego/faction_update.html'
     success_url = reverse_lazy("juego:factionView")
 
 class FactionDeleteView(LoginRequiredMixin, DeleteView):
