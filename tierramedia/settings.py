@@ -88,8 +88,14 @@ DATABASES = {
     }
 }
 
+# Obtenemos el nombre del host (máquina local) y sus direcciones IP asociadas
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+
+# Creamos una lista de direcciones IP internas agregando '.1' al final de cada dirección
 INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "localhost"]
+
+# Si conseguimos la ip de nuestro contenedor docker con el comando (docker inspect django_web) y cogemos la ip del ("Gateway") podemos ponerlo de la siguiente manera
+# INTERNAL_IPS = ["172.19.0.1", "127.0.0.1", "localhost"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
