@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Batalla / Tierra Media{% endblock %}
+{% load static %}
+{% block links %}<script src="{% static 'js/battle.js' %}"></script>{% endblock %}
 {% block content %}
     <h1>Contenido de batalla.</h1>
     

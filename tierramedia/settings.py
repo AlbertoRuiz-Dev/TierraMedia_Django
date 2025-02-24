@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'juego.apps.JuegoConfig',
     'debug_toolbar',
     'django_json_widget',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

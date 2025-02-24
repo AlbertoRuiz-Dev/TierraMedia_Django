@@ -3,6 +3,11 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from juego.models import *
 from juego.forms import *
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from juego.models import Character
+from juego.serializers import CharacterSerializer
+
 # Create your views here.
 
 """
@@ -37,6 +42,12 @@ class EquipmentView(LoginRequiredMixin, TemplateView):
 class FactionView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/faction.html'
 
+
+@api_view(['GET'])
+def get_data(request):
+    datos = Character.objects.all()
+    serializer = CharacterSerializer(datos, many=True)
+    return Response(serializer.data)
 
 
 class BattleView(LoginRequiredMixin, TemplateView):

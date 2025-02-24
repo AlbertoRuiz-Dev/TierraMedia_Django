@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from juego import views
+from juego.views import get_data
 
 app_name = 'juego'
 
@@ -19,6 +20,7 @@ urlpatterns = [
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
+    path('api/datos/', get_data, name='get_data'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),
