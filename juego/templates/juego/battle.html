@@ -3,7 +3,7 @@
 {% load static %}
 {% block links %}<script src="{% static 'js/battle.js' %}"></script>{% endblock %}
 {% block content %}
-    <div class="container-fluid text-center">
+    <div class="container-fluid text-center rounded">
         <h1>Selecciona los personajes para la batalla.</h1>
         <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
             {% csrf_token %}
