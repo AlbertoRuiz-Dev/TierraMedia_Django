@@ -1,0 +1,39 @@
+listar_armor:
+{% extends "base.html" %}
+{% block title %}Lista de Armaduras{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Lista de Armaduras</h2>
+    <a href="{% url 'juego:armorCreateView' %}" class="btn btn-primary mb-3">➕ Añadir Nueva Armadura</a>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Defensa</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for armor in armors %}
+                <tr>
+                    <td>{{ armor.name }}</td>
+                    <td>{{ armor.defense }}</td>
+                    <td>
+                        <a href="{% url 'juego:armorDetailView' armor.pk %}" class="btn btn-info btn-sm">👁️ Ver</a>
+                        <a href="{% url 'juego:armorUpdateView' armor.pk %}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                        <a href="{% url 'juego:armorDeleteView' armor.pk %}" class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">No hay armaduras disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

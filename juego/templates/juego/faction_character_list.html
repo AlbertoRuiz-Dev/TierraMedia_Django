@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Lista de facciones{% endblock %}
+
 {% block content %}
 <form method="post">
     {% csrf_token %}
@@ -15,4 +17,7 @@
         <li>No hay personajes para esta facción.</li>
     {% endfor %}
 </ul>
+
+<a href="{% url 'juego:factionView' %}" class="btn btn-secondary">Volver</a>
+
 {% endblock %}

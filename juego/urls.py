@@ -19,9 +19,10 @@ urlpatterns = [
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
     path('faction/delete/<int:pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
+    path('faction/update/<int:pk>', views.FactionUpdateView.as_view(), name='factionUpdateView'),
+    path('character/update/<int:pk>', views.CharacterUpdateView.as_view(), name='characterUpdateView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
-    path('equipment/create_weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
@@ -29,6 +30,12 @@ urlpatterns = [
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'),
     path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
     path('equipment/weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'),
+    path('equipment/create_weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'),
+    path('equipment/armors/', views.ArmorListView.as_view(), name='armorListView'),
+    path('equipment/armor/<int:pk>/', views.ArmorDetailView.as_view(), name='armorDetailView'),
+    path('equipment/armor/<int:pk>/edit/', views.ArmorUpdateView.as_view(), name='armorUpdateView'),
+    path('equipment/armor/<int:pk>/delete/', views.ArmorDeleteView.as_view(), name='armorDeleteView'),
+    path('equipment/create_armor/', views.ArmorCreateView.as_view(), name='armorCreateView'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
