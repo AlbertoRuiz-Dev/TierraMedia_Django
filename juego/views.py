@@ -37,11 +37,8 @@ class EquipmentView(LoginRequiredMixin, TemplateView):
 class FactionView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/faction.html'
 
-
-
 class BattleView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/battle.html'
-
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
     model = Character
@@ -170,6 +167,7 @@ class RelationshipListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship

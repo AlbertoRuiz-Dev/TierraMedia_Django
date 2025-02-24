@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar Relacion{% else %}Crear Nueva Relacion{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Estas seguro de borrar: {{ object.name }}{% else %}Crear Nueva Arma{% endif %}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">{% if object %}Guardar Cambios{% else %}Crear Relacion{% endif %}</button>
+        <a href="{% url 'juego:weaponListView' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
