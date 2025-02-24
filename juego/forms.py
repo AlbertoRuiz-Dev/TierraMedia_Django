@@ -36,8 +36,7 @@ class ArmorForm(forms.ModelForm):
         fields = ['name', 'description', 'defense', 'image']
 
 
-
-class FactionCreateForm(forms.ModelForm):
+class FactionDefaultForm(forms.ModelForm):
     class Meta:
         model = Faction  # Vincula el formulario al modelo Faccion
         fields = ["name", "location"]  # Campos que se incluirán en el formulario
