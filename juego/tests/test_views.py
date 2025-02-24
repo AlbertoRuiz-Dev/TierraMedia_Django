@@ -98,7 +98,7 @@ class CharacterUpdateViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina facciones, armas, armaduras, personajes y el usuario de prueba.
         """
 
         # Eliminar personajes
@@ -272,7 +272,7 @@ class FactionCharacterFormViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina facciones, personajes y el usuario de prueba.
         """
 
         # Eliminar personajes
@@ -357,7 +357,7 @@ class EquipmentCharacterFormViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina armas, armaduras, personajes y el usuario de prueba.
         """
 
         # Eliminar personajes
@@ -406,7 +406,7 @@ class FactionCreateViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina facciones y el usuario de prueba.
         """
 
         # Eliminar facciones
@@ -451,7 +451,7 @@ class FactionUpdateViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina facciones y el usuario de prueba.
         """
 
         # Eliminar facciones
@@ -494,7 +494,7 @@ class FactionDeleteViewTest(TestCase):
     def tearDown(self):
         """
             Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
+            Elimina facciones y el usuario de prueba.
         """
 
         # Eliminar facciones
