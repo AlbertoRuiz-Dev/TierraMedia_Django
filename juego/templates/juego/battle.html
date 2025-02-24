@@ -3,13 +3,16 @@
 {% load static %}
 {% block links %}<script src="{% static 'js/battle.js' %}"></script>{% endblock %}
 {% block content %}
-    <h1>Selecciona los personajes para la batalla.</h1>
-    <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" onclick="pelea()">Batalla!</button>
-    </form>
-    <div id="battle_arena" style="display: none;">
+    <div class="container-fluid text-center">
+        <h1>Selecciona los personajes para la batalla.</h1>
+        <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" onclick="pelea()">Batalla!</button>
+        </form>
+    </div>
+    
+    <div class="container-fluid text-center" id="battle_arena" style="display: none;">
         <h2>¡Batalla en curso!</h2>
         <p id="status"></p>
     
