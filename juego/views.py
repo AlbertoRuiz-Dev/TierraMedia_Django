@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from juego.models import *
 from juego.forms import *
 # Create your views here.
@@ -124,7 +124,7 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
-    form_class = FactionCreateForm  # Usamos ModelForm
+    form_class = FactionDefaultForm  # Usamos ModelForm
     template_name = 'juego/faction_create.html'
     success_url = reverse_lazy("juego:factionView")
 
