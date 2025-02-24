@@ -126,6 +126,11 @@ class CharacterListViewTest(TestCase):
         self.assertContains(response, "Vacio")  # No tiene facción
         self.assertContains(response, "No hay inventario")  # No tiene armas ni armaduras
 
+    def tearDown(self):
+        # Limpia después de cada prueba (opcional)
+        pass
+
+
 class FactionCharacterFormViewTest(TestCase):
     """Pruebas para la vista de filtrar los personajes por una facción"""
 
@@ -177,6 +182,10 @@ class FactionCharacterFormViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Legolas")  # Personaje
         self.assertNotContains(response, "Gimli")  # Personaje
+
+    def tearDown(self):
+        # Limpia después de cada prueba (opcional)
+        pass
 
 class EquipmentCharacterFormViewTest(TestCase):
     """Pruebas para la vista de filtrar los personajes por un equipamiento específico"""
@@ -247,6 +256,10 @@ class EquipmentCharacterFormViewTest(TestCase):
         self.assertNotContains(response, "Legolas")  # Personaje
         self.assertNotContains(response, "Gimli")  # Personaje
 
+    def tearDown(self):
+        # Limpia después de cada prueba (opcional)
+        pass
+
 class FactionCreateViewTest(TestCase):
     """Pruebas para la vista de crear facciones"""
 
@@ -278,6 +291,10 @@ class FactionCreateViewTest(TestCase):
         self.assertEqual(faction.name, 'Hermandad')
         self.assertEqual(faction.location, 'Bosque')
 
+    def tearDown(self):
+        # Limpia después de cada prueba (opcional)
+        pass
+
 class FactionDeleteViewTest(TestCase):
     """Pruebas para la vista de eliminar facciones"""
 
@@ -305,3 +322,7 @@ class FactionDeleteViewTest(TestCase):
 
         # Verificar que la facción se eliminó correctamente
         self.assertEqual(Faction.objects.count(), 0)
+
+    def tearDown(self):
+        # Limpia después de cada prueba (opcional)
+        pass
