@@ -8,6 +8,7 @@ from juego.forms import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework import viewsets
 
 from juego.models import Character
 from juego.serializers import *
@@ -54,13 +55,6 @@ class FactionView(LoginRequiredMixin, TemplateView):
         context['faction_list'] = factions
         return context
 
-
-@api_view(['GET'])
-def get_data(request):
-    datos = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all()
-    serializer = CharacterSerializer(datos, many=True)
-    return Response(serializer.data)
-
 @api_view(['GET'])
 def get_factions_member_count(request):
     factions = Faction.objects.all()
@@ -75,6 +69,29 @@ def get_factions_member_count(request):
 
     return Response(data)
 
+class FactionViewSet(viewsets.ModelViewSet):
+    queryset = Faction.objects.all()
+    serializer_class = FactionSerializer
+
+class ArmorViewSet(viewsets.ModelViewSet):
+    queryset = Armor.objects.all()  # Todos los objetos de Armor
+    serializer_class = ArmorSerializer  # Usa el ArmorSerializer para la serialización
+
+class WeaponViewSet(viewsets.ModelViewSet):
+    queryset = Weapon.objects.all()  # Obtiene todos los objetos de Weapon
+    serializer_class = WeaponSerializer  # Usa el WeaponSerializer para la serialización
+
+class RelationshipViewSet(viewsets.ModelViewSet):
+    queryset = Relationship.objects.all()  # Obtiene todas las relaciones
+    serializer_class = RelationshipSerializer  # Usa el RelationshipSerializer para la serialización
+
+class InventoryViewSet(viewsets.ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+
+class CharacterViewSet(viewsets.ModelViewSet):
+    queryset = Character.objects.all()  # Puedes usar select_related para optimizar las consultas
+    serializer_class = CharacterSerializer
 
 class BattleView(LoginRequiredMixin, FormView):
     template_name = 'juego/battle.html'

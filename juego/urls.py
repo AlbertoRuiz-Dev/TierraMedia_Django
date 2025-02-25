@@ -1,15 +1,27 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
 
 from juego import views
-from juego.views import get_data, get_factions_member_count
+from juego.views import *
+
+
+# Crea un router para tus views
+router = DefaultRouter()
+router.register(r'factions', FactionViewSet, basename='faction')
+router.register(r'armors', ArmorViewSet, basename='armor')
+router.register(r'weapons', WeaponViewSet, basename='weapon')
+router.register(r'relationships', RelationshipViewSet, basename='relationship')
+router.register(r'inventories', InventoryViewSet, basename='inventory')
+router.register(r'characters', CharacterViewSet, basename='character')
 
 app_name = 'juego'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='indexView'),
-    path('api/datos/', get_data, name='get_data'),
+    path('api/', include(router.urls)),
     path('api/faction_member_count/', get_factions_member_count, name='faction_member_count'),
     path('character/', views.CharacterListView.as_view(), name='characterView'),
     path('character/<int:pk>/', views.CharacterDetailView.as_view(), name='characterDetailView'),
