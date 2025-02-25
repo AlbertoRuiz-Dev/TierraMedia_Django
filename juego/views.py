@@ -75,7 +75,7 @@ class CharacterListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        characters = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all()
+        characters = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').prefetch_related('relationships1__character2', 'relationships2__character1', 'inventory__armors', 'inventory__weapons').all()
         context['character_list'] = characters
         return context
 
@@ -102,17 +102,15 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         weapon = form.cleaned_data["weapon"]  # Obtiene el arma seleccionada
         armor = form.cleaned_data["armor"]  # Obtiene la armadura seleccionada
-        characters = Character.objects.select_related('equipped_weapon', 'equipped_armor', 'faction').prefetch_related(
-            'inventory__weapons', 'inventory__armors'  # Relaciones de muchos a muchos
-        ).all()
+        characters = Character.objects.select_related('equipped_weapon', 'equipped_armor').all()
 
         if weapon or armor:
             if weapon and armor:
-                characters = characters.filter(equipped_weapon=weapon, equipped_armor=armor)  # Filtros combinados
+                characters = characters.filter(equipped_weapon=weapon, equipped_armor=armor).select_related('equipped_weapon', 'equipped_armor').all()  # Filtros combinados
             elif weapon:
-                characters = characters.filter(equipped_weapon=weapon)  # Filtra personajes por arma
+                characters = characters.filter(equipped_weapon=weapon).select_related('equipped_weapon', 'equipped_armor').all()  # Filtra personajes por arma
             elif armor:
-                characters = characters.filter(equipped_armor=armor)  # Filtra personajes por armadura
+                characters = characters.filter(equipped_armor=armor).select_related('equipped_weapon', 'equipped_armor').all()  # Filtra personajes por armadura
         else:
             return self.render_to_response(
                 (self.get_context_data(form=form, error_mensaje="No has seleccionado ningúna opción")))
@@ -121,7 +119,7 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.setdefault("characters", Character.objects.all())  # Mostrar todos los personajes por defecto
+        context.setdefault("characters", Character.objects.select_related('equipped_weapon', 'equipped_armor').all())  # Mostrar todos los personajes por defecto
         context.setdefault("weapons", Weapon.objects.all())  # Mostrar todas las armas por defecto
         context.setdefault("armors", Armor.objects.all())  # Mostrar todas las armaduras por defecto
         return context
