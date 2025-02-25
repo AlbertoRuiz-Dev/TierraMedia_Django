@@ -1,5 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}Facción / Tierra Media{% endblock %}
 {% block content %}
-    <h1>Contenido de facciones.</h1>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Lista de Facciones</h1>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for f in faction_list %}
+                <div class="col">
+                    <div class="card text-light h-100" style="background-color: rgba(0,0,0,0.81)">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ f.name }}</h5>
+                            <p><strong>Ubicación:</strong> {{ f.location }}</p>
+                            <p><strong>Miembros:</strong> {{ f.members.all|length }}</p>
+                            <a href="{% url 'juego:factionUpdateView' f.id %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url 'juego:factionDetailView' f.id %}" class="btn btn-warning">Detalles</a>
+                            <a href="{% url 'juego:factionDeleteView' f.id %}" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mt-4">Filtrar personajes por facción</a>
+        <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mt-4">Crear facción</a>
+
+    </div>
+
 {% endblock %}
