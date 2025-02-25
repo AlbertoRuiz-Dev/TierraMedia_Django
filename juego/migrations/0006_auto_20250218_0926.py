@@ -57,15 +57,15 @@ def poblar_datos(apps, schema_editor):
     # Crear armas
     weapons = [
         Weapon(name="Espada del Apocalipsis", description="Una espada legendaria capaz de partir el acero en dos.",
-               damage=12),
+               damage=75),
         Weapon(name="Rifle de Asalto Fantasma", description="Un rifle silencioso usado por los asesinos más letales.",
-               damage=10),
+               damage=62),
         Weapon(name="Martillo del Juicio", description="Un martillo pesado que aplasta a los enemigos con furia.",
-               damage=14),
+               damage=80),
         Weapon(name="Arco del Cazador Nocturno", description="Un arco ligero con flechas que perforan la armadura.",
-               damage=9),
+               damage=95),
         Weapon(name="Dagas de la Sombra", description="Un par de dagas envenenadas, perfectas para ataques rápidos.",
-               damage=11)
+               damage=53)
     ]
 
     Weapon.objects.bulk_create(weapons)
