@@ -148,6 +148,7 @@ class FactionCreateView(LoginRequiredMixin, CreateView):
 
 class FactionDetailView(LoginRequiredMixin, DetailView):
     # FALTAN TEST DE ESTA CLASE
+
     model = Faction
     template_name = 'juego/faction_detail.html'
     context_object_name = 'faction'
