@@ -1,5 +1,37 @@
 {% extends 'base.html' %}
 {% block title %}Batalla / Tierra Media{% endblock %}
+{% load static %}
+{% block links %}<script src="{% static 'js/battle.js' %}"></script>{% endblock %}
 {% block content %}
-    <h1>Contenido de batalla.</h1>
+    <div class="container-fluid text-center rounded">
+        <h1>Selecciona los personajes para la batalla.</h1>
+        <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" onclick="pelea()">Batalla!</button>
+        </form>
+    </div>
+    
+    <div class="container-fluid text-center" id="battle_arena" style="display: none;">
+        <h2>¡Batalla en curso!</h2>
+        <p id="status"></p>
+    
+        <div>
+            <h3 id="char1_name"></h3>
+            <p>HP: <span id="char1_hp">1000</span></p>
+            <div id="char1_controls">
+                <button id="char1_fuerte">⚔️ Ataque Fuerte</button>
+                <button id="char1_debil">🗡️ Ataque Débil</button>
+            </div>
+        </div>
+    
+        <div>
+            <h3 id="char2_name"></h3>
+            <p>HP: <span id="char2_hp">1000</span></p>
+            <div id="char2_controls">
+                <button id="char2_fuerte">⚔️ Ataque Fuerte</button>
+                <button id="char2_debil">🗡️ Ataque Débil</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}

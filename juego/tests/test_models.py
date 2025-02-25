@@ -63,7 +63,7 @@ class InventoryModelTest(TestCase):
         self.inventory.armors.add(self.armor1, self.armor2)
 
     def test_inventory_str(self):
-        self.assertEqual(str(self.inventory), "Equipo de Legolas")
+        self.assertEqual(str(self.inventory), "Equipo de Legolas, Armas: ['Arco', 'Espada corta'], Armadura: ['Armadura ligera', 'Armadura pesada']")
 
     def test_inventory_weapons(self):
         self.assertEqual(list(self.inventory.weapons.all()), [self.weapon1, self.weapon2])

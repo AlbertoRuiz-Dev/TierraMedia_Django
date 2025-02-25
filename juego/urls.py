@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from juego import views
+from juego.views import get_data
 
 app_name = 'juego'
 
@@ -16,9 +17,12 @@ urlpatterns = [
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
     path('faction/delete/<int:pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
+    path('faction/update/<int:pk>', views.FactionUpdateView.as_view(), name='factionUpdateView'),
+    path('character/update/<int:pk>', views.CharacterUpdateView.as_view(), name='characterUpdateView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
+    path('api/datos/', get_data, name='get_data'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),

@@ -35,9 +35,27 @@ class ArmorForm(forms.ModelForm):
         model = Armor
         fields = ['name', 'description', 'defense', 'image']
 
+class CharacterForm(forms.ModelForm):
+    class Meta:
+        model = Character
+        fields = ['name', 'location', 'faction', 'equipped_weapon', 'equipped_armor']
 
 
-class FactionCreateForm(forms.ModelForm):
+class CharacterBattleForm(forms.Form):
+    character = forms.ModelChoiceField(
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
+        widget=forms.Select(),
+        label="Selecciona un personaje:"
+    )
+
+    character2 = forms.ModelChoiceField(
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
+        widget=forms.Select(),
+        label="Selecciona otro personaje:"
+    )
+
+
+class FactionDefaultForm(forms.ModelForm):
     class Meta:
         model = Faction  # Vincula el formulario al modelo Faccion
         fields = ["name", "location"]  # Campos que se incluirán en el formulario
