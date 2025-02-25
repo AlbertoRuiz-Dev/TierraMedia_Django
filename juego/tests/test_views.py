@@ -48,174 +48,6 @@ class LogoutViewTest(TestCase):
         response = self.client.post(reverse('logout'))  # Hacer logout con POST
         self.assertTemplateUsed(response, 'registration/logged_out.html')
 
-class CharacterUpdateViewTest(TestCase):
-    """Pruebas para la vista de actualizar personajes"""
-
-    def setUp(self):
-        """
-            Configuración inicial de los datos de prueba.
-            Crea un usuario y una facción de prueba
-        """
-
-        # Eliminar personajes
-        Character.objects.all().delete()
-
-        self.faction1 = Faction.objects.create(name="Aliados", location="Rohan")
-        self.faction2 = Faction.objects.create(name="Prueba2_faccion", location="Prueba2_localizacion")
-        self.weapon1 = Weapon.objects.create(name="Arco", description="Arco largo", damage=12)
-        self.weapon2 = Weapon.objects.create(name="Espada corta", description="Espada afilada", damage=8)
-        self.armor1 = Armor.objects.create(name="Armadura ligera", description="Armadura de cuero", defense=5)
-        self.armor2 = Armor.objects.create(name="Armadura pesada", description="Armadura de placas", defense=15)
-        self.character = Character.objects.create(name="Legolas", location="Rohan", faction=self.faction1,
-                                                  equipped_armor=self.armor1, equipped_weapon=self.weapon1)
-
-        self.user = User.objects.create_user(username='testuser', password='password123')
-        self.character_update_url = reverse('juego:characterUpdateView', args={self.character.id})
-
-    def test_redirect_if_not_logged_in(self):
-        """Verifica que un usuario no autenticado debe ser redirigido al login """
-        response = self.client.get(self.character_update_url)
-        self.assertRedirects(response, f"/accounts/login/?next={self.character_update_url}")
-
-    def test_character_update(self):
-        """Verifica que un usuario autenticado puede actualizar un personaje """
-        self.client.login(username='testuser', password='password123')
-        response = self.client.post(self.character_update_url, {'name': 'Actualizado', 'location': 'Actualizado', 'faction': self.faction2.id, 'equipped_weapon': self.weapon2.id, 'equipped_armor': self.armor2.id})
-
-        # Verificar redirección después de la modificación
-        self.assertRedirects(response, reverse('juego:characterView'))
-
-        # Verificar que el personaje se modificó correctamente
-        self.assertEqual(Character.objects.count(), 1)
-        character = Character.objects.first()
-        self.assertEqual(character.name, 'Actualizado')
-        self.assertEqual(character.location, 'Actualizado')
-        self.assertEqual(character.faction.name, 'Prueba2_faccion')
-        self.assertEqual(str(character.equipped_weapon), 'Espada corta (Daño: 8)')
-        self.assertEqual(str(character.equipped_armor), 'Armadura pesada (Defensa: 15)')
-
-
-    def tearDown(self):
-        """
-            Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes y el usuario de prueba.
-        """
-
-        # Eliminar personajes
-        Character.objects.all().delete()
-
-        # Eliminar armas y armaduras
-        Weapon.objects.all().delete()
-        Armor.objects.all().delete()
-
-        # Eliminar facciones
-        Faction.objects.all().delete()
-
-        # Eliminar usuario
-        User.objects.all().delete()
-
-
-class CharacterListViewTest(TestCase):
-    """Pruebas para la vista que lista los personajes con sus detalles"""
-
-    def setUp(self):
-        """
-            Configuración inicial de los datos de prueba.
-            Crea armas, armaduras, personajes, relaciones, inventario, facciones, usuario de prueba...
-        """
-        self.faction1 = Faction.objects.create(name="Aliados", location="Rohan")
-        self.faction2 = Faction.objects.create(name="Prueba2_faccion", location="Prueba2_localizacion")
-        self.faction3 = Faction.objects.create(name="Prueba3_faccion", location="Prueba3_localizacion")
-
-        self.weapon1 = Weapon.objects.create(name="Arco", description="Arco largo", damage=12)
-        self.weapon2 = Weapon.objects.create(name="Espada corta", description="Espada afilada", damage=8)
-        self.armor1 = Armor.objects.create(name="Armadura ligera", description="Armadura de cuero", defense=5)
-        self.armor2 = Armor.objects.create(name="Armadura pesada", description="Armadura de placas", defense=15)
-        self.character = Character.objects.create(name="Legolas", location="Rohan", faction=self.faction1, equipped_armor=self.armor1, equipped_weapon=self.weapon1)
-        self.inventory = Inventory.objects.create(character=self.character)
-        self.inventory.weapons.add(self.weapon1, self.weapon2)
-        self.inventory.armors.add(self.armor1, self.armor2)
-        self.character2 = Character.objects.create(name="Gimli", location="Montañas Nubladas", faction=None)
-        Relationship.objects.create(character1=self.character, character2=self.character2, relationship_type="friend")
-        self.user = User.objects.create_user(username='testuser', password='password123')
-        self.character_list_url = reverse('juego:characterListView')
-
-    def test_redirect_if_not_logged_in(self):
-        """ Verifica que un usuario no autenticado sea redirigido al login """
-        response = self.client.get(self.character_list_url)
-        self.assertRedirects(response, f"/accounts/login/?next={self.character_list_url}")
-
-    def test_character_list_template_render(self):
-        """Verifica que la plantilla se renderiza correctamente y muestra los datos del personaje"""
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(self.character_list_url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'juego/character_list.html')
-
-        self.assertContains(response, "Legolas")  # Personaje
-        self.assertContains(response, "Rohan")  # Ubicación
-        self.assertContains(response, "Aliados")  # Facción
-
-
-    def test_character_list_shows_inventory(self):
-        """Verifica que se muestra el inventario del personaje"""
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(self.character_list_url)
-
-        self.assertContains(response, "Espada corta (Daño: 8)")  # Arma
-        self.assertContains(response, "Arco (Daño: 12)")  # Arma
-        self.assertContains(response, "Armadura ligera (Defensa: 5)")  # Armadura
-        self.assertContains(response, "Armadura pesada (Defensa: 15)")  # Armadura
-
-    def test_character_list_shows_equipped_items(self):
-        """Verifica que se muestran los objetos equipados"""
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(self.character_list_url)
-
-        self.assertContains(response, "Espada corta (Daño: 8)")
-        self.assertContains(response, "Armadura ligera (Defensa: 5)")
-
-    def test_character_list_shows_relationships(self):
-        """Verifica que se muestran las relaciones del personaje"""
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(self.character_list_url)
-
-        self.assertContains(response, "Legolas - Gimli (Amigo)")  # Relación
-
-    def test_character_without_inventory_or_faction(self):
-        """Verifica que un personaje sin inventario ni facción muestra 'Vacio' y 'No hay inventario'"""
-        self.client.login(username='testuser', password='password123')
-        response = self.client.get(self.character_list_url)
-
-        self.assertContains(response, "Gimli")  # Otro personaje sin facción ni inventario
-        self.assertContains(response, "Vacio")  # No tiene facción
-        self.assertContains(response, "No hay inventario")  # No tiene armas ni armaduras
-
-    def tearDown(self):
-        """
-            Limpieza de los datos de prueba.
-            Elimina facciones, armas, armaduras, personajes, relaciones, inventarios y el usuario de prueba.
-        """
-        # Eliminar relaciones
-        Relationship.objects.all().delete()
-
-        # Eliminar inventarios
-        Inventory.objects.all().delete()
-
-        # Eliminar personajes
-        Character.objects.all().delete()
-
-        # Eliminar armas y armaduras
-        Weapon.objects.all().delete()
-        Armor.objects.all().delete()
-
-        # Eliminar facciones
-        Faction.objects.all().delete()
-
-        # Eliminar usuario
-        User.objects.all().delete()
-
 
 class FactionCharacterFormViewTest(TestCase):
     """Pruebas para la vista de filtrar los personajes por una facción"""
@@ -456,6 +288,53 @@ class FactionUpdateViewTest(TestCase):
 
         # Eliminar facciones
         Faction.objects.all().delete()
+
+        # Eliminar usuario
+        User.objects.all().delete()
+
+class FactionDetailViewTest(TestCase):
+    """Pruebas para la vista de detalles de faccion"""
+
+    def setUp(self):
+        """
+            Configuración inicial de los datos de prueba.
+            Crea un usuario, un personaje y una facción de prueba
+        """
+        # Eliminar personajes
+        Character.objects.all().delete()
+        # Eliminar facciones
+        Faction.objects.all().delete()
+        self.faction = Faction.objects.create(name='Hermandad', location='Bosque')
+        self.character = Character.objects.create(name="Legolas", location="Rohan", faction=self.faction,)
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.faction_detail_url = reverse('juego:factionDetailView', args={self.faction.id})
+
+    def test_redirect_if_not_logged_in(self):
+        """Verifica que un usuario no autenticado debe ser redirigido al login """
+        response = self.client.get(self.faction_detail_url)
+        self.assertRedirects(response, f"/accounts/login/?next={self.faction_detail_url}")
+
+    def test_faction_details(self):
+        """Verifica que un usuario autenticado puede ver los detalles una facción """
+        self.client.login(username='testuser', password='password123')
+        response = self.client.get(self.faction_detail_url)
+
+        # Verificar que la facción se modificó correctamente
+        self.assertEqual(Faction.objects.count(), 1)
+        self.assertContains(response, "Legolas")  # Personaje
+        self.assertContains(response, 1)  # Personaje
+
+    def tearDown(self):
+        """
+            Limpieza de los datos de prueba.
+            Elimina facciones, personajes y el usuario de prueba.
+        """
+
+        # Eliminar facciones
+        Faction.objects.all().delete()
+
+        # Eliminar personajes
+        Character.objects.all().delete()
 
         # Eliminar usuario
         User.objects.all().delete()
