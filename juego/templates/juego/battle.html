@@ -48,8 +48,4 @@
         <!-- Campo oculto para almacenar el jugador cuyo turno es -->
         <input type="hidden" id="turn_player" value="{{ turn_player }}">
     </div>
-    <script>
-    // Inyectar la URL de la vista 'attackView' desde Django
-    let attackUrl = "{% url 'juego:attackView' %}";
-</script>
 {% endblock %}

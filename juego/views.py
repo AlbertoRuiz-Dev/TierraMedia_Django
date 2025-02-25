@@ -3,7 +3,6 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from juego.models import *
 from juego.forms import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -114,6 +113,18 @@ class AttackView(View):
             char1_id = battle_state.get('char1')
             char2_id = battle_state.get('char2')
 
+            # Obtener los personajes para estadísticas
+            character1 = Character.objects.select_related('equipped_armor', 'equipped_weapon').get(id=char1_id)
+            character2 = Character.objects.select_related('equipped_armor', 'equipped_weapon').get(id=char2_id)
+
+            # Obtener las estadísticas que se necesitarán
+            character1_accuracy = character1.equipped_weapon.accuracy if character1.equipped_weapon.accuracy else 50
+            character2_accuracy = character2.equipped_weapon.accuracy if character2.equipped_weapon.accuracy else 50
+            character1_critic = character1.equipped_weapon.critic if character1.equipped_weapon.critic else 10
+            character2_critic = character2.equipped_weapon.critic if character2.equipped_weapon.critic else 10
+            character1_defense = character1.equipped_armor.defense if character1.equipped_armor.defense else 0
+            character2_defense = character2.equipped_armor.defense if character2.equipped_armor.defense else 0
+
             # Determinar quién es el atacante y quién el defensor
             if attacker_id == char1_id:
                 defender_id = char2_id
@@ -136,7 +147,7 @@ class AttackView(View):
 
             # Determinar el daño según el tipo de ataque
             if ataque_type == 'fuerte':
-                damage = attacker.equipped_weapon.damage * 2
+                damage = attacker.equipped_weapon.damage * 1.5
             elif ataque_type == 'debil':
                 damage = attacker.equipped_weapon.damage
             else:
@@ -144,8 +155,18 @@ class AttackView(View):
 
             # Aplicar el daño al defensor
             if defender_id == char1_id:
+                accuracy = random.randint(0, 100) <= character2_accuracy
+                critic = random.randint(0, 100) <= character2_critic
+                damage = damage * 2 if critic else damage
+                damage = damage - character1_defense if damage > character1_defense else 0
+                damage = damage if accuracy else 0
                 char1_hp -= damage
             else:
+                accuracy = random.randint(0, 100) <= character1_accuracy
+                critic = random.randint(0, 100) <= character1_critic
+                damage = damage * 2 if critic else damage
+                damage = damage - character2_defense if damage > character2_defense else 0
+                damage = damage if accuracy else 0
                 char2_hp -= damage
 
             # Verificar si la batalla terminó
