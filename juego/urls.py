@@ -9,6 +9,7 @@ app_name = 'juego'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='indexView'),
+    path('api/datos/', get_data, name='get_data'),
     path('character/', views.CharacterListView.as_view(), name='characterView'),
     path('character/<int:pk>/', views.CharacterDetailView.as_view(), name='characterDetailView'),
     path('character/<int:pk>/update/', views.CharacterUpdateView.as_view(), name='characterUpdateView'),
@@ -24,7 +25,6 @@ urlpatterns = [
     path('faction/update/<int:pk>', views.FactionUpdateView.as_view(), name='factionUpdateView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
-    path('api/datos/', get_data, name='get_data'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'),
