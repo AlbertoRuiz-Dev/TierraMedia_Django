@@ -115,13 +115,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         context.setdefault("armors", Armor.objects.all())  # Mostrar todas las armaduras por defecto
         return context
 
-
-class RelationCreateView(LoginRequiredMixin, CreateView):
-    model = Relationship
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
-
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
     form_class = FactionDefaultForm  # Usamos ModelForm
@@ -234,7 +227,9 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 class RelationshipDeleteView(LoginRequiredMixin, DeleteView):
     model = Relationship
     template_name = "juego/relationship_delete.html"
-    success_url = "juego:relationshipListView"
+    success_url = reverse_lazy("juego:relationshipListView")
 
 class RelationshipUpdateView(LoginRequiredMixin, UpdateView):
-    pass
+    model = Relationship
+    template_name = "juego/relationship_update.html"
+    success_url = reverse_lazy("juego:relationshipListView")
