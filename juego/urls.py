@@ -35,12 +35,13 @@ urlpatterns = [
     path('equipment/armor/<int:pk>/edit/', views.ArmorUpdateView.as_view(), name='armorUpdateView'),
     path('equipment/armor/<int:pk>/delete/', views.ArmorDeleteView.as_view(), name='armorDeleteView'),
     path('equipment/create_armor/', views.ArmorCreateView.as_view(), name='armorCreateView'),
-    path('character/<int:pk>/inventory/add_weapon/', views.InventoryAddWeaponView.as_view(), name='inventory_add_weapon'),
-    path('character/<int:pk>/inventory/remove_weapon/<int:weapon_id>/', views.InventoryRemoveWeaponView.as_view(), name='inventory_remove_weapon'),
-    path('character/<int:pk>/inventory/add_armor/', views.InventoryAddArmorView.as_view(), name='inventory_add_armor'),
-    path('character/<int:pk>/inventory/remove_armor/<int:armor_id>/', views.InventoryRemoveArmorView.as_view(), name='inventory_remove_armor'),
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('character/<int:pk>/inventory/add_items/', views.InventoryAddItemsView.as_view(), name='inventory_add_items'),
+    path('character/<int:pk>/equip_weapon/', views.EquipWeaponView.as_view(), name='equip_weapon'),
+    path('character/<int:pk>/equip_armor/', views.EquipArmorView.as_view(), name='equip_armor'),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 """
 
