@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -40,7 +41,15 @@ class EquipmentView(LoginRequiredMixin, TemplateView):
     template_name = 'juego/equipment.html'
 
 class FactionView(LoginRequiredMixin, TemplateView):
+    model = Faction
     template_name = 'juego/faction.html'
+    context_object_name = 'faction_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        factions = Faction.objects.prefetch_related('members').all()
+        context['faction_list'] = factions
+        return context
 
 
 @api_view(['GET'])
@@ -137,6 +146,18 @@ class FactionCreateView(LoginRequiredMixin, CreateView):
     template_name = 'juego/faction_create.html'
     success_url = reverse_lazy("juego:factionView")
 
+class FactionDetailView(LoginRequiredMixin, DetailView):
+    # FALTAN TEST DE ESTA CLASE
+    model = Faction
+    template_name = 'juego/faction_detail.html'
+    context_object_name = 'faction'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        faction = Faction.objects.annotate(member_count=Count('members')).get(id=self.kwargs['pk'])
+        context['faction'] = faction
+        return context
+
 class FactionUpdateView(LoginRequiredMixin, UpdateView):
     model = Faction
     form_class = FactionDefaultForm
@@ -173,7 +194,6 @@ class WeaponListView(LoginRequiredMixin, ListView):
     model = Weapon
     template_name = 'juego/weapon.html'
     context_object_name = 'weapons'
-
 
 class WeaponDetailView(LoginRequiredMixin, DetailView):
     model = Weapon
