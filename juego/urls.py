@@ -9,23 +9,23 @@ app_name = 'juego'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='indexView'),
-    path('character/', views.CharacterView.as_view(), name='characterView'),
+    path('character/', views.CharacterListView.as_view(), name='characterView'),
+    path('character/<int:pk>/', views.CharacterDetailView.as_view(), name='characterDetailView'),
+    path('character/<int:pk>/update/', views.CharacterUpdateView.as_view(), name='characterUpdateView'),
+    path('character/<int:pk>/delete/', views.CharacterDeleteView.as_view(), name='characterDeleteView'),
+    path('character/create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
     path('equipment/', views.EquipmentView.as_view(), name='equipmentView'),
     path('faction/', views.FactionView.as_view(), name='factionView'),
-    path('character/list_character/', views.CharacterListView.as_view(), name='characterListView'),
     path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'),
     path('character/list_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'),
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'),
     path('faction/delete/<int:pk>', views.FactionDeleteView.as_view(), name='factionDeleteView'),
     path('faction/detail/<int:pk>', views.FactionDetailView.as_view(), name='factionDetailView'),
     path('faction/update/<int:pk>', views.FactionUpdateView.as_view(), name='factionUpdateView'),
-    path('character/update/<int:pk>', views.CharacterUpdateView.as_view(), name='characterUpdateView'),
     path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'),
-    path('character_create/', views.CharacterCreateView.as_view(), name='characterCreateView'),
     path('battle/', views.BattleView.as_view(), name='battleView'),
     path('api/datos/', get_data, name='get_data'),
     path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'),
-    path('character/inventory/', views.InventoryUpdateView.as_view(), name='inventoryUpdateView'),
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'),
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'),
     path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'),
@@ -36,8 +36,13 @@ urlpatterns = [
     path('equipment/armor/<int:pk>/edit/', views.ArmorUpdateView.as_view(), name='armorUpdateView'),
     path('equipment/armor/<int:pk>/delete/', views.ArmorDeleteView.as_view(), name='armorDeleteView'),
     path('equipment/create_armor/', views.ArmorCreateView.as_view(), name='armorCreateView'),
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('character/<int:pk>/inventory/add_items/', views.InventoryAddItemsView.as_view(), name='inventory_add_items'),
+    path('character/<int:pk>/equip_weapon/', views.EquipWeaponView.as_view(), name='equip_weapon'),
+    path('character/<int:pk>/equip_armor/', views.EquipArmorView.as_view(), name='equip_armor'),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 """
 

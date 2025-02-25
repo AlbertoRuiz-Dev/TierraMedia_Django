@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -66,7 +67,7 @@ class BattleView(LoginRequiredMixin, FormView):
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
     model = Character
-
+    template_name = "juego/character_detail.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -77,14 +78,49 @@ class CharacterUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'juego/character_update.html'
     success_url = reverse_lazy("juego:characterView")
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.object and hasattr(self.object, 'inventory'):
+            # Limitar equipped_weapon y equipped_armor al inventario del personaje
+            form.fields['equipped_weapon'].queryset = self.object.inventory.weapons.all()
+            form.fields['equipped_armor'].queryset = self.object.inventory.armors.all()
+            # Permitir "Ninguna" como opción
+            form.fields['equipped_weapon'].empty_label = "Ninguna"
+            form.fields['equipped_armor'].empty_label = "Ninguna"
+        else:
+            # Si no hay inventario, no permitir selección
+            form.fields['equipped_weapon'].queryset = Weapon.objects.none()
+            form.fields['equipped_armor'].queryset = Armor.objects.none()
+        return form
+
 class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
-    template_name = 'juego/character_list.html'
+    template_name = 'juego/character.html'
     context_object_name = 'character_list'
+
+    def get_queryset(self):
+        # Optimizamos la consulta con select_related y prefetch_related
+        return Character.objects.select_related(
+            'faction', 'equipped_weapon', 'equipped_armor'
+        ).prefetch_related(
+            'inventory__weapons', 'inventory__armors'
+        ).all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        characters = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').prefetch_related('relationships1__character2', 'relationships2__character1', 'inventory__armors', 'inventory__weapons').all()
+        # Añadimos datos adicionales si es necesario
+        context['title'] = 'Lista de Personajes'
+        return context
+
+
+class CharacterDeleteView(LoginRequiredMixin, DeleteView):
+    model = Character
+    template_name = 'juego/character_delete.html'
+    success_url = reverse_lazy("juego:characterView")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        characters = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all()
         context['character_list'] = characters
         return context
 
@@ -172,20 +208,16 @@ class FactionDeleteView(LoginRequiredMixin, DeleteView):
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
+    form_class = CharacterForm
+    template_name = 'juego/character_create.html'
+    success_url = reverse_lazy('juego:characterView')
 
-
+    def form_valid(self, form):
+        self.object = form.save()
+        Inventory.objects.create(character=self.object)
+        return super().form_valid(form)
 
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
-    model = Character
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
-
-
-class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
     fields = ['', '']
     template_name = ''
@@ -246,3 +278,111 @@ class ArmorDeleteView(LoginRequiredMixin,DeleteView):
     template_name = "juego/armor_delete.html"
     success_url = reverse_lazy('juego:armorListView')
 
+class InventoryAddItemsView(LoginRequiredMixin, FormView):
+    template_name = 'juego/inventory_add_items.html'
+    form_class = InventoryAddItemsForm
+    success_url = reverse_lazy('juego:characterView')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        kwargs['character'] = character
+        return kwargs
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        try:
+            inventory = character.inventory
+        except Character.inventory.RelatedObjectDoesNotExist:
+            inventory = Inventory.objects.create(character=character)
+
+        # Obtener los ítems seleccionados en el formulario
+        selected_weapons = form.cleaned_data['weapons']
+        selected_armors = form.cleaned_data['armors']
+
+        # Añadir o eliminar armas del inventario
+        current_weapons = set(inventory.weapons.all())
+        weapons_to_add = set(selected_weapons) - current_weapons
+        weapons_to_remove = current_weapons - set(selected_weapons)
+        inventory.weapons.add(*weapons_to_add)
+        inventory.weapons.remove(*weapons_to_remove)
+
+        # Añadir o eliminar armaduras del inventario
+        current_armors = set(inventory.armors.all())
+        armors_to_add = set(selected_armors) - current_armors
+        armors_to_remove = current_armors - set(selected_armors)
+        inventory.armors.add(*armors_to_add)
+        inventory.armors.remove(*armors_to_remove)
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['character'] = get_object_or_404(Character, pk=self.kwargs['pk'])
+        return context
+
+class EquipWeaponView(LoginRequiredMixin, FormView):
+    template_name = 'juego/equip_weapon.html'
+    form_class = EquipWeaponForm
+    success_url = reverse_lazy('juego:characterView')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        try:
+            inventory = character.inventory
+            kwargs['inventory_weapons'] = inventory.weapons.all()
+        except Character.inventory.RelatedObjectDoesNotExist:
+            kwargs['inventory_weapons'] = []
+        return kwargs
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        new_weapon = form.cleaned_data['weapon']
+        try:
+            inventory = character.inventory
+        except Character.inventory.RelatedObjectDoesNotExist:
+            inventory = Inventory.objects.create(character=character)
+        if character.equipped_weapon:
+            inventory.weapons.add(character.equipped_weapon)  # Añadir el arma equipada actual al inventario
+        character.equipped_weapon = new_weapon
+        character.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['character'] = get_object_or_404(Character, pk=self.kwargs['pk'])
+        return context
+
+class EquipArmorView(LoginRequiredMixin, FormView):
+    template_name = 'juego/equip_armor.html'
+    form_class = EquipArmorForm
+    success_url = reverse_lazy('juego:characterView')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        try:
+            inventory = character.inventory
+            kwargs['inventory_armors'] = inventory.armors.all()
+        except Character.inventory.RelatedObjectDoesNotExist:
+            kwargs['inventory_armors'] = []
+        return kwargs
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        new_armor = form.cleaned_data['armor']
+        try:
+            inventory = character.inventory
+        except Character.inventory.RelatedObjectDoesNotExist:
+            inventory = Inventory.objects.create(character=character)
+        if character.equipped_armor:
+            inventory.armors.add(character.equipped_armor)  # Añadir la armadura equipada actual al inventario
+        character.equipped_armor = new_armor
+        character.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['character'] = get_object_or_404(Character, pk=self.kwargs['pk'])
+        return context

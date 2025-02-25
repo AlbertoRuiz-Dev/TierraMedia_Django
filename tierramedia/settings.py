@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'juego.apps.JuegoConfig',
+    'django_extensions',
     'debug_toolbar',
     'django_json_widget',
     'rest_framework',
