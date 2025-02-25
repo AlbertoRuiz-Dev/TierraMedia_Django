@@ -3,13 +3,14 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from juego import views
-from juego.views import get_data
+from juego.views import get_data, get_factions_member_count
 
 app_name = 'juego'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='indexView'),
     path('api/datos/', get_data, name='get_data'),
+    path('api/faction_member_count/', get_factions_member_count, name='faction_member_count'),
     path('character/', views.CharacterListView.as_view(), name='characterView'),
     path('character/<int:pk>/', views.CharacterDetailView.as_view(), name='characterDetailView'),
     path('character/<int:pk>/update/', views.CharacterUpdateView.as_view(), name='characterUpdateView'),

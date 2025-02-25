@@ -7,8 +7,10 @@ from juego.models import *
 from juego.forms import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
+
 from juego.models import Character
-from juego.serializers import CharacterSerializer
+from juego.serializers import *
 
 # Create your views here.
 
@@ -58,6 +60,20 @@ def get_data(request):
     datos = Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all()
     serializer = CharacterSerializer(datos, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_factions_member_count(request):
+    factions = Faction.objects.all()
+    data = []
+
+    for faction in factions:
+        member_count = faction.members.count()  # Cuenta el número de miembros
+        data.append({
+            'name': faction.name,
+            'member_count': member_count
+        })
+
+    return Response(data)
 
 
 class BattleView(LoginRequiredMixin, FormView):
