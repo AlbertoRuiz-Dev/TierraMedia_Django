@@ -184,7 +184,17 @@ python manage.py runserver
 Ejecuta los tests con:
 
 ```bash
-docker compose exec web python manage.py juego/tests/
+$ docker compose exec web python manage.py test juego/tests/
+Found 28 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+............................
+----------------------------------------------------------------------
+Ran 28 tests in 8.713s
+
+OK
+Destroying test database for alias 'default'...
+
 ```
 
 ## 📌 Contribución
