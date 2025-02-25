@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import *
+from django.db.models import Q
+
 
 class WeaponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,7 +30,7 @@ class FactionSerializer(serializers.ModelSerializer):
 class RelationshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relationship
-        fields = ['character1', 'character2', 'relationship_type']
+        fields = ['character1_id', 'character2_id', 'relationship_type']
 
 class InventorySerializer(serializers.ModelSerializer):
     # Usamos los serializers anidados para las armas y armaduras
@@ -37,7 +39,7 @@ class InventorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inventory
-        fields = ['character','weapons', 'armors']
+        fields = ['character_id','weapons', 'armors']
 
 class FactionCharacterCountModelSerializer(serializers.ModelSerializer):
     character_count = serializers.SerializerMethodField()
@@ -66,12 +68,9 @@ class CharacterSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'location', 'image', 'faction', 'equipped_weapon', 'equipped_armor', 'relationships', 'inventory']
 
     def get_relationships(self, obj):
-        # Obtener las relaciones del personaje (Character)
-        relationships_1 = Relationship.objects.filter(character1=obj)
-        relationships_2 = Relationship.objects.filter(character2=obj)
-
-        # Combinar ambas listas de relaciones y serializarlas
-        all_relationships = relationships_1 | relationships_2  # Usamos el operador OR para combinar
-
+        # Usamos Q para combinar las condiciones en una sola consulta
+        relationships = Relationship.objects.filter(
+            Q(character1=obj) | Q(character2=obj)
+        )
         # Serializamos las relaciones
-        return RelationshipSerializer(all_relationships, many=True).data
+        return RelationshipSerializer(relationships, many=True).data

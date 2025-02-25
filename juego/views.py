@@ -70,7 +70,7 @@ def get_factions_member_count(request):
     return Response(data)
 
 class FactionViewSet(viewsets.ModelViewSet):
-    queryset = Faction.objects.all()
+    queryset = Faction.objects.all().prefetch_related('members')
     serializer_class = FactionSerializer
 
 class ArmorViewSet(viewsets.ModelViewSet):
@@ -86,11 +86,11 @@ class RelationshipViewSet(viewsets.ModelViewSet):
     serializer_class = RelationshipSerializer  # Usa el RelationshipSerializer para la serialización
 
 class InventoryViewSet(viewsets.ModelViewSet):
-    queryset = Inventory.objects.all()
+    queryset = Inventory.objects.all().prefetch_related('armors', 'weapons')
     serializer_class = InventorySerializer
 
 class CharacterViewSet(viewsets.ModelViewSet):
-    queryset = Character.objects.all()  # Puedes usar select_related para optimizar las consultas
+    queryset = Character.objects.all().select_related('faction', 'inventory', 'equipped_armor', 'equipped_weapon')
     serializer_class = CharacterSerializer
 
 class BattleView(LoginRequiredMixin, FormView):
