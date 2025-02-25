@@ -2,8 +2,23 @@
 {% block title %}Editar facción{% endblock %}
 {% block content %}
 
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update">
-</form>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="text-center">
+        <h1 class="text-light mb-4">Actualiza la facción:</h1>
+        <p>{{ object }}</p>
+        <form method="post" class="p-4 border rounded-3 shadow-lg" style="background-color: rgba(0, 0, 0, 0.7); color: white; width: 400px;">
+            {% csrf_token %}
+            <div class="mb-4">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Actualizar</button>
+        </form>
+        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary mt-3">Volver</a>
+
+    </div>
+
+</div>
+
+
 {% endblock %}
