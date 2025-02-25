@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Borrar {{ character.name }} / Tierra Media{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">¿Borrar {{ character.name }}?</h1>
+        <div class="card bg-dark text-white shadow p-4">
+            <p class="card-text text-center">
+                ¿Estás seguro de que quieres borrar a {{ character.name }}? Esta acción no se puede deshacer.
+            </p>
+            <form method="post" class="text-center">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Confirmar Borrado</button>
+                <a href="{% url 'juego:characterDetailView' character.pk %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            background-color: #2d2d2d; /* Darker background for the card */
+        }
+    </style>
+{% endblock %}

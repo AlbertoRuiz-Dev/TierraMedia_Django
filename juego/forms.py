@@ -38,8 +38,23 @@ class ArmorForm(forms.ModelForm):
 class CharacterForm(forms.ModelForm):
     class Meta:
         model = Character
-        fields = ['name', 'location', 'faction', 'equipped_weapon', 'equipped_armor']
+        fields = ['name', 'location', 'faction', 'equipped_weapon', 'equipped_armor','image']
 
+class WeaponAddForm(forms.Form):
+    weapon_id = forms.ModelChoiceField(
+        queryset=Weapon.objects.all(),
+        empty_label="Selecciona un arma",
+        required=True,
+        label="Arma"
+    )
+
+class ArmorAddForm(forms.Form):
+    armor_id = forms.ModelChoiceField(
+        queryset=Armor.objects.all(),
+        empty_label="Selecciona una armadura",
+        required=True,
+        label="Armadura"
+    )
 
 class CharacterBattleForm(forms.Form):
     character = forms.ModelChoiceField(

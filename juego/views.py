@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -57,7 +58,7 @@ class BattleView(LoginRequiredMixin, FormView):
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):
     model = Character
-
+    template_name = "juego/character_detail.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -68,10 +69,24 @@ class CharacterUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'juego/character_update.html'
     success_url = reverse_lazy("juego:characterView")
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.object and hasattr(self.object, 'inventory'):
+            # Limit equipped_weapon to weapons in the character's inventory
+            form.fields['equipped_weapon'].queryset = self.object.inventory.weapons.all()
+            # Limit equipped_armor to armors in the character's inventory
+            form.fields['equipped_armor'].queryset = self.object.inventory.armors.all()
+        return form
+
 class CharacterListView(LoginRequiredMixin, ListView):
     model = Character
-    template_name = 'juego/character_list.html'
+    template_name = 'juego/character.html'
     context_object_name = 'character_list'
+
+class CharacterDeleteView(LoginRequiredMixin, DeleteView):
+    model = Character
+    template_name = 'juego/character_delete.html'
+    success_url = reverse_lazy("juego:factionView")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,20 +167,26 @@ class FactionDeleteView(LoginRequiredMixin, DeleteView):
 
 class CharacterCreateView(LoginRequiredMixin, CreateView):
     model = Character
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
+    form_class = CharacterForm
+    template_name = 'juego/character_create.html'
+    success_url = reverse_lazy('characterListView')
 
+    def form_valid(self, form):
+        # Create the character first
+        self.object = form.save()
+        # Create an associated Inventory instance
+        Inventory.objects.create(character=self.object)
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # For new characters, equipped_weapon and equipped_armor should default to None or empty
+        form.fields['equipped_weapon'].queryset = Weapon.objects.none()
+        form.fields['equipped_armor'].queryset = Armor.objects.none()
+        return form
 
 
 class LocationUpdateView(LoginRequiredMixin, UpdateView):
-    model = Character
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
-
-
-class InventoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Character
     fields = ['', '']
     template_name = ''
@@ -227,3 +248,112 @@ class ArmorDeleteView(LoginRequiredMixin,DeleteView):
     template_name = "juego/armor_delete.html"
     success_url = reverse_lazy('juego:armorListView')
 
+class InventoryAddWeaponView(LoginRequiredMixin, FormView):
+    template_name = 'juego/inventory_add_weapon.html'
+    success_url = reverse_lazy('juego:characterDetailView')
+
+    def get_form_class(self):
+        return WeaponAddForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        # Limit weapons to those not already in the character's inventory
+        form.fields['weapon_id'].queryset = Weapon.objects.exclude(inventory_weapons__character=character)
+        return form
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        weapon = form.cleaned_data['weapon_id']
+        character.inventory.weapons.add(weapon)
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        context['character'] = character
+        return context
+
+class InventoryRemoveWeaponView(LoginRequiredMixin, FormView):
+    template_name = 'juego/inventory_remove_weapon.html'
+    success_url = reverse_lazy('juego:characterDetailView')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        weapon_id = self.kwargs.get('weapon_id')
+        weapon = get_object_or_404(Weapon, pk=weapon_id) if weapon_id else None
+        context['character'] = character
+        context['weapon'] = weapon
+        return context
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        weapon_id = self.kwargs.get('weapon_id')
+        if weapon_id:
+            try:
+                weapon = Weapon.objects.get(pk=weapon_id)
+                character.inventory.weapons.remove(weapon)
+            except Weapon.DoesNotExist:
+                pass  # Silently fail if weapon doesn’t exist
+        return redirect(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        # Handle GET request to show the confirmation page
+        return super().get(request, *args, **kwargs)
+
+
+
+class InventoryAddArmorView(LoginRequiredMixin, FormView):
+    template_name = 'juego/inventory_add_armor.html'
+    success_url = reverse_lazy('juego:characterDetailView')
+
+    def get_form_class(self):
+        return ArmorAddForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        # Limit armors to those not already in the character's inventory
+        form.fields['armor_id'].queryset = Armor.objects.exclude(inventory_armors__character=character)
+        return form
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        armor = form.cleaned_data['armor_id']
+        character.inventory.armors.add(armor)
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        context['character'] = character
+        return context
+
+class InventoryRemoveArmorView(LoginRequiredMixin, FormView):
+    template_name = 'juego/inventory_remove_armor.html'
+    success_url = reverse_lazy('juego:characterDetailView')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        armor_id = self.kwargs.get('armor_id')
+        armor = get_object_or_404(Armor, pk=armor_id) if armor_id else None
+        context['character'] = character
+        context['armor'] = armor
+        return context
+
+    def form_valid(self, form):
+        character = get_object_or_404(Character, pk=self.kwargs['pk'])
+        armor_id = self.kwargs.get('armor_id')
+        if armor_id:
+            try:
+                armor = Armor.objects.get(pk=armor_id)
+                character.inventory.armors.remove(armor)
+            except Armor.DoesNotExist:
+                pass  # Silently fail if armor doesn’t exist
+        return redirect(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        # Handle GET request to show the confirmation page
+        return super().get(request, *args, **kwargs)

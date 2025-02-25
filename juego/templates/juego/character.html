@@ -1,5 +1,150 @@
 {% extends 'base.html' %}
-{% block title %}Personaje / Tierra Media{% endblock %}
+{% block title %}Lista de Personajes / Tierra Media{% endblock %}
 {% block content %}
-    <h1>Contenido de personajes.</h1>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">Lista de Personajes de Tierra Media</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for character in character_list %}
+                <div class="col">
+                    <div class="card h-100 bg-dark text-white border-light shadow">
+                        <img src="{{ character.image.url }}" class="card-img-top" alt="{{ character.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ character.name }}</h5>
+                            <p class="card-text">
+                                <strong>Facción:</strong>
+                                {% if character.faction %}
+                                    {{ character.faction.name }}
+                                {% else %}
+                                    Sin Facción
+                                {% endif %}<br>
+                                <strong>Ubicación:</strong> {{ character.location }}<br>
+                                <strong>Arma Equipada:</strong>
+                                {% if character.equipped_weapon %}
+                                    {{ character.equipped_weapon.name }}
+                                {% else %}
+                                    Ninguna
+                                {% endif %}<br>
+                                <strong>Armadura Equipada:</strong>
+                                {% if character.equipped_armor %}
+                                    {{ character.equipped_armor.name }}
+                                {% else %}
+                                    Ninguna
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-dark d-flex justify-content-around">
+                            {% if character.pk %}
+                                <a href="{% url 'juego:characterDetailView' character.pk %}" class="btn btn-info btn-sm">Detalle</a>
+                                <a href="{% url 'juego:characterUpdateView' character.pk %}" class="btn btn-warning btn-sm">Modificar</a>
+                                <a href="{% url 'juego:characterDeleteView' character.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                            {% else %}
+                                <span class="text-white">No se pueden realizar acciones: ID no válido.</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Inventory Section for Each Character -->
+                        <div class="card-body mt-3">
+                            <h6 class="card-subtitle mb-2 text-white">Inventario</h6>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <h6 class="mb-2 text-white">Armas en Inventario</h6>
+                                    <ul class="list-group list-group-flush">
+                                        {% for weapon in character.inventory.weapons.all %}
+                                            <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                                                {{ weapon.name }}
+                                                <div>
+                                                    {% if character.pk and weapon.pk %}
+                                                        <a href="{% url 'juego:inventory_remove_weapon' character.pk weapon.pk %}" class="btn btn-danger btn-sm">Quitar</a>
+                                                    {% else %}
+                                                        <span class="text-white">No se puede quitar: ID no válido.</span>
+                                                    {% endif %}
+                                                </div>
+                                            </li>
+                                        {% empty %}
+                                            <li class="list-group-item bg-dark text-white">No hay armas en el inventario.</li>
+                                        {% endfor %}
+                                        {% if character.pk %}
+                                            <div class="mt-2">
+                                                <a href="{% url 'juego:inventory_add_weapon' character.pk %}" class="btn btn-danger btn-sm">Añadir Arma</a>
+                                            </div>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="col-12 col-md-6 mt-3 mt-md-0">
+                                    <h6 class="mb-2 text-white">Armaduras en Inventario</h6>
+                                    <ul class="list-group list-group-flush">
+                                        {% for armor in character.inventory.armors.all %}
+                                            <li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                                                {{ armor.name }}
+                                                <div>
+                                                    {% if character.pk and armor.pk %}
+                                                        <a href="{% url 'juego:inventory_remove_armor' character.pk armor.pk %}" class="btn btn-danger btn-sm">Quitar</a>
+                                                    {% else %}
+                                                        <span class="text-white">No se puede quitar: ID no válido.</span>
+                                                    {% endif %}
+                                                </div>
+                                            </li>
+                                        {% empty %}
+                                            <li class="list-group-item bg-dark text-white">No hay armaduras en el inventario.</li>
+                                        {% endfor %}
+                                        {% if character.pk %}
+                                            <div class="mt-2">
+                                                <a href="{% url 'juego:inventory_add_armor' character.pk %}" class="btn btn-danger btn-sm">Añadir Armadura</a>
+                                            </div>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-white">No hay personajes registrados.</p>
+            {% endfor %}
+        </div>
+        <!-- Button to Create New Character -->
+        <div class="text-center mt-4">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'juego:characterCreateView' %}" class="btn btn-danger btn-lg">Crear Nuevo Personaje</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .card {
+            background-color: #2d2d2d; /* Darker background for cards */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5); /* Red shadow on hover for Tierra Media theme */
+        }
+        .card-title {
+            color: #e74c3c; /* Red for character names, matching Tierra Media theme */
+        }
+        .card-text {
+            color: #f8f9fa; /* Light text for readability */
+        }
+        .bg-dark {
+            background-color: #1a1a1a !important; /* Ensure dark background consistency */
+        }
+        .card-img-top {
+            object-fit: cover;
+            height: 200px; /* Fixed height for consistency */
+            border-bottom: 2px solid #e74c3c; /* Red border for Tierra Media theme */
+        }
+        .card-footer {
+            border-top: 2px solid #e74c3c; /* Red border for footer */
+        }
+        .list-group-item {
+            border-color: #e74c3c; /* Red border for list items */
+        }
+        .btn-info { background-color: #3498db; border: none; }
+        .btn-warning { background-color: #f1c40f; border: none; }
+        .btn-danger { background-color: #e74c3c; border: none; }
+        .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+            opacity: 0.8;
+            color: white;
+        }
+    </style>
 {% endblock %}

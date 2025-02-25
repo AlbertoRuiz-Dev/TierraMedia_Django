@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Añadir Arma a {{ character.name }} / Tierra Media{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">Añadir Arma a {{ character.name }}</h1>
+        <form method="post" class="card bg-dark text-white shadow p-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_weapon_id" class="form-label">Selecciona una Arma:</label>
+                {{ form.weapon_id }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-danger">Añadir Arma</button>
+                <a href="{% url 'juego:characterDetailView' character.pk %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+            {% if form.errors %}
+                <div class="alert alert-danger mt-3">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <style>
+        .form-label {
+            color: #e74c3c; /* Red labels for Tierra Media theme */
+        }
+        .form-select {
+            background-color: #1a1a1a; /* Dark input background */
+            border: 1px solid #e74c3c; /* Red border for inputs */
+            color: #f8f9fa; /* Light text for readability */
+        }
+        .form-select:focus {
+            background-color: #1a1a1a;
+            border-color: #c0392b; /* Darker red on focus */
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+        }
+    </style>
+{% endblock %}
