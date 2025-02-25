@@ -50,7 +50,7 @@ class Character(models.Model):
 
     def __str__(self):
         faction_name = self.faction.name if self.faction else "Sin Facción"
-        return f"{self.name} ({faction_name}) - Ubicación: {self.location}"
+        return f"{self.name} ({faction_name})"
 
 class Inventory(models.Model):
     character = models.OneToOneField(Character, on_delete=models.CASCADE, related_name="inventory")
