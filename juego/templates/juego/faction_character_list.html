@@ -19,7 +19,7 @@
             {% for character in characters %}
                 <li class="d-flex align-items-center mb-3 p-2 border rounded-3" style="background-color: rgba(255, 255, 255, 0.2);">
                     <div class="d-flex w-100 align-items-center">
-                        <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i>
+                        <img src="{{ character.image.url }}" class="me-2" alt="{{ character.name }}" style="height: 32px; width: 32px ">
                         <span class="fw-bold">{{ character.name }}</span>
                         <span class="ms-auto text-end">{{ character.faction.name }}</span>
                     </div>
@@ -29,9 +29,13 @@
             {% endfor %}
         </ul>
 
-        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary mt-3">Volver</a>
+        <!-- Botón centrado -->
+        <div class="text-center mt-3">
+            <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
     </div>
 </div>
+
 
 
 

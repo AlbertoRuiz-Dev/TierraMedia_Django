@@ -21,8 +21,11 @@
             {% endfor %}
         </div>
 
-        <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mt-4">Filtrar personajes por facción</a>
-        <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mt-4">Crear facción</a>
+        <!-- Botones centrados -->
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mx-2">Filtrar personajes por facción</a>
+        <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mx-2">Crear facción</a>
+    </div>
 
     </div>
 

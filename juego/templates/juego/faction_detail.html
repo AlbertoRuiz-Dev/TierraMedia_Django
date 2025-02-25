@@ -12,8 +12,7 @@
             <ul class="list-unstyled text-light">
                 {% for m in faction.members.all %}
                     <li class="d-flex align-items-center mb-3 p-2 border rounded-3" style="background-color: rgba(255, 255, 255, 0.2);">
-                        <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i> <!-- Icono de persona -->
-                        <span>{{ m.name }}</span>
+                        <img src="{{ m.image.url }}" class="me-2" alt="{{ m.name }}" style="height: 32px; width: 32px ">                        <span>{{ m.name }}</span>
                     </li>
                 {% endfor %}
             </ul>
