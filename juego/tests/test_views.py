@@ -5,7 +5,7 @@ from django.test import Client
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-
+from django.contrib.auth.models import User
 
 
 
@@ -64,11 +64,6 @@ class LogoutViewTest(TestCase):
         self.assertTemplateUsed(response, 'registration/logged_out.html')  # Verifica que la plantilla 'logged_out.html' se haya usado
 
         # Si la plantilla 'logged_out.html' es usada, eso significa que el logout se realizó correctamente y el usuario fue desconectado.
-
-from django.test import TestCase
-from django.urls import reverse
-from django.contrib.auth.models import User
-from juego.models import Faction, Character
 
 class FactionViewTest(TestCase):
     """Pruebas para la vista que muestra una lista de facciones"""
