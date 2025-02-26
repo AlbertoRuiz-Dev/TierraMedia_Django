@@ -1487,6 +1487,7 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
 
 Esta vista permite la edición de datos de los personajes, así como su creación y eliminación dentro del sistema.
 
+
 ```python
 class CharacterModifyViewSet(viewsets.ModelViewSet):
     """
