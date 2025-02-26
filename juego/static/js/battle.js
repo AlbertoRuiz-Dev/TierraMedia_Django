@@ -45,8 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Si se acabó el juego o algún personaje tiene 0 HP, mostrar mensaje de fin de juego
                 if (data.char1_hp <= 0 || data.char2_hp <= 0) {
-                    alert('¡El juego ha terminado!');
-                    // Aquí podrías redirigir a otra página o actualizar la UI de forma más visual.
+                    document.getElementById('frase').textContent = "Prueba";
                 }
             }
         })
