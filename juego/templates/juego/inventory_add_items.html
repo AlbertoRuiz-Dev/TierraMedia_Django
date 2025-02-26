@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Añadir al Inventario de {{ character.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5 text-light display-5 fw-bold text-shadow">Inventario de {{ character.name }}</h1>
+    <div class="card bg-dark text-light border-0 shadow-lg rounded-3 p-4">
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-12 mb-4">
+                <label class="form-label text-danger fw-bold fs-4">Armas</label>
+                <div class="d-flex flex-wrap gap-3">
+                    {% for weapon in form.weapons %}
+                        <div class="form-check">
+                            {{ weapon.tag }}
+                            <label class="form-check-label text-light fs-5" for="{{ weapon.id_for_label }}">
+                                {{ weapon.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.weapons.errors %}
+                    <div class="text-danger mt-2">{{ form.weapons.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 mb-4">
+                <label class="form-label text-danger fw-bold fs-4">Armaduras</label>
+                <div class="d-flex flex-wrap gap-3">
+                    {% for armor in form.armors %}
+                        <div class="form-check">
+                            {{ armor.tag }}
+                            <label class="form-check-label text-light fs-5" for="{{ armor.id_for_label }}">
+                                {{ armor.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.armors.errors %}
+                    <div class="text-danger mt-2">{{ form.armors.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-danger px-4 py-2 fs-5 fw-bold rounded-0 shadow-sm">
+                    Actualizar Inventario
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos personalizados -->
+<style>
+    .form-check {
+        margin-bottom: 0.5rem;
+    }
+    .form-check-input:checked {
+        background-color: #e63946;
+        border-color: #e63946;
+    }
+    .form-check-label {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+    .btn-danger {
+        background-color: #e63946;
+        border-color: #e63946;
+        transition: background-color 0.3s ease;
+    }
+    .btn-danger:hover {
+        background-color: #d62828;
+        border-color: #d62828;
+    }
+    .text-danger {
+        color: #e63946 !important;
+    }
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .display-5 {
+        font-size: 2rem;
+    }
+    body {
+        background-color: #1a1a1a;
+        color: #f8f9fa;
+    }
+</style>
+
+<!-- FontAwesome -->
+<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+{% endblock %}

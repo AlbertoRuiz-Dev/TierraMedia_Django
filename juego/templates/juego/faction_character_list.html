@@ -3,21 +3,40 @@
 {% block title %}Lista de facciones{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Filtrar</button>
-</form>
 
-<h2>Personajes</h2>
-<ul>
-    {% for character in characters %}
-        <li>{{ character.name }} - {{ character.faction.name }}</li>
-    {% empty %}
-        <li>No hay personajes para esta facción.</li>
-    {% endfor %}
-</ul>
+<div class="container-fluid d-flex justify-content-center ">
+    <div class="container-sm">
+        <form method="post" class="mb-3">
+            {% csrf_token %}
+            <div class="mb-2">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+        </form>
 
-<a href="{% url 'juego:factionView' %}" class="btn btn-secondary">Volver</a>
+        <h2 class="h4 text-light">Personajes</h2>
+        <ul class="list-group">
+            {% for character in characters %}
+                <li class="d-flex align-items-center mb-3 p-2 border rounded-3" style="background-color: rgba(255, 255, 255, 0.2);">
+                    <div class="d-flex w-100 align-items-center">
+                        <img src="{{ character.image.url }}" class="me-2" alt="{{ character.name }}" style="height: 32px; width: 32px ">
+                        <span class="fw-bold">{{ character.name }}</span>
+                        <span class="ms-auto text-end">{{ character.faction.name }}</span>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item py-2 text-center text-muted">No hay personajes para esta facción.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Botón centrado -->
+        <div class="text-center mt-3">
+            <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
+
+
+
 
 {% endblock %}
