@@ -14,16 +14,16 @@
 <div class="container d-flex flex-column align-items-center justify-content-center" style="max-width: 800px;">
 
     <!-- Contenedor del formulario con fondo oscuro, borde blanco y centrado -->
-    <div class="container d-flex justify-content-center bg-dark m-3 p-3 rounded border border-white" style="max-width: 500px;">
+    <div class="container-fluid d-flex justify-content-center bg-dark mt-3 p-1 rounded border border-white" style="max-width: 600px;">
         <form method="post" class="mb-4 w-100 bg-dark text-white p-3 rounded">
             <!-- Token CSRF para seguridad -->
             {% csrf_token %}
-            <div class="mb-3 text-center">
+            <div class="mb-3" >
                 <!-- Mostrar el formulario de manera centrada -->
                 {{ form.as_p }}
             </div>
             <!-- Botón para enviar el formulario, centrado y pequeño -->
-            <button type="submit" class="btn btn-primary btn-sm d-block mx-auto w-auto">Filtrar</button>
+            <button type="submit" class="btn btn-primary btn-sm d-block mx-auto">Filtrar</button>
         </form>
     </div>
 
