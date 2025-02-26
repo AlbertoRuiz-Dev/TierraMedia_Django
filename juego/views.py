@@ -28,6 +28,7 @@ from django.views import View
 
     Pagina principal donde se muestra un menu con las diferentes funciones
     Pagina para el login/logout
+    
 
     Opcion personaje
     Pagina para crear el personaje
