@@ -1,9 +1,10 @@
 from django import forms
+from django.db.models import Q
+
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ClearableFileInput
 
 from juego.models import *
-
 
 class FactionForm(forms.Form):
     """
@@ -15,7 +16,6 @@ class FactionForm(forms.Form):
         widget=forms.Select(),  # Utiliza un widget Select para mostrar opciones desplegables
         label="Selecciona una facción:"  # Etiqueta que se mostrará junto al campo
     )
-
 
 class EquipmentForm(forms.Form):
     """
@@ -83,14 +83,14 @@ class ArmorAddForm(forms.Form):
 
 class CharacterBattleForm(forms.Form):
     character = forms.ModelChoiceField(
-        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
-        widget=forms.Select(),
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').exclude(Q(equipped_armor__isnull=True) | Q(equipped_weapon__isnull=True)),
+        widget=forms.Select(attrs={'class':'form-select mt-2 mb-3'}),
         label="Selecciona un personaje:"
     )
 
     character2 = forms.ModelChoiceField(
-        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').all(),
-        widget=forms.Select(),
+        queryset=Character.objects.select_related('faction', 'equipped_weapon', 'equipped_armor').exclude(Q(equipped_armor__isnull=True) | Q(equipped_weapon__isnull=True)),
+        widget=forms.Select(attrs={'class':'form-select mt-2 mb-3'}),
         label="Selecciona otro personaje:"
     )
 

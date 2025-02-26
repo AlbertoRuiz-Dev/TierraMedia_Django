@@ -1,7 +1,6 @@
 from django.contrib.auth import login
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
-from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
@@ -10,9 +9,18 @@ from juego.models import *
 from juego.forms import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
-from rest_framework import viewsets
+from juego.models import Character
+from juego.serializers import CharacterSerializer
+from rest_framework import status, viewsets
 from juego.serializers import *
+import random
+from django.shortcuts import render, get_object_or_404
+from juego.forms import CharacterBattleForm
+import json
+from django.contrib.auth import login
+from django.db.models import Count
+from django.http import JsonResponse
+from django.views import View
 
 # Create your views here.
 
@@ -175,9 +183,152 @@ class CharacterModifyViewSet(viewsets.ModelViewSet):
     serializer_class = CharacterSerializerModify
 
 
-class BattleView(LoginRequiredMixin, FormView):
-    template_name = 'juego/battle.html'
-    form_class = CharacterBattleForm
+class BattleView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        """Renderiza la página de batalla con el formulario"""
+        form = CharacterBattleForm()  # Cargar el formulario de batalla
+        return render(request, "juego/battle.html", {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        """Procesa los datos del formulario cuando se seleccionan los personajes"""
+        form = CharacterBattleForm(request.POST)
+        if form.is_valid():
+            char1 = form.cleaned_data['character']
+            char2 = form.cleaned_data['character2']
+
+            # Establecer el turno de los personajes
+            turn_player = char1.id  # Empezamos con el jugador 1
+
+            # Guardar el estado de la batalla en la sesión
+            request.session['battle'] = {
+                'char1': char1.id,
+                'char2': char2.id,
+                'char1_hp': 100,
+                'char2_hp': 100,
+                'turn_player': turn_player,
+            }
+
+            # Pasar los personajes seleccionados y el turno al contexto para mostrarlos en la plantilla
+            return render(request, "juego/battle.html", {
+                'char1': char1,
+                'char2': char2,
+                'turn_player': turn_player,
+            })
+
+        # Si no es válido, devolver el formulario con error
+        return render(request, "juego/battle.html",
+                      {'form': form, 'error': "Hay un problema con la selección de personajes."})
+
+
+class AttackView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            # Obtener los datos enviados por el cliente
+            data = json.loads(request.body)
+            attacker_id = int(data.get('attacker'))
+            ataque_type = data.get('ataque')
+
+            # Verificar que los datos sean correctos
+            if not attacker_id or not ataque_type:
+                return JsonResponse({'error': 'Datos incompletos'}, status=400)
+
+            # Obtener el estado de la batalla desde la sesión
+            battle_state = request.session.get('battle', {})
+            if not battle_state:
+                return JsonResponse({'error': 'No hay batalla en curso'}, status=400)
+
+            # Obtener IDs de los personajes
+            char1_id = battle_state.get('char1')
+            char2_id = battle_state.get('char2')
+
+            # Obtener los personajes para estadísticas
+            character1 = Character.objects.select_related('equipped_armor', 'equipped_weapon').get(id=char1_id)
+            character2 = Character.objects.select_related('equipped_armor', 'equipped_weapon').get(id=char2_id)
+
+            # Obtener las estadísticas que se necesitarán
+            character1_accuracy = character1.equipped_weapon.accuracy if character1.equipped_weapon.accuracy else 50
+            character2_accuracy = character2.equipped_weapon.accuracy if character2.equipped_weapon.accuracy else 50
+            character1_critic = character1.equipped_weapon.critic if character1.equipped_weapon.critic else 10
+            character2_critic = character2.equipped_weapon.critic if character2.equipped_weapon.critic else 10
+            character1_defense = character1.equipped_armor.defense if character1.equipped_armor.defense else 0
+            character2_defense = character2.equipped_armor.defense if character2.equipped_armor.defense else 0
+
+            # Determinar quién es el atacante y quién el defensor
+            if attacker_id == char1_id:
+                defender_id = char2_id
+            elif attacker_id == char2_id:
+                defender_id = char1_id
+            else:
+                return JsonResponse({'error': 'Atacante no válido'}, status=400)
+
+            # Verificar que sea el turno correcto
+            if battle_state.get('turn_player') != attacker_id:
+                return JsonResponse({'error': 'No es tu turno'}, status=400)
+
+            # Obtener los HP actuales de los personajes
+            char1_hp = battle_state.get('char1_hp', 100)
+            char2_hp = battle_state.get('char2_hp', 100)
+
+            # Obtener el atacante y el defensor desde la base de datos
+            attacker = get_object_or_404(Character, id=attacker_id)
+            defender = get_object_or_404(Character, id=defender_id)
+
+            # Determinar el daño según el tipo de ataque
+            if ataque_type == 'fuerte':
+                damage = attacker.equipped_weapon.damage * 1.5
+            elif ataque_type == 'debil':
+                damage = attacker.equipped_weapon.damage
+            else:
+                return JsonResponse({'error': 'Tipo de ataque inválido'}, status=400)
+
+            # Aplicar el daño al defensor
+            if defender_id == char1_id:
+                accuracy = random.randint(0, 100) <= character2_accuracy
+                critic = random.randint(0, 100) <= character2_critic
+                damage = damage * 2 if critic else damage
+                damage = damage - character1_defense if damage > character1_defense else 0
+                damage = damage if accuracy else 0
+                char1_hp -= damage
+            else:
+                accuracy = random.randint(0, 100) <= character1_accuracy
+                critic = random.randint(0, 100) <= character1_critic
+                damage = damage * 2 if critic else damage
+                damage = damage - character2_defense if damage > character2_defense else 0
+                damage = damage if accuracy else 0
+                char2_hp -= damage
+
+            # Verificar si la batalla terminó
+            if char1_hp <= 0:
+                request.session.pop('battle', None)  # Eliminar la batalla de la sesión
+                return JsonResponse({'char1_hp': 0, 'char2_hp': char2_hp, 'turn_player': None, 'winner': f'Jugador {char2_id}'})
+
+            if char2_hp <= 0:
+                request.session.pop('battle', None)
+                return JsonResponse({'char1_hp': char1_hp, 'char2_hp': 0, 'turn_player': None, 'winner': f'Jugador {char1_id}'})
+
+            # Cambiar el turno al otro jugador
+            next_turn_player = defender_id
+
+            # Guardar el estado de la batalla actualizado
+            request.session['battle'] = {
+                'char1': char1_id,
+                'char2': char2_id,
+                'char1_hp': char1_hp,
+                'char2_hp': char2_hp,
+                'turn_player': next_turn_player,
+            }
+
+            # Devolver la nueva información de la batalla
+            return JsonResponse({
+                'char1_hp': char1_hp,
+                'char1_id': char1_id,
+                'char2_hp': char2_hp,
+                'char2_id': char2_id,
+                'turn_player': next_turn_player,
+            })
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 class CharacterDetailView(LoginRequiredMixin, DetailView):

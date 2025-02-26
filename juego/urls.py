@@ -56,6 +56,7 @@ urlpatterns = [
     path('character/relationship_update/<int:pk>/', views.RelationshipUpdateView.as_view(), name="relationshipUpdateView"),
 
     path('battle/', views.BattleView.as_view(), name='battleView'), # Vista para batallas entre personajes
+    path('battle/attack/', views.AttackView.as_view(), name='attackView'),
 
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'), # Vista de lista de armas
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'), # Vista de detalle de arma

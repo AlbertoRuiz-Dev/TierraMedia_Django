@@ -1,37 +1,59 @@
 {% extends 'base.html' %}
 {% block title %}Batalla / Tierra Media{% endblock %}
 {% load static %}
-{% block links %}<script src="{% static 'js/battle.js' %}"></script>{% endblock %}
+
+{% block links %}
+    <script src="{% static 'js/battle.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/battle.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="container-fluid text-center rounded">
-        <h1>Selecciona los personajes para la batalla.</h1>
+    <div class="container text-center rounded w-25 mt-3 batalla p-4" style="display: {% if char1 and char2 %}none{% else %}block{% endif %};">
+        <h2 class="mb-3">Selecciona los personajes para la batalla.</h2>
         <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" onclick="pelea()">Batalla!</button>
+            <button type="submit" id="start_battle" class="btn btn-primary boton_batalla mt-2">¡Batalla!</button>
         </form>
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
     </div>
+
+    <div class="container-fluid text-center rounded mt-3" id="battle_arena" style="display: {% if char1 and char2 %}block{% else %}none{% endif %};">
     
-    <div class="container-fluid text-center" id="battle_arena" style="display: none;">
-        <h2>¡Batalla en curso!</h2>
-        <p id="status"></p>
-    
-        <div>
-            <h3 id="char1_name"></h3>
-            <p>HP: <span id="char1_hp">1000</span></p>
-            <div id="char1_controls">
-                <button id="char1_fuerte">⚔️ Ataque Fuerte</button>
-                <button id="char1_debil">🗡️ Ataque Débil</button>
+        <div class="container text-center rounded">
+            <h2 class="mt-5">¡Batalla en curso!</h2>
+            <p id="status"></p>
+            <div class="row justify-content-center align-items-center mb-5 mt-5">
+                <div class="col-4 batalla rounded mx-3 pb-3">
+                    <h3 id="char1_name" class="mt-3">{{ char1.name }}</h3>
+                    <p>HP: <span id="char1_hp">100</span></p>
+                    <input type="hidden" id="char1_id" value="{{ char1.id }}">
+        
+                    <div id="char1_controls">
+                        <button type="button" id="char1_fuerte" class="btn btn-primary boton_fuerte mx-2">⚔️ Ataque Fuerte</button>
+                        <button type="button" id="char1_debil" class="btn btn-primary boton_debil mx-2">🗡️ Ataque Débil</button>
+                    </div>
+                </div>
+        
+                <div class="col-4 batalla rounded mx-3 pb-3">
+                    <h3 id="char2_name" class="mt-3">{{ char2.name }}</h3>
+                    <p>HP: <span id="char2_hp">100</span></p>
+                    <input type="hidden" id="char2_id" value="{{ char2.id }}">
+        
+                    <div id="char2_controls">
+                        <button type="button" id="char2_fuerte" class="btn btn-primary boton_fuerte mx-2">⚔️ Ataque Fuerte</button>
+                        <button type="button" id="char2_debil" class="btn btn-primary boton_debil mx-2">🗡️ Ataque Débil</button>
+                    </div>
+                </div>
             </div>
+            
+            <p id="frase" class="frase rounded p-2">Que comience la batalla!</p>
+            
         </div>
-    
-        <div>
-            <h3 id="char2_name"></h3>
-            <p>HP: <span id="char2_hp">1000</span></p>
-            <div id="char2_controls">
-                <button id="char2_fuerte">⚔️ Ataque Fuerte</button>
-                <button id="char2_debil">🗡️ Ataque Débil</button>
-            </div>
-        </div>
+
+        <!-- Campo oculto para almacenar el jugador cuyo turno es -->
+        <input type="hidden" id="turn_player" value="{{ turn_player }}">
     </div>
 {% endblock %}
