@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{{ character.name }} / Tierra Media{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">{{ character.name }}</h1>
+        <div class="card bg-dark text-white shadow">
+            <img src="{{ character.image.url }}" class="card-img-top" alt="{{ character.name }}">            <div class="card-body">
+                <p class="card-text">
+                    <strong>Facción:</strong> 
+                    {% if character.faction %}
+                        {{ character.faction.name }}
+                    {% else %}
+                        Sin Facción
+                    {% endif %}<br>
+                    <strong>Ubicación:</strong> {{ character.location }}<br>
+                    <strong>Arma Equipada:</strong> 
+                    {% if character.equipped_weapon %}
+                        {{ character.equipped_weapon.name }}
+                    {% else %}
+                        Ninguna
+                    {% endif %}<br>
+                    <strong>Armadura Equipada:</strong> 
+                    {% if character.equipped_armor %}
+                        {{ character.equipped_armor.name }}
+                    {% else %}
+                        Ninguna
+                    {% endif %}
+                </p>
+                <div class="text-center">
+                    <a href="{% url 'juego:characterView' %}" class="btn btn-danger">Volver a la Lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            background-color: #2d2d2d;
+        }
+        .card-img-top {
+            object-fit: cover;
+            height: 300px;
+            border-bottom: 2px solid #e74c3c;
+        }
+    </style>
+{% endblock %}

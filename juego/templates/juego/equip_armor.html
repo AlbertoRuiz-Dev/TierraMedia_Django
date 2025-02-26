@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Equipar Armadura para {{ character.name }}{% endblock %}
+{% block content %}
+<div class="container mt-4 text-light">
+    <h1 class="text-center mb-4">Equipar Armadura para {{ character.name }}</h1>
+    <form method="post" class="bg-dark p-4 rounded border-danger">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_armor" class="form-label">Selecciona una armadura del inventario:</label>
+            {{ form.armor }}
+        </div>
+        <button type="submit" class="btn btn-danger">Equipar Armadura</button>
+    </form>
+</div>
+{% endblock %}

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'juego.apps.JuegoConfig',
+    'django_extensions',
     'debug_toolbar',
     'django_json_widget',
     'rest_framework',
@@ -80,14 +81,26 @@ WSGI_APPLICATION = 'tierramedia.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "django_db",
-        "USER": "postgres",
-        "PASSWORD": "password",
-        "HOST": "db",
-        "PORT": "5432",
+        # Especifica el backend de la base de datos que se utilizará. En este caso, estamos usando PostgreSQL.
+        "ENGINE": "django.db.backends.postgresql",  # Backend de PostgreSQL
+
+        # Nombre de la base de datos que se utilizará. En este caso, la base de datos se llama "django_db".
+        "NAME": "django_db",  # Nombre de la base de datos
+
+        # Usuario que se usará para conectarse a la base de datos.
+        "USER": "postgres",  # Usuario de la base de datos
+
+        # Contraseña del usuario para acceder a la base de datos.
+        "PASSWORD": "password",  # Contraseña del usuario de la base de datos
+
+        # Dirección del servidor de la base de datos. Si estás usando Docker, el valor podría ser el nombre del servicio, como "db".
+        "HOST": "db",  # Dirección del host de la base de datos
+
+        # Puerto en el que se ejecuta la base de datos. El valor predeterminado de PostgreSQL es 5432.
+        "PORT": "5432",  # Puerto donde la base de datos escucha
     }
 }
+
 
 # Obtenemos el nombre del host (máquina local) y sus direcciones IP asociadas
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -140,8 +153,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Definir la URL a la que los usuarios serán redirigidos si intentan acceder a una página que requiere autenticación
 LOGIN_URL = '/accounts/login/'
+
+# Definir la URL a la que el usuario será redirigido después de iniciar sesión con éxito
 LOGIN_REDIRECT_URL = '/'
+
+# Definir la URL a la que el usuario será redirigido después de cerrar sesión
 LOGOUT_REDIRECT_URL = '/accounts/logout/'
+
+# Definir la URL pública utilizada para acceder a los archivos de medios (como imágenes o documentos)
 MEDIA_URL = '/media/'  # Ruta pública para acceder a los archivos de medios
+
+# Definir la ruta en el sistema de archivos donde los archivos de medios serán almacenados
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ruta física donde se almacenan los archivos

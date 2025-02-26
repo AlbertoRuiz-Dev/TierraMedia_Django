@@ -16,7 +16,7 @@ Este es un proyecto desarrollado con Django que permite gestionar personajes, su
 
 ## 📌 Requisitos Previos
 
-Antes de instalar el proyecto, asegúrate de tener:
+Antes de instalar el proyecto, asegúrate de tener un archivo `requirements.txt` con el siguiente contenido:
 
 - Python 3.8...
 - Django 4....
@@ -33,7 +33,7 @@ cd tu_proyecto
 # Crear entorno virtual e instalar dependencias
 python -m venv venv
 source venv/bin/activate  # En Windows usa: venv\Scripts\activate
-pip install -r requirements.txt (Hay que crearlo)
+pip install -r requirements.txt
 
 # Configurar la base de datos
 python manage.py migrate
@@ -184,7 +184,17 @@ python manage.py runserver
 Ejecuta los tests con:
 
 ```bash
-python manage.py test....
+$ docker compose exec web python manage.py test juego/tests/
+Found 28 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+............................
+----------------------------------------------------------------------
+Ran 28 tests in 8.713s
+
+OK
+Destroying test database for alias 'default'...
+
 ```
 
 ## 📌 Contribución
@@ -202,6 +212,5 @@ Este proyecto está libre de licencia.
 ## 📌 Contacto
 
 Si tienes preguntas, puedes contactarnos en: elmejorproyecto\@gmail.com
-
 
 
