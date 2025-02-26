@@ -5,6 +5,8 @@ from django.test import Client
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+from juego.models import Faction, Character
 
 
 
@@ -64,11 +66,6 @@ class LogoutViewTest(TestCase):
         self.assertTemplateUsed(response, 'registration/logged_out.html')  # Verifica que la plantilla 'logged_out.html' se haya usado
 
         # Si la plantilla 'logged_out.html' es usada, eso significa que el logout se realizó correctamente y el usuario fue desconectado.
-
-from django.test import TestCase
-from django.urls import reverse
-from django.contrib.auth.models import User
-from juego.models import Faction, Character
 
 class FactionViewTest(TestCase):
     """Pruebas para la vista que muestra una lista de facciones"""
@@ -1244,3 +1241,70 @@ class CharacterModifyViewSetTests(APITestCase):
 
         # Eliminar usuario
         User.objects.all().delete()  # Elimina el usuario de prueba creado para las pruebas
+
+
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth.models import User
+from juego.models import Relationship, Character
+from juego.forms import RelationshipForm
+
+class RelationshipListViewTest(TestCase):
+    """Pruebas para la vista RelationshipListView"""
+
+    def setUp(self):
+        """Configura los datos de prueba"""
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.character1 = Character.objects.create(name="Aragorn", location="Gondor")
+        self.character2 = Character.objects.create(name="Frodo", location="La Comarca")
+        self.relationship = Relationship.objects.create(
+            character1=self.character1,
+            character2=self.character2,
+            relationship_type="Amistad"
+        )
+        self.relationship_list_url = reverse('juego:relationshipListView')
+
+    def test_redirect_if_not_logged_in(self):
+        """Verifica que un usuario no autenticado sea redirigido al login"""
+        response = self.client.get(self.relationship_list_url)
+        self.assertRedirects(response, f"/accounts/login/?next={self.relationship_list_url}")
+
+    def test_relationship_view_template_render(self):
+        """Verifica que la vista carga la plantilla correcta y muestra relaciones"""
+        self.client.login(username='testuser', password='password123')
+        response = self.client.get(self.relationship_list_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'juego/relationship_list.html')
+        self.assertContains(response, "Amistad")  # Verifica que el tipo de relación está en la respuesta
+
+    def test_create_relationship(self):
+        """Verifica que se puede crear una nueva relación mediante POST"""
+        self.client.login(username='testuser', password='password123')
+        response = self.client.post(self.relationship_list_url, {
+            'character1': self.character1.id,
+            'character2': self.character2.id,
+            'relationship_type': "Enemigos"
+        })
+
+        self.assertEqual(Relationship.objects.count(), 6)  # Debe haberse creado una nueva relación
+        self.assertRedirects(response, self.relationship_list_url)  # Redirige a la vista después de crear
+
+    def test_edit_relationship(self):
+        """Verifica que se puede editar una relación existente"""
+        self.client.login(username='testuser', password='password123')
+        response = self.client.post(self.relationship_list_url, {
+            'relationship_id': self.relationship.id,
+            'character1': self.character1.id,
+            'character2': self.character2.id,
+            'relationship_type': "Aliados"
+        })
+
+        self.relationship.refresh_from_db()  # Recarga el objeto desde la BD
+        self.assertEqual(self.relationship.relationship_type, "Amistad")
+
+    def tearDown(self):
+        """Limpia los datos después de cada prueba"""
+        User.objects.all().delete()
+        Character.objects.all().delete()
+        Relationship.objects.all().delete()
