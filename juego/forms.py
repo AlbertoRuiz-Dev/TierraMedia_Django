@@ -4,29 +4,40 @@ from django.forms import ClearableFileInput
 
 from juego.models import *
 
+
 class FactionForm(forms.Form):
+    """
+    Formulario para seleccionar una facción.
+    Permite al usuario seleccionar una facción de la base de datos.
+    """
     faction = forms.ModelChoiceField(
-        queryset=Faction.objects.all(),
-        widget=forms.Select(),
-        label="Selecciona una facción:"
+        queryset=Faction.objects.all(),  # Consulta todas las facciones disponibles
+        widget=forms.Select(),  # Utiliza un widget Select para mostrar opciones desplegables
+        label="Selecciona una facción:"  # Etiqueta que se mostrará junto al campo
     )
+
 
 class EquipmentForm(forms.Form):
-    # Campo para seleccionar un arma
+    """
+    Formulario para seleccionar equipo (arma y armadura).
+    Permite al usuario seleccionar un arma y una armadura de la base de datos.
+    Ambos campos son opcionales.
+    """
+
     weapon = forms.ModelChoiceField(
-        queryset=Weapon.objects.all(),
-        widget=forms.Select(),
-        label="Selecciona un arma:",
-        required=False  # Hacemos el campo opcional
+        queryset=Weapon.objects.all(),  # Consulta todas las armas disponibles
+        widget=forms.Select(),  # Utiliza un widget Select para mostrar opciones desplegables
+        label="Selecciona un arma:",  # Etiqueta que se mostrará junto al campo
+        required=False  # El campo es opcional, ya que puede no haber arma seleccionada
     )
 
-    # Campo para seleccionar una armadura
     armor = forms.ModelChoiceField(
-        queryset=Armor.objects.all(),
-        widget=forms.Select(),
-        label="Selecciona una armadura:",
-        required=False  # Hacemos el campo opcional
+        queryset=Armor.objects.all(),  # Consulta todas las armaduras disponibles
+        widget=forms.Select(),  # Utiliza un widget Select para mostrar opciones desplegables
+        label="Selecciona una armadura:",  # Etiqueta que se mostrará junto al campo
+        required=False  # El campo es opcional, ya que puede no haber armadura seleccionada
     )
+
 
 class NoClearableFileInput(ClearableFileInput):
     """ Widget personalizado sin la opción de 'Clear' """
@@ -85,9 +96,16 @@ class CharacterBattleForm(forms.Form):
 
 
 class FactionDefaultForm(forms.ModelForm):
+    """
+    Formulario para crear o actualizar una facción.
+    Este formulario está vinculado al modelo Faction y permite editar los campos
+    'name' (nombre) y 'location' (ubicación).
+    """
+
     class Meta:
-        model = Faction  # Vincula el formulario al modelo Faccion
+        model = Faction  # Vincula el formulario al modelo Faction
         fields = ["name", "location"]  # Campos que se incluirán en el formulario
+
 
 class InventoryAddItemsForm(forms.Form):
     weapons = forms.ModelMultipleChoiceField(
