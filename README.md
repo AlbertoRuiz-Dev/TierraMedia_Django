@@ -1,6 +1,6 @@
 # 📜 Tierra Media
 
-Tierra Media se trata de un proyecto de un juego web creado por: Aarón Gutierrez, Jesús Pérez, Alberto Ruiz.
+Tierra Media se trata de un proyecto de un juego web creado por: Aarón Gutierrez, Jesús Pérez, Alberto Ruiz, Alejandro Jimenez Perez.
 
 
 ## 📌 Descripción
@@ -12,12 +12,13 @@ Este es un proyecto desarrollado con python más Django que permite gestionar pe
 - ✅ Gestión de usuarios con autenticación.
 - ✅ Gestión de sesiones.
 - ✅ Uso de docker.
-- ✅ Uso de Postgres.
+- ✅ Uso de Postgres:
+  - Contiene una migración vacia con una función poblate y otra para revertir el poblate.
 - ✅ Uso de `LoginRequiredMixin` para proteger vistas.
 - ✅ Uso de Django REST framework:
   - Generación de urls automáticamente con router para las apis.
   - Uso de apis para controlar el CRUD de los modelos.
-  - Gráfico con recuento de personajes por facción.
+  - Generación de un gráfico con recuento de personajes por facción.
 - ✅ Interfaz de usuario construida con **Bootstrap** para una experiencia responsiva y moderna.
 - ✅ Sistema de inventario y equipamiento.
 - ✅ Creación de relaciones entre personajes.
@@ -31,9 +32,8 @@ Este es un proyecto desarrollado con python más Django que permite gestionar pe
    - Uso de `exclude` para excluir elementos de las consultas.  
    - Aplicación de `annotate` para agregar cálculos y agregaciones a las consultas.
 
-## 📌 Requisitos Previos 
-> [!WARNING]
-> 
+## 📌 Requisitos Previos
+
 Antes de instalar el proyecto, asegúrate de tener un archivo `requirements.txt` con el siguiente contenido:
 
 - Django>=5.0
@@ -1217,6 +1217,18 @@ Este documento detalla la implementación de los serializadores en Django REST F
   - [RelationshipSerializerDefault](#relationshipserializerdefault)
   - [CharacterSerializerAll](#characterserializerall)
   - [CharacterSerializerModify](#characterserializermodify)
+- [Vistas](#Vistas)
+  - [Obtener número de miembros por facción](#obtener-número-de-miembros-por-facción)
+  - [Gestión de facciones](#gestión-de-facciones)
+  - [Gestión de armaduras](#gestión-de-armaduras)
+  - [Gestión de armas](#gestión-de-armas)
+  - [Gestión de relaciones entre personajes](#gestión-de-relaciones-entre-personajes)
+  - [Gestión de inventarios](#gestión-de-inventarios)
+  - [Gestión de personajes](#gestión-de-personajes)
+    - [Solo lectura de personajes](#solo-lectura-de-personajes)
+    - [Modificación de personajes](#modificación-de-personajes)
+
+  
 
 ---
 
@@ -1490,9 +1502,6 @@ class CharacterModifyViewSet(viewsets.ModelViewSet):
 ## Conclusión
 Estos serializadores facilitan la gestión estructurada y eficiente de la información dentro del sistema de juego, asegurando una integración fluida con la API de Django REST Framework. Se pueden modificar y ampliar según las necesidades del proyecto.
 
-
-
-
 ## 📌 Contribución
 
 1. Haz un fork del proyecto
@@ -1501,12 +1510,38 @@ Estos serializadores facilitan la gestión estructurada y eficiente de la inform
 4. Sube los cambios a tu fork (`git push origin features/feature_nueva`)
 5. Abre un Pull Request
 
+## 📌 Manejo de Errores:
+- Explicación de los errores que el programa puede manejar y cómo están gestionados (como la gestión de excepciones para personajes no existentes o equipamiento faltante).
+  - Si introduces una relación de un personaje consigo mismo da un mensaje de error.
+  - No se puede pegar un personaje que no tenga un arma equipada.
+
+## 📌 Trabajo en Equipo:
+- Organización:
+  - Hemos usado Discord, Whatsapp, Github y Trello para organizar las tareas.
+- Explicación del flujo de trabajo en GitHub.
+  - Cada integrante del equipo tiene una rama para cada funcionalidad en un proyecto de GitHub en la cual cada uno hace sus funciones necesarias para sus funciones, una vez se termina el trabajo se sube a la rama correspondiente de GitHub `(commit && push)`. Luego se suben los cambios de la rama al main *(pull requests)* asignando un compañero como reviewer y asi mismo como creador del *pull request*, una vez el compañero revisa el código y crea el pull request `(Squash and merge)`. 
+  - Cuando ya tenemos todo en el main, uno de los integrantes se lleva todo a su rama actualizando su main y luego lo pasa a su rama para realizar el archivo global.
+  
+- Detallar qué partes del código y de la documentación han sido realizadas por cada miembro del equipo. (Engloba HTML, PYTHON, JS, etc...)
+  - **Readme:** *Aarón & Jimenez*
+  - **Archivo principal (Documentado)**: *Todos*
+  - **APIs (Documentado)**: *Aarón*
+  - **Personaje (Documentado)**: *Jimenez & Aarón & Alberto*
+  - **Equipamiento (Documentado)**: *Alberto*
+  - **Armas (Documentado):** *Alberto*
+  - **Relaciones (Documentado):** *Jimenez*
+  - **Batalla (Documentado):** *Jesús*
+  - **Facción (Documentado):** *Aarón*
+  - **Listar personajes por facción (Documentado):** *Aarón*
+  - **Buscar personajes por equipamiento (Documentado):** *Aarón*
+  - **Mostrar todos los personajes (Documentado):** *Aarón & Alberto*
+ 
 ## 📌 Licencia
 
 Este proyecto está libre de licencia.
 
 ## 📌 Contacto
 
-Si tienes preguntas, puedes contactarnos en: elmejorproyecto\@gmail.com
+Si tienes preguntas, puedes contactarnos en: muerteajavascript@gmail.com
 
 
