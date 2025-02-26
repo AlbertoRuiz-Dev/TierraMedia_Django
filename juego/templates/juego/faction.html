@@ -3,6 +3,14 @@
 {% block content %}
     <!-- Contenedor principal de la página con margen superior e inferior -->
     <div class="container my-5">
+
+    <!-- Botones centrados para filtrar personajes por facción y crear una nueva facción -->
+        <div class="d-flex justify-content-center mb-3">
+            <!-- Enlace para filtrar personajes por facción -->
+            <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mx-2">Filtrar personajes por facción</a>
+            <!-- Enlace para crear una nueva facción -->
+            <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mx-2">Crear facción</a>
+        </div>
         <!-- Título de la página de listas de facciones -->
         <h1 class="text-center mb-4">Lista de Facciones</h1>
 
@@ -41,13 +49,7 @@
             </div>
         </div>
 
-        <!-- Botones centrados para filtrar personajes por facción y crear una nueva facción -->
-        <div class="d-flex justify-content-center mt-4">
-            <!-- Enlace para filtrar personajes por facción -->
-            <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mx-2">Filtrar personajes por facción</a>
-            <!-- Enlace para crear una nueva facción -->
-            <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mx-2">Crear facción</a>
-        </div>
+
 
     </div>
 

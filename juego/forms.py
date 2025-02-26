@@ -170,3 +170,14 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class RelationshipForm(forms.ModelForm):
+    class Meta:
+        model = Relationship
+        fields = ['character1', 'relationship_type', 'character2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['character1'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Personaje 1'})
+        self.fields['relationship_type'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Tipo de Relación'})
+        self.fields['character2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Personaje 2'})

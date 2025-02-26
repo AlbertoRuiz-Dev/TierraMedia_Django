@@ -1,4 +1,8 @@
+from django.contrib.auth import login
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from juego.models import *
@@ -24,7 +28,7 @@ from django.views import View
 
     Pagina principal donde se muestra un menu con las diferentes funciones
     Pagina para el login/logout
-
+    
     Opcion personaje
     Pagina para crear el personaje
     Pagina para crear las relaciones
@@ -766,3 +770,35 @@ class RegisterView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
+
+class RelationshipListView(LoginRequiredMixin, View):  # Cambiamos a View para manejar GET y POST
+    template_name = 'juego/relationship_list.html'
+
+    def get(self, request, *args, **kwargs):
+        relation_list = Relationship.objects.all()
+        form = RelationshipForm()
+        return render(request, self.template_name, {'relation_list': relation_list, 'form': form})
+
+    def post(self, request, *args, **kwargs):
+        relationship_id = request.POST.get("relationship_id")
+
+        if relationship_id:  # Si hay ID, estamos editando una relación existente
+            relationship = get_object_or_404(Relationship, id=relationship_id)
+            form = RelationshipForm(request.POST, instance=relationship)
+        else:  # Si no hay ID, creamos una nueva relación
+            form = RelationshipForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+        return redirect('juego:relationshipListView')
+
+class RelationshipDeleteView(LoginRequiredMixin, DeleteView):
+    model = Relationship
+    template_name = "juego/relationship_delete.html"
+    success_url = reverse_lazy("juego:relationshipListView")
+
+class RelationshipUpdateView(LoginRequiredMixin, UpdateView):
+    model = Relationship
+    template_name = "juego/relationship_update.html"
+    success_url = reverse_lazy("juego:relationshipListView")

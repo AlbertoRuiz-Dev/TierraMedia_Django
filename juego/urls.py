@@ -49,7 +49,11 @@ urlpatterns = [
     path('faction/detail/<int:pk>', views.FactionDetailView.as_view(), name='factionDetailView'), # Vista para ver los detalles de una facción
     path('faction/update/<int:pk>', views.FactionUpdateView.as_view(), name='factionUpdateView'), # Vista para actualizar una facción
 
-    path('relation/', views.RelationCreateView.as_view(), name='relationCreateView'), # Vista para crear una relación entre personajes
+     # Vista para crear una relación entre personajes
+    path('character/relationship/', views.RelationCreateView.as_view(), name='relationCreateView'),
+    path('character/relationship_list/', views.RelationshipListView.as_view(), name= 'relationshipListView'),
+    path('character/relationship_delete/<int:pk>/', views.RelationshipDeleteView.as_view(), name="relationshipDeleteView"),
+    path('character/relationship_update/<int:pk>/', views.RelationshipUpdateView.as_view(), name="relationshipUpdateView"),
 
     path('battle/', views.BattleView.as_view(), name='battleView'), # Vista para batallas entre personajes
     path('battle/attack/', views.AttackView.as_view(), name='attackView'),
