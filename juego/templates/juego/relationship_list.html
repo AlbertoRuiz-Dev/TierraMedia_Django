@@ -1,16 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}Lista de Relaciones / Tierra Media{% endblock %}
+
+{% block title %}Lista de Relaciones | Tierra Media{% endblock %}
+
 {% block content %}
-   {% if relation_list %}
-       <h1>Lista de relaciones: </h1>
-       {% for relation in relation_list %}
-           <li> Relación:
-               {{ relation.character1 }} -
-               {{ relation.character2 }} -
-               {{ relation.relationship_type }}
-           </li>
-       {% endfor %}
+    <div class="card shadow-sm p-4" style="background: rgba(255, 255, 255, 0.6); border-radius: 15px; border: none;">
+        <h1 class="text-center mb-4">Lista de Relaciones</h1>
 
-   {% endif %}
+        <!-- Formulario para CREAR relaciones -->
+        <form method="post" action="{% url 'juego:relationshipListView' %}" class="mb-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Crear Relación</button>
+        </form>
 
+        <hr>
+
+        <!-- Lista de relaciones (SOLO LECTURA) -->
+        {% if relation_list %}
+            <ul class="list-group">
+            {% for relation in relation_list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center" style="background: rgba(255, 255, 255, 0.6); border: none;">
+                    <span>
+                        <strong>{{ relation.character1 }}</strong> -
+                        <em>{{ relation.relationship_type }}</em> -
+                        <strong>{{ relation.character2 }}</strong>
+                    </span>
+                    <a href="{% url 'juego:relationshipDeleteView' relation.id %}" class="btn btn-primary btn-sm">Eliminar</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted text-center">No hay relaciones registradas.</p>
+        {% endif %}
+    </div>
 {% endblock %}

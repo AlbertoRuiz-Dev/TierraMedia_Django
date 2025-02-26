@@ -1,4 +1,6 @@
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from juego.models import *
@@ -116,12 +118,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         return context
 
 
-class RelationCreateView(LoginRequiredMixin, CreateView):
-    model = Relationship
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
-
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
     form_class = FactionDefaultForm  # Usamos ModelForm
@@ -215,15 +211,27 @@ class ArmorDeleteView(LoginRequiredMixin,DeleteView):
     success_url = reverse_lazy('juego:armorListView')
 
 
-class RelationshipListView(LoginRequiredMixin, ListView):
-    model = Relationship
+class RelationshipListView(LoginRequiredMixin, View):  # Cambiamos a View para manejar GET y POST
     template_name = 'juego/relationship_list.html'
-    context_object_name = 'relation_list'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get(self, request, *args, **kwargs):
+        relation_list = Relationship.objects.all()
+        form = RelationshipForm()
+        return render(request, self.template_name, {'relation_list': relation_list, 'form': form})
 
+    def post(self, request, *args, **kwargs):
+        relationship_id = request.POST.get("relationship_id")
+
+        if relationship_id:  # Si hay ID, estamos editando una relación existente
+            relationship = get_object_or_404(Relationship, id=relationship_id)
+            form = RelationshipForm(request.POST, instance=relationship)
+        else:  # Si no hay ID, creamos una nueva relación
+            form = RelationshipForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+        return redirect('juego:relationshipListView')
 
 class RelationCreateView(LoginRequiredMixin, CreateView):
     model = Relationship
@@ -234,7 +242,9 @@ class RelationCreateView(LoginRequiredMixin, CreateView):
 class RelationshipDeleteView(LoginRequiredMixin, DeleteView):
     model = Relationship
     template_name = "juego/relationship_delete.html"
-    success_url = "juego:relationshipListView"
+    success_url = reverse_lazy("juego:relationshipListView")
 
 class RelationshipUpdateView(LoginRequiredMixin, UpdateView):
-    pass
+    model = Relationship
+    template_name = "juego/relationship_update.html"
+    success_url = reverse_lazy("juego:relationshipListView")
