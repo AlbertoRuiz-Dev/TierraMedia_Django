@@ -1252,6 +1252,7 @@ pip install django djangorestframework
 
 Luego, agrega `'rest_framework'` en `INSTALLED_APPS` dentro del archivo `settings.py`.
 
+
 ```python
 INSTALLED_APPS = [
     ...
