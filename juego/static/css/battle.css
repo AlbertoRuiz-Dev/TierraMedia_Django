@@ -1,0 +1,45 @@
+.batalla {
+   background-color: rgba(0,0,0,0.81);
+}
+
+.frase {
+    display: inline;
+    width: auto;
+    background-color: rgba(0,0,0,0.81);
+}
+
+.boton_batalla {
+    /* Transición suave */
+    transition: all 0.3s ease;
+}
+
+.boton_batalla:hover {
+    /* Sombra */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    /* Escalado */
+    transform: scale(1.05);
+}
+
+.boton_fuerte {
+    /* Transición suave */
+    transition: all 0.3s ease;
+}
+
+.boton_fuerte:hover {
+    /* Sombra */
+    box-shadow: 0 0 15px rgba(255, 0, 0, 1);
+    /* Escalado */
+    transform: scale(1.05);
+}
+
+.boton_debil {
+    /* Transición suave */
+    transition: all 0.3s ease;
+}
+
+.boton_debil:hover {
+    /* Sombra */
+    box-shadow: 0 0 15px rgba(255, 255, 0, 1);
+    /* Escalado */
+    transform: scale(1.05);
+}
