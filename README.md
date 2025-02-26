@@ -9,17 +9,31 @@ Este es un proyecto desarrollado con python más Django que permite gestionar pe
 
 ## 📌 Características
 
-- ✅ Gestión de usuarios con autenticación
-- ✅ Uso de docker
-- ✅ Uso de `LoginRequiredMixin` para proteger vistas
-- ✅ Uso de Django API Rest
-- ✅ Interfaz de usuario construida con **Bootstrap** para una experiencia responsiva y moderna
-- ✅ Sistema de inventario y equipamiento
-- ✅ Creación de relaciones entre personajes
-- ✅ Personalización de personajes
+- ✅ Gestión de usuarios con autenticación.
+- ✅ Gestión de sesiones.
+- ✅ Uso de docker.
+- ✅ Uso de Postgres.
+- ✅ Uso de `LoginRequiredMixin` para proteger vistas.
+- ✅ Uso de Django REST framework:
+  - Generación de urls automáticamente con router para las apis.
+  - Uso de apis para controlar el CRUD de los modelos.
+  - Gráfico con recuento de personajes por facción.
+- ✅ Interfaz de usuario construida con **Bootstrap** para una experiencia responsiva y moderna.
+- ✅ Sistema de inventario y equipamiento.
+- ✅ Creación de relaciones entre personajes.
+- ✅ Funcionalidad CRUD (Crear, Leer, Actualizar y Eliminar) para la gestión de recursos.
+- ✅ Interfaz de administración personalizada:
+  - Uso del JSONEditorWidget para facilitar la edición de campos JSONField en el panel de administración de Django. Esto permite visualizar y modificar estructuras JSON de forma más amigable e intuitiva.
+- ✅ Uso de **optimización de consultas en Django**:  
+   - Aplicación de `Q` para realizar consultas complejas.  
+   - Uso de `COUNT` para contar elementos de una consulta.  
+   - Implementación de `select_related` y `prefetch_related` para optimizar las consultas y evitar problemas de N+1.  
+   - Uso de `exclude` para excluir elementos de las consultas.  
+   - Aplicación de `annotate` para agregar cálculos y agregaciones a las consultas.
 
-## 📌 Requisitos Previos
-
+## 📌 Requisitos Previos 
+> [!WARNING]
+> 
 Antes de instalar el proyecto, asegúrate de tener un archivo `requirements.txt` con el siguiente contenido:
 
 - Django>=5.0
