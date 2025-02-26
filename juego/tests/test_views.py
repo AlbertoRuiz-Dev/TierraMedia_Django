@@ -1460,4 +1460,3 @@ class AttackViewTest(TestCase):
         # Eliminar usuario
         User.objects.all().delete()  # Elimina el usuario de prueba creado para las pruebas
 
-
