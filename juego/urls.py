@@ -40,7 +40,6 @@ urlpatterns = [
 
     path('equipment/', views.EquipmentView.as_view(), name='equipmentView'), # Vista para ver el equipo
 
-
     path('faction/', views.FactionView.as_view(), name='factionView'),  # Vista para ver la lista de facciones
     path('faction/list_faction/', views.FactionCharacterFormView.as_view(), name='factionCharacterFormView'), # Vista de formulario de facción
     path('faction/create/', views.FactionCreateView.as_view(), name='factionCreateView'), # Vista para crear una nueva facción
@@ -59,7 +58,9 @@ urlpatterns = [
     path('equipment/weapons/<int:pk>/edit/', views.WeaponUpdateView.as_view(), name='weaponUpdateView'), # Vista para editar arma
     path('equipment/weapons/<int:pk>/delete/', views.WeaponDeleteView.as_view(), name='weaponDeleteView'), # Vista para eliminar arma
     path('equipment/create_weapon/', views.WeaponCreateView.as_view(), name='weaponCreateView'), # Vista para crear un arma nueva
-    path('equipment/list_character_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'), # Vista para crear un arma nueva
+
+    # FALTA IMPLEMENTAR!!!!
+    path('equipment/list_character_for_equipment/', views.EquipmentCharacterFormView.as_view(), name='equipmentCharacterFormView'), # Vista para listar personajes segun un equipamiento
 
     path('equipment/armors/', views.ArmorListView.as_view(), name='armorListView'), # Vista de lista de armaduras
     path('equipment/armor/<int:pk>/', views.ArmorDetailView.as_view(), name='armorDetailView'), # Vista de detalle de armadura
