@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Equipamiento / Tierra Media{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">Equipamiento de Tierra Media</h1>
+        <div class="equipment-section text-center">
+            <p class="text-white mb-4">Explora el arsenal legendario de Tierra Media. Selecciona una categoría para ver los detalles.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'juego:weaponListView' %}" class="btn btn-danger btn-lg">Ver Armas</a>
+                <a href="{% url 'juego:armorListView' %}" class="btn btn-danger btn-lg">Ver Armaduras</a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'juego:equipmentCharacterFormView' %}" class="text-center btn btn-danger btn-lg">Filtrar personajes según equipamiento</a>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #1a1a1a; /* Dark background for a medieval feel */
+            color: #f8f9fa; /* Light text for contrast */
+        }
+        .equipment-section {
+            background-color: #2d2d2d; /* Slightly lighter than body for content */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+        .btn-danger {
+            background-color: #e74c3c; /* Red button for Tierra Media theme */
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b; /* Darker red on hover */
+            color: white;
+        }
+    </style>
+{% endblock %}

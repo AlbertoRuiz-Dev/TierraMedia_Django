@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Lista de caracteres por equipamiento{% endblock %}
+
+{% block content %}
+
+{% if error_mensaje %}
+    <!-- Mostrar un mensaje de error en caso de que exista -->
+    <div class="alert alert-danger alert-dismissible p-2 text-center w-25 mx-auto" role="alert">
+        {{ error_mensaje }}
+    </div>
+{% endif %}
+
+<!-- Contenedor principal con límite de ancho y centrado -->
+<div class="container d-flex flex-column align-items-center justify-content-center" style="max-width: 800px;">
+
+    <!-- Contenedor del formulario con fondo oscuro, borde blanco y centrado -->
+    <div class="container-fluid d-flex justify-content-center bg-dark mt-3 p-1 rounded border border-white" style="max-width: 600px;">
+        <form method="post" class="mb-4 w-100 bg-dark text-white p-3 rounded">
+            <!-- Token CSRF para seguridad -->
+            {% csrf_token %}
+            <div class="mb-3" >
+                <!-- Mostrar el formulario de manera centrada -->
+                {{ form.as_p }}
+            </div>
+            <!-- Botón para enviar el formulario, centrado y pequeño -->
+            <button type="submit" class="btn btn-primary btn-sm d-block mx-auto">Filtrar</button>
+        </form>
+    </div>
+
+    <!-- Título para la lista de personajes -->
+    <h2 class="text-light text-center">Personajes</h2>
+    <!-- Lista de personajes con fondo oscuro y texto blanco -->
+    <ul class="list-group mb-4 bg-dark text-white">
+        {% for character in characters %}
+            <!-- Cada personaje con su nombre y equipo -->
+            <li class="list-group-item bg-dark text-white">
+                <img src="{{ character.image.url }}" class="me-2" alt="{{ character.name }}" style="height: 32px; width: 32px ">
+                {{ character.name }}
+                {% if character.equipped_armor or character.equipped_weapon %}
+                    <!-- Si tiene un arma equipada, mostrarla -->
+                    {% if character.equipped_weapon %}
+                        - <span class="badge bg-secondary">{{ character.equipped_weapon }}</span>
+                    {% endif %}
+                    <!-- Si tiene armadura equipada, mostrarla -->
+                    {% if character.equipped_armor %}
+                        - <span class="badge bg-success">{{ character.equipped_armor }}</span>
+                    {% endif %}
+                {% else %}
+                    <!-- Si no tiene equipo, mostrar como "Vacío" -->
+                    - <span class="text-light">Vacio</span>
+                {% endif %}
+            </li>
+        {% empty %}
+            <!-- Mensaje en caso de que no haya personajes -->
+            <li class="list-group-item bg-dark text-muted">No hay personajes disponibles.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Título para la lista de armas -->
+    <h2 class="text-light text-center">Armas disponibles</h2>
+    <!-- Lista de armas con fondo oscuro y texto blanco -->
+    <ul class="list-group mb-4 bg-dark text-white">
+        {% if weapons %}
+            {% for weapon in weapons %}
+                <!-- Mostrar cada arma disponible -->
+                <li class="list-group-item bg-dark text-white">{{ weapon }}</li>
+            {% endfor %}
+        {% else %}
+            <!-- Mensaje en caso de que no haya armas disponibles -->
+            <li class="list-group-item bg-dark text-muted">No hay armas disponibles.</li>
+        {% endif %}
+    </ul>
+
+    <!-- Título para la lista de armaduras -->
+    <h2 class="text-light text-center">Armaduras disponibles</h2>
+    <!-- Lista de armaduras con fondo oscuro y texto blanco -->
+    <ul class="list-group bg-dark text-white">
+        {% if armors %}
+            {% for armor in armors %}
+                <!-- Mostrar cada armadura disponible -->
+                <li class="list-group-item bg-dark text-white">{{ armor }}</li>
+            {% endfor %}
+        {% else %}
+            <!-- Mensaje en caso de que no haya armaduras disponibles -->
+            <li class="list-group-item bg-dark text-muted">No hay armaduras disponibles.</li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
+{% endblock %}

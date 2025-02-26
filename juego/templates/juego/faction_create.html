@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Crear facción{% endblock %}
+
+{% block content %}
+    
+<!-- Contenedor principal centrado con un mínimo de altura del 60% de la vista -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <!-- Contenedor de texto centrado -->
+    <div class="text-center">
+        <!-- Título principal de la página -->
+        <h1 class="text-light mb-4">Añade una facción:</h1>
+
+        <!-- Formulario para añadir una facción -->
+        <form method="post" class="p-4 border rounded-3 shadow-lg" style="background-color: rgba(0, 0, 0, 0.7); color: white; width: 400px;">
+            {% csrf_token %}
+            <!-- Campo del formulario, renderizado como párrafos -->
+            <div class="mb-4">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Botón para guardar la facción -->
+            <button type="submit" class="btn btn-primary w-100 mt-3">Guardar</button>
+        </form>
+
+        <!-- Botón de volver a la vista de facciones -->
+        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary mt-3">Volver</a>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

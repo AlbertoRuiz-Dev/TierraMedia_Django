@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,7 @@ SECRET_KEY = 'django-insecure-#vzios5+-$aff*=#fnh+uf=b+_imwz)gmw3)owo1_beqeaor5*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'juego.apps.JuegoConfig',
+    'debug_toolbar',
+    'django_json_widget',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'tierramedia.urls'
@@ -75,12 +80,36 @@ WSGI_APPLICATION = 'tierramedia.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        # Especifica el backend de la base de datos que se utilizará. En este caso, estamos usando PostgreSQL.
+        "ENGINE": "django.db.backends.postgresql",  # Backend de PostgreSQL
+
+        # Nombre de la base de datos que se utilizará. En este caso, la base de datos se llama "django_db".
+        "NAME": "django_db",  # Nombre de la base de datos
+
+        # Usuario que se usará para conectarse a la base de datos.
+        "USER": "postgres",  # Usuario de la base de datos
+
+        # Contraseña del usuario para acceder a la base de datos.
+        "PASSWORD": "password",  # Contraseña del usuario de la base de datos
+
+        # Dirección del servidor de la base de datos. Si estás usando Docker, el valor podría ser el nombre del servicio, como "db".
+        "HOST": "db",  # Dirección del host de la base de datos
+
+        # Puerto en el que se ejecuta la base de datos. El valor predeterminado de PostgreSQL es 5432.
+        "PORT": "5432",  # Puerto donde la base de datos escucha
     }
 }
 
+
+# Obtenemos el nombre del host (máquina local) y sus direcciones IP asociadas
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+
+# Creamos una lista de direcciones IP internas agregando '.1' al final de cada dirección
+INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "localhost"]
+
+# Si conseguimos la ip de nuestro contenedor docker con el comando (docker inspect django_web) y cogemos la ip del ("Gateway") podemos ponerlo de la siguiente manera
+# INTERNAL_IPS = ["172.19.0.1", "127.0.0.1", "localhost"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -99,6 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
@@ -123,6 +153,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Definir la URL a la que los usuarios serán redirigidos si intentan acceder a una página que requiere autenticación
 LOGIN_URL = '/accounts/login/'
+
+# Definir la URL a la que el usuario será redirigido después de iniciar sesión con éxito
 LOGIN_REDIRECT_URL = '/'
+
+# Definir la URL a la que el usuario será redirigido después de cerrar sesión
 LOGOUT_REDIRECT_URL = '/accounts/logout/'
+
+# Definir la URL pública utilizada para acceder a los archivos de medios (como imágenes o documentos)
+MEDIA_URL = '/media/'  # Ruta pública para acceder a los archivos de medios
+
+# Definir la ruta en el sistema de archivos donde los archivos de medios serán almacenados
+MEDIA_ROOT = os.path.join(BASE_DIR, 'juego/static/media')  # Ruta física donde se almacenan los archivos

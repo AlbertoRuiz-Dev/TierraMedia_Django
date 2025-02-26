@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Relación | Tierra Media{% endblock %}
+
+{% block content %}
+    <div class="card shadow-sm p-4 text-center" style="background: rgba(255, 255, 255, 0.6); border-radius: 15px; border: none;">
+        <h1 class="mb-4 text-danger">¿Estás seguro?</h1>
+        <p class="lead">Vas a eliminar la relación entre:</p>
+
+        <div class="p-3 mb-3 rounded" style="background: rgba(255, 255, 255, 0.6);">
+            <strong>{{ object.character1 }}</strong> -
+            <em>{{ object.relationship_type }}</em> -
+            <strong>{{ object.character2 }}</strong>
+        </div>
+
+        <p class="text-muted">Esta acción no se puede deshacer.</p>
+
+        <!-- Formulario de eliminación -->
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Eliminar</button>
+            <a href="{% url 'juego:relationshipListView' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Editar facción{% endblock %}
+{% block content %}
+
+
+<!-- Contenedor principal centrado con un mínimo de altura del 60% de la vista -->
+<div class="d-flex justify-content-center align-items-center " style="min-height: 60vh;">
+    <!-- Contenedor de texto centrado -->
+    <div class="text-center">
+        <!-- Título principal de la página -->
+        <h1 class="text-light mb-4">Actualiza la facción:</h1>
+
+        <!-- Mostrar el nombre del objeto (facción) que se está actualizando -->
+        <p>{{ object }}</p>
+
+        <!-- Formulario para actualizar la facción -->
+        <form method="post" class="p-4 border rounded-3 shadow-lg" style="background-color: rgba(0, 0, 0, 0.7); color: white; width: 400px;">
+            {% csrf_token %}
+            <!-- Campos del formulario, renderizados como párrafos -->
+            <div class="mb-4">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Botón para enviar el formulario y actualizar la facción -->
+            <button type="submit" class="btn btn-primary w-100 mt-3">Actualizar</button>
+        </form>
+
+        <!-- Botón de "Volver" para regresar a la vista de facciones -->
+        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary mt-3">Volver</a>
+    </div>
+</div>
+
+
+
+{% endblock %}

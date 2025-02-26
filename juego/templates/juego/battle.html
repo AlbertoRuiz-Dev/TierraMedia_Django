@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+<!-- Se extiende una plantilla base llamada 'base.html', la cual probablemente contiene los elementos comunes a todas las páginas (como el encabezado y pie de página) -->
+
+{% block title %}Batalla / Tierra Media{% endblock %}
+<!-- Se define el título de la página, en este caso "Batalla / Tierra Media". Este bloque sobrescribe el título definido en la plantilla base. -->
+
+{% load static %}
+<!-- Se carga la etiqueta 'static' para poder acceder a archivos estáticos como imágenes, hojas de estilo y scripts en Django. -->
+
+{% block links %}
+    <!-- Este bloque define los enlaces a los archivos estáticos que serán cargados en la página -->
+    <script src="{% static 'js/battle.js' %}"></script>
+    <!-- Carga el archivo JavaScript battle.js, probablemente para manejar la lógica de la batalla -->
+    <link rel="stylesheet" href="{% static 'css/battle.css' %}">
+    <!-- Carga el archivo CSS battle.css para el estilo específico de la página de batalla -->
+{% endblock %}
+
+{% block content %}
+    <!-- Comienza el bloque de contenido específico de esta página -->
+    
+    <div class="container text-center rounded w-25 mt-3 batalla p-4" style="display: {% if char1 and char2 %}none{% else %}block{% endif %};">
+        <!-- Contenedor para la selección de personajes, que solo se muestra si no se han seleccionado ambos personajes -->
+        <h2 class="mb-3">Selecciona los personajes para la batalla.</h2>
+        <!-- Título indicando que se deben seleccionar personajes -->
+        <form method="post" id="battle_form" action="{% url 'juego:battleView' %}">
+            <!-- Formulario para enviar los personajes seleccionados, se usa un método POST y la acción envía los datos a 'juego:battleView' -->
+            {% csrf_token %}
+            <!-- Token CSRF para protección contra ataques de falsificación de solicitudes entre sitios -->
+            {{ form.as_p }}
+            <!-- Renderiza el formulario como párrafos -->
+            <button type="submit" id="start_battle" class="btn btn-primary boton_batalla mt-2">¡Batalla!</button>
+            <!-- Botón para iniciar la batalla, solo aparecerá si los personajes no están seleccionados -->
+        </form>
+        {% if error %}
+            <!-- Si hay un error (por ejemplo, si no se seleccionaron ambos personajes), se muestra un mensaje de error -->
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <div class="container-fluid text-center rounded mt-3" id="battle_arena" style="display: {% if char1 and char2 %}block{% else %}none{% endif %};">
+        <!-- Contenedor de la arena de batalla, que solo se muestra si ambos personajes han sido seleccionados -->
+    
+        <div class="container text-center rounded">
+            <h2 class="mt-5">¡Batalla en curso!</h2>
+            <!-- Título indicando que la batalla está en curso -->
+            <p id="status"></p>
+            <!-- Un párrafo donde se mostrarán los mensajes de estado de la batalla -->
+            <div class="row justify-content-center align-items-center mb-5 mt-5">
+                <!-- Fila para alinear las tarjetas de los personajes de manera centrada -->
+                
+                <div class="col-4 batalla rounded mx-3 pb-3">
+                    <!-- Tarjeta de personaje 1 -->
+                    <h3 id="char1_name" class="mt-3">{{ char1.name }}</h3>
+                    <!-- Nombre del primer personaje -->
+                    <p>HP: <span id="char1_hp">1000</span></p>
+                    <!-- Muestra los puntos de vida del personaje 1, que probablemente se actualizarán dinámicamente -->
+                    <input type="hidden" id="char1_id" value="{{ char1.id }}">
+                    <!-- Almacena el ID del personaje 1 para uso posterior en JavaScript -->
+        
+                    <div id="char1_controls">
+                        <!-- Controles del personaje 1 -->
+                        <button type="button" id="char1_fuerte" class="btn btn-primary boton_fuerte mx-2">⚔️ Ataque Fuerte</button>
+                        <!-- Botón para realizar un ataque fuerte -->
+                        <button type="button" id="char1_debil" class="btn btn-primary boton_debil mx-2">🗡️ Ataque Débil</button>
+                        <!-- Botón para realizar un ataque débil -->
+                    </div>
+                </div>
+        
+                <div class="col-4 batalla rounded mx-3 pb-3">
+                    <!-- Tarjeta de personaje 2 -->
+                    <h3 id="char2_name" class="mt-3">{{ char2.name }}</h3>
+                    <!-- Nombre del segundo personaje -->
+                    <p>HP: <span id="char2_hp">1000</span></p>
+                    <!-- Muestra los puntos de vida del personaje 2 -->
+                    <input type="hidden" id="char2_id" value="{{ char2.id }}">
+                    <!-- Almacena el ID del personaje 2 -->
+        
+                    <div id="char2_controls">
+                        <!-- Controles del personaje 2 -->
+                        <button type="button" id="char2_fuerte" class="btn btn-primary boton_fuerte mx-2">⚔️ Ataque Fuerte</button>
+                        <!-- Botón para realizar un ataque fuerte -->
+                        <button type="button" id="char2_debil" class="btn btn-primary boton_debil mx-2">🗡️ Ataque Débil</button>
+                        <!-- Botón para realizar un ataque débil -->
+                    </div>
+                </div>
+            </div>
+            
+            <p class="frase rounded p-2"><span id="comentario">Que comience la batalla!</span></p>
+            <!-- Mensaje que aparece antes de que la batalla comience -->
+        </div>
+
+        <!-- Campo oculto para almacenar el jugador cuyo turno es -->
+        <input type="hidden" id="turn_player" value="{{ turn_player }}">
+        <!-- Este campo es utilizado por JavaScript para llevar el control de qué jugador debe actuar en cada turno -->
+    </div>
+{% endblock %}
+<!-- Fin del bloque de contenido específico -->

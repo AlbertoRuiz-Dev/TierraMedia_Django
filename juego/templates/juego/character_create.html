@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Crear Personaje / Tierra Media{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4 text-white">Crear Nuevo Personaje</h1>
+        <form method="post" enctype="multipart/form-data" class="card bg-dark text-white shadow p-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Nombre:</label>
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                <label for="id_location" class="form-label">Ubicación:</label>
+                {{ form.location }}
+            </div>
+            <div class="mb-3">
+                <label for="id_faction" class="form-label">Facción:</label>
+                {{ form.faction }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image" class="form-label">Imagen:</label>
+                {{ form.image }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-danger">Crear Personaje</button>
+                <a href="{% url 'juego:characterView' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+            {% if form.errors %}
+                <div class="alert alert-danger mt-3">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <style>
+        .form-label {
+            color: #e74c3c; /* Red labels for Tierra Media theme */
+        }
+        .form-control, .form-select {
+            background-color: #1a1a1a; /* Dark input background */
+            border: 1px solid #e74c3c; /* Red border for inputs */
+            color: #f8f9fa; /* Light text for readability */
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #1a1a1a;
+            border-color: #c0392b; /* Darker red on focus */
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}{{ character.name }} / Tierra Media{% endblock %}
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card bg-dark text-white shadow">
+                <div class="card-header bg-secondary py-3">
+                    <h1 class="text-center mb-0 fs-2">{{ character.name }}</h1>
+                </div>
+                <div class="character-image-container">
+                    <img src="{{ character.image.url }}" class="character-image" alt="{{ character.name }}">
+                </div>
+                <div class="card-body">
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="character-detail">
+                                <span class="detail-label">Facción:</span>
+                                <span class="detail-value">
+                                    {% if character.faction %}
+                                        {{ character.faction.name }}
+                                    {% else %}
+                                        Sin Facción
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="character-detail">
+                                <span class="detail-label">Ubicación:</span>
+                                <span class="detail-value">{{ character.location }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="character-detail">
+                                <span class="detail-label">Arma Equipada:</span>
+                                <span class="detail-value">
+                                    {% if character.equipped_weapon %}
+                                        {{ character.equipped_weapon.name }}
+                                    {% else %}
+                                        Ninguna
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="character-detail">
+                                <span class="detail-label">Armadura Equipada:</span>
+                                <span class="detail-value">
+                                    {% if character.equipped_armor %}
+                                        {{ character.equipped_armor.name }}
+                                    {% else %}
+                                        Ninguna
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'juego:characterView' %}" class="btn btn-danger px-4 py-2">Volver a la Lista</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background-color: #1a1a1a;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    .character-image-container {
+        max-height: 500px;
+        overflow: hidden;
+        border-bottom: 3px solid #e74c3c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #000;
+    }
+
+    .character-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain; /* Muestra la imagen completa */
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        background-color: #2d2d2d;
+    }
+
+    .character-detail {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: #e74c3c;
+        display: block;
+        margin-bottom: 0.2rem;
+    }
+
+    .detail-value {
+        color: #f8f9fa;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+        border-bottom: none;
+        background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Media queries para proporciones en diferentes dispositivos */
+    @media (max-width: 768px) {
+        .character-image-container {
+            max-height: 350px;
+        }
+
+        .character-image {
+            max-height: 350px;
+        }
+    }
+</style>
+{% endblock %}
