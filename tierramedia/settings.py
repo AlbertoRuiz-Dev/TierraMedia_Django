@@ -166,4 +166,4 @@ LOGOUT_REDIRECT_URL = '/accounts/logout/'
 MEDIA_URL = '/media/'  # Ruta pública para acceder a los archivos de medios
 
 # Definir la ruta en el sistema de archivos donde los archivos de medios serán almacenados
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ruta física donde se almacenan los archivos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'juego/static/media')  # Ruta física donde se almacenan los archivos

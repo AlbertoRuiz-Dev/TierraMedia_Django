@@ -51,21 +51,21 @@ def poblar_datos(apps, schema_editor):
 
     # Crear armas
     weapons = [
-        Weapon(name="Espada del Apocalipsis", description="Una espada legendaria capaz de partir el acero en dos.", damage=75),
-        Weapon(name="Rifle de Asalto Fantasma", description="Un rifle silencioso usado por los asesinos más letales.", damage=62),
-        Weapon(name="Martillo del Juicio", description="Un martillo pesado que aplasta a los enemigos con furia.", damage=80),
-        Weapon(name="Arco del Cazador Nocturno", description="Un arco ligero con flechas que perforan la armadura.", damage=95),
-        Weapon(name="Dagas de la Sombra", description="Un par de dagas envenenadas, perfectas para ataques rápidos.", damage=53)
+        Weapon(name="Espada del Apocalipsis", description="Una espada legendaria capaz de partir el acero en dos.", damage=75,image="weapons/arma1.jpg"),
+        Weapon(name="Rifle de Asalto Fantasma", description="Un rifle silencioso usado por los asesinos más letales.", damage=62,image="weapons/arma2.jpg"),
+        Weapon(name="Martillo del Juicio", description="Un martillo pesado que aplasta a los enemigos con furia.", damage=80,image="weapons/arma3.jpg"),
+        Weapon(name="Arco del Cazador Nocturno", description="Un arco ligero con flechas que perforan la armadura.", damage=95,image="weapons/arma4.jpg"),
+        Weapon(name="Dagas de la Sombra", description="Un par de dagas envenenadas, perfectas para ataques rápidos.", damage=53,image="weapons/arma5.jpg")
     ]
     Weapon.objects.bulk_create(weapons)  # Guardar todas las armas de una vez
 
     # Crear armaduras
     armors = [
-        Armor(name="Armadura del Titán", description="Una armadura pesada que ofrece máxima protección.", defense=15),
-        Armor(name="Traje de Sigilo Fantasma", description="Un traje ligero que permite moverse sin ser detectado.", defense=8),
-        Armor(name="Coraza del Renegado", description="Una coraza resistente forjada en las arenas del desierto.", defense=12),
-        Armor(name="Manto del Caos", description="Un manto que absorbe parte del daño mágico.", defense=10),
-        Armor(name="Armadura del Cazador", description="Una armadura flexible que ofrece equilibrio entre defensa y agilidad.", defense=11)
+        Armor(name="Armadura del Titán", description="Una armadura pesada que ofrece máxima protección.", defense=15,image="armors/armadura1.jpg"),
+        Armor(name="Traje de Sigilo Fantasma", description="Un traje ligero que permite moverse sin ser detectado.", defense=8,image="armors/armadura2.jpg"),
+        Armor(name="Coraza del Renegado", description="Una coraza resistente forjada en las arenas del desierto.", defense=12,image="armors/armadura3.jpg"),
+        Armor(name="Manto del Caos", description="Un manto que absorbe parte del daño mágico.", defense=10,image="armors/armadura4.jpg"),
+        Armor(name="Armadura del Cazador", description="Una armadura flexible que ofrece equilibrio entre defensa y agilidad.", defense=11,image="armors/armadura5.jpg")
     ]
     Armor.objects.bulk_create(armors)  # Guardar todas las armaduras de una vez
 
@@ -80,46 +80,55 @@ def poblar_datos(apps, schema_editor):
             location="Fortaleza del Hierro",
             faction=faction1,
             equipped_weapon=Weapon.objects.get(name="Espada del Apocalipsis"),
-            equipped_armor=Armor.objects.get(name="Armadura del Titán")
+            equipped_armor=Armor.objects.get(name="Armadura del Titán"),
+            image = "characters/personaje1.jpg"
         ),
         Character(
             name="Nyx, la Sombra",
             location="Ciudad Sombría",
             faction=faction2,
             equipped_weapon=Weapon.objects.get(name="Dagas de la Sombra"),
-            equipped_armor=Armor.objects.get(name="Traje de Sigilo Fantasma")
+            equipped_armor=Armor.objects.get(name="Traje de Sigilo Fantasma"),
+            image="characters/personaje10.jpg"
+
         ),
         Character(
             name="Kael, el Martillo",
             location="Tierras Áridas",
             faction=faction1,
             equipped_weapon=Weapon.objects.get(name="Martillo del Juicio"),
-            equipped_armor=Armor.objects.get(name="Coraza del Renegado")
+            equipped_armor=Armor.objects.get(name="Coraza del Renegado"),
+            image="characters/personaje8.jpg"
+
         ),
         Character(
             name="Selene, la Cazadora",
             location="Ruinas Olvidadas",
             faction=faction2,
             equipped_weapon=Weapon.objects.get(name="Arco del Cazador Nocturno"),
-            equipped_armor=Armor.objects.get(name="Armadura del Cazador")
+            equipped_armor=Armor.objects.get(name="Armadura del Cazador"),
+            image="characters/personaje9.jpg"
+
         ),
         Character(
             name="Malek, el Caótico",
             location="Ruinas Olvidadas",
             faction=faction1,
             equipped_weapon=Weapon.objects.get(name="Rifle de Asalto Fantasma"),
-            equipped_armor=Armor.objects.get(name="Manto del Caos")
+            equipped_armor=Armor.objects.get(name="Manto del Caos"),
+            image="characters/personaje2.jpg"
+
         )
     ]
     Character.objects.bulk_create(characters)  # Guardar todos los personajes de una vez
 
     # Crear personajes simples (sin equipo)
     characters_simple = [
-        Character(name="Rogar, el Errante", location="Bosques Perdidos"),
-        Character(name="Lyra, la Vengadora", location="Ciudad Sombría"),
-        Character(name="Thalor, el Exiliado", location="Tierras Áridas"),
-        Character(name="Eryndor, el Hechicero", location="Ruinas Olvidadas"),
-        Character(name="Astra, la Guardiana", location="Fortaleza del Hierro")
+        Character(name="Rogar, el Errante", location="Bosques Perdidos",image="characters/personaje3.jpg" ),
+        Character(name="Lyra, la Vengadora", location="Ciudad Sombría",image="characters/personaje4.jpg"),
+        Character(name="Thalor, el Exiliado", location="Tierras Áridas",image="characters/personaje5.jpg"),
+        Character(name="Eryndor, el Hechicero", location="Ruinas Olvidadas",image="characters/personaje6.jpg"),
+        Character(name="Astra, la Guardiana", location="Fortaleza del Hierro", image="characters/personaje7.jpg")
     ]
     Character.objects.bulk_create(characters_simple)  # Guardar todos los personajes simples
 
