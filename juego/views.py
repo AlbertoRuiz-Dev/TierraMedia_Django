@@ -117,7 +117,6 @@ class EquipmentCharacterFormView(LoginRequiredMixin, FormView):
         context.setdefault("armors", Armor.objects.all())  # Mostrar todas las armaduras por defecto
         return context
 
-
 class FactionCreateView(LoginRequiredMixin, CreateView):
     model = Faction
     form_class = FactionDefaultForm  # Usamos ModelForm

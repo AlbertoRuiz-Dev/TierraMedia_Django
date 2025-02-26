@@ -1,6 +1,6 @@
-# 📜 Nombre del Proyecto
+# 📜 Tierra Media
 
-Breve descripción del proyecto.
+Tierra Media se trata de un proyecto de un juego web creado por: Aarón Gutierrez, Jesús Pérez, Alberto Ruiz.
 
 ## 📌 Descripción
 
