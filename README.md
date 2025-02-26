@@ -2,6 +2,7 @@
 
 Tierra Media se trata de un proyecto de un juego web creado por: Aarón Gutierrez, Jesús Pérez, Alberto Ruiz.
 
+
 ## 📌 Descripción
 
 Este es un proyecto desarrollado con Django que permite gestionar personajes, sus facciones, inventarios y relaciones. Incluye autenticación, modelos bien estructurados y una interfaz web intuitiva.
