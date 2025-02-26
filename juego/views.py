@@ -150,7 +150,7 @@ class InventoryViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar los personajes usando el viewset
-class CharacterViewSet(viewsets.ModelViewSet):
+class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Character. Usa el serializador CharacterSerializer.
@@ -159,7 +159,21 @@ class CharacterViewSet(viewsets.ModelViewSet):
     queryset = Character.objects.all().select_related('faction', 'inventory', 'equipped_armor',
                                                       'equipped_weapon')  # Usamos select_related para optimizar la consulta de relaciones
     # Especificar el serializador que se utilizará para convertir los objetos de Character a JSON
-    serializer_class = CharacterSerializer
+    serializer_class = CharacterSerializerAll
+
+
+# Vista para gestionar los personajes usando el viewset
+class CharacterModifyViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+    para el modelo Character. Usa el serializador CharacterSerializer.
+    """
+    # Definir la consulta que se usará para obtener los objetos de Character
+    queryset = Character.objects.all().select_related('faction', 'inventory', 'equipped_armor',
+                                                      'equipped_weapon')  # Usamos select_related para optimizar la consulta de relaciones
+    # Especificar el serializador que se utilizará para convertir los objetos de Character a JSON
+    serializer_class = CharacterSerializerModify
+
 
 class BattleView(LoginRequiredMixin, FormView):
     template_name = 'juego/battle.html'
@@ -418,12 +432,6 @@ class CharacterCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         Inventory.objects.create(character=self.object)
         return super().form_valid(form)
-
-class LocationUpdateView(LoginRequiredMixin, UpdateView):
-    model = Character
-    fields = ['', '']
-    template_name = ''
-    success_url = ''
 
 class WeaponListView(LoginRequiredMixin, ListView):
     model = Weapon

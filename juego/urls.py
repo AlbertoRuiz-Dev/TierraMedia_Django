@@ -16,7 +16,9 @@ router.register(r'armors', ArmorViewSet, basename='armor')  # Ruta para Armor
 router.register(r'weapons', WeaponViewSet, basename='weapon')  # Ruta para Weapon
 router.register(r'relationships', RelationshipViewSet, basename='relationship')  # Ruta para Relationship
 router.register(r'inventories', InventoryViewSet, basename='inventory')  # Ruta para Inventory
-router.register(r'characters', CharacterViewSet, basename='character')  # Ruta para Character
+router.register(r'characters-info', CharacterViewSet, basename='character_info')  # Ruta para ver la info de los Characters
+router.register(r'characters-modidy', CharacterModifyViewSet, basename='character_modify')  # Ruta para modificar, eliminar y crear Characters
+
 
 # Definir el nombre de la aplicación para los nombres de las rutas
 app_name = 'juego'
@@ -30,7 +32,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     # Ruta para obtener el conteo de miembros por facción
-    path('api/faction_member_count/', get_factions_member_count, name='faction_member_count'),
+    path('api/faction_member_count/', get_factions_member_count, name='get_factions_member_count'),
 
     path('character/', views.CharacterListView.as_view(), name='characterView'),  # Vista de lista de personajes
     path('character/<int:pk>/', views.CharacterDetailView.as_view(), name='characterDetailView'), # Vista de detalle de personaje
@@ -54,8 +56,6 @@ urlpatterns = [
     path('character/relationship_update/<int:pk>/', views.RelationshipUpdateView.as_view(), name="relationshipUpdateView"),
 
     path('battle/', views.BattleView.as_view(), name='battleView'), # Vista para batallas entre personajes
-
-    path('character/location/', views.LocationUpdateView.as_view(), name='locationUpdateView'), # Vista para actualizar la ubicación de un personaje
 
     path('equipment/weapons/', views.WeaponListView.as_view(), name='weaponListView'), # Vista de lista de armas
     path('equipment/weapon/<int:pk>/', views.WeaponDetailView.as_view(), name='weaponDetailView'), # Vista de detalle de arma
