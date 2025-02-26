@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', data.error);
             } else {
                 // Si la respuesta es exitosa, actualizamos la UI
-                // Actualizar los puntos de vida de los personajes
+                // Actualizar los puntos de vida de los personajes y la frase
                 document.getElementById('char1_hp').textContent = data.char1_hp;
                 document.getElementById('char2_hp').textContent = data.char2_hp;
+                document.getElementById('comentario').innerText = data.frase;
 
                 // Actualizar el turno del jugador
                 if (data.turn_player === data.char1_id) {
@@ -45,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Si se acabó el juego o algún personaje tiene 0 HP, mostrar mensaje de fin de juego
                 if (data.char1_hp <= 0 || data.char2_hp <= 0) {
-                    document.getElementById('frase').textContent = data.frase;
+                    document.getElementById('comentario').innerText = data.winner;
                 }
             }
         })
