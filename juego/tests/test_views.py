@@ -1296,8 +1296,8 @@ class BattleViewTest(TestCase):
         """
         self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         data = {
-            'char1': self.character1,
-            'char2': self.character2,
+            'character': self.character1.id,
+            'character2': self.character2.id,
         }
 
         # Realiza la solicitud POST
