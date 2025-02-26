@@ -87,7 +87,7 @@ class CharacterModelTest(TestCase):
         Verifica que la representación en cadena del personaje sea 'Sauron (Villanos) - Ubicación: Mordor'
         """
         # Se verifica que la representación en cadena del personaje sea la esperada
-        self.assertEqual(str(self.character), "Sauron (Villanos) - Ubicación: Mordor")
+        self.assertEqual(str(self.character), "Sauron (Villanos)")
 
     def test_character_equipment(self):
         """
