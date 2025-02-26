@@ -5,7 +5,8 @@ from django.test import Client
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-
+import json
+from django.middleware.csrf import get_token
 
 
 
@@ -1329,6 +1330,129 @@ class BattleViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)  # Verifica que el código de estado sea 200 (OK)
         self.assertContains(response, "Hay un problema con la selección de personajes.")  # Verifica que el mensaje de error esté presente
+
+    def tearDown(self):
+        """
+        Limpieza de los datos de prueba.
+        Elimina personajes y el usuario de prueba.
+        """
+        # Eliminar personajes
+        Character.objects.all().delete()  # Elimina todos los personajes creados en las pruebas
+
+        # Eliminar usuario
+        User.objects.all().delete()  # Elimina el usuario de prueba creado para las pruebas
+
+
+class AttackViewTest(TestCase):
+    """Pruebas para la vista de ataque"""
+
+    def setUp(self):
+        """
+        Configuración inicial de los datos de prueba.
+        Crea personajes, armas, armaduras y un usuario de prueba.
+        """
+        # Elimina los datos
+        Character.objects.all().delete()
+        Armor.objects.all().delete()
+        Weapon.objects.all().delete()
+        Faction.objects.all().delete()
+
+        weapon1 = Weapon.objects.create(name="Espada del Apocalipsis", description="Una espada legendaria capaz de partir el acero en dos.", damage=75)  # Crea un arma
+        armor1 = Armor.objects.create(name="Armadura del Titán", description="Una armadura pesada que ofrece máxima protección.", defense=15)  # Crea una armadura
+        faction1 = Faction.objects.create(name="La Hermandad de Acero", location="Fortaleza del Hierro")
+
+        self.character1 = Character.objects.create(name="Aragorn", location="Gondor", faction=faction1, equipped_weapon=weapon1, equipped_armor=armor1)  # Crea un personaje 'Aragorn'
+        self.character2 = Character.objects.create(name="Gollum", location="Mordor", faction=faction1, equipped_weapon=weapon1, equipped_armor=armor1)  # Crea otro personaje 'Gollum'
+        self.user = User.objects.create_user(username='testuser', password='password123')  # Crea un usuario de prueba
+        self.attack_view_url = reverse('juego:attackView')  # URL para la vista de ataque
+
+        # Realizar una solicitud GET a una vista para obtener el token CSRF
+        response = self.client.get(self.attack_view_url)  # Realiza una solicitud GET a la vista que contiene el CSRF token
+        self.csrf_token = response.cookies['csrftoken'].value  # Obtener el token CSRF desde la cookie
+
+    def test_redirect_if_not_logged_in(self):
+        """
+        Verifica que un usuario no autenticado sea redirigido al login.
+        """
+        response = self.client.post(self.attack_view_url)  # Realiza una solicitud POST sin estar autenticado
+        self.assertRedirects(response, f"/accounts/login/?next={self.attack_view_url}")  # Verifica que sea redirigido a login
+
+    def test_attack_view_invalid_data(self):
+        """
+        Verifica que, al enviar datos incompletos, se devuelvan los errores correspondientes.
+        """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
+
+        data = {}  # Enviar datos vacíos
+
+        response = self.client.post(self.attack_view_url, data, content_type='application/json')  # Realiza una solicitud POST con datos vacíos
+        self.assertEqual(response.status_code, 400)  # Verifica que se retorne un código de estado 400
+        self.assertContains(response, 'Datos incompletos')  # Verifica que el mensaje de error esté presente
+
+    def test_attack_view_turn_error(self):
+        """
+        Verifica que el atacante no sea el correcto en su turno.
+        """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
+
+        # Primero iniciamos la batalla con los personajes
+        battle_data = {
+            'char1': self.character1.id,
+            'char2': self.character2.id,
+        }
+        self.client.post(reverse('juego:battleView'), battle_data)
+
+        # Intentamos atacar con el personaje equivocado
+        data = {
+            'attacker': self.character2.id,  # Intentamos atacar con el personaje que no es su turno
+            'ataque': 'fuerte',
+        }
+
+        response = self.client.post(self.attack_view_url, json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 400)  # Verifica que se retorne un código de estado 400
+        self.assertContains(response, 'No es tu turno')  # Verifica que el mensaje de error esté presente
+
+    def test_attack_view_successful_attack(self):
+        """
+        Verifica que un ataque exitoso actualice correctamente los puntos de vida.
+        """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
+
+        # Primero iniciamos la batalla con los personajes
+        battle_data = {
+            'char1': self.character1.id,
+            'char2': self.character2.id,
+        }
+        self.client.post(reverse('juego:battleView'), battle_data)
+
+        # Realizamos un ataque válido
+        data = {
+            'attacker': self.character1.id,
+            'ataque': 'fuerte',
+        }
+
+        response = self.client.post(self.attack_view_url, json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)  # Verifica que el código de estado sea 200 (OK)
+
+        # Verifica que la respuesta contenga los HP actualizados
+        self.assertContains(response, 'char1_hp')
+        self.assertContains(response, 'char2_hp')
+
+    def test_attack_view_invalid_attack_type(self):
+        # Preparar los datos de prueba con un tipo de ataque inválido
+        data = {
+            'ataque': 'invalid_attack_type',  # Un tipo de ataque no válido
+            'attacker': self.character1.id,  # ID de un atacante válido
+        }
+
+        # Realizar la solicitud POST
+        response = self.client.post('/battle/attack/', data, HTTP_X_CSRFTOKEN=self.csrf_token)
+
+        # Verificar que la respuesta tenga el código de estado 400 (Bad Request)
+        self.assertEqual(response.status_code, 400)
+
+        # Verificar que el mensaje de error esté en el cuerpo de la respuesta
+        self.assertContains(response, 'Tipo de ataque inválido')
 
     def tearDown(self):
         """
