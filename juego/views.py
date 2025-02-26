@@ -199,9 +199,10 @@ class BattleView(LoginRequiredMixin, View):
             request.session['battle'] = {
                 'char1': char1.id,
                 'char2': char2.id,
-                'char1_hp': 100,
-                'char2_hp': 100,
+                'char1_hp': 1000,
+                'char2_hp': 1000,
                 'turn_player': turn_player,
+                'frase': "Prueba",
             }
 
             # Pasar los personajes seleccionados y el turno al contexto para mostrarlos en la plantilla
@@ -262,8 +263,8 @@ class AttackView(View):
                 return JsonResponse({'error': 'No es tu turno'}, status=400)
 
             # Obtener los HP actuales de los personajes
-            char1_hp = battle_state.get('char1_hp', 100)
-            char2_hp = battle_state.get('char2_hp', 100)
+            char1_hp = battle_state.get('char1_hp', 1000)
+            char2_hp = battle_state.get('char2_hp', 1000)
 
             # Obtener el atacante y el defensor desde la base de datos
             attacker = get_object_or_404(Character, id=attacker_id)
@@ -312,6 +313,7 @@ class AttackView(View):
                 'char1_hp': char1_hp,
                 'char2_hp': char2_hp,
                 'turn_player': next_turn_player,
+                'frase': "Prueba",
             }
 
             # Devolver la nueva información de la batalla
@@ -321,6 +323,7 @@ class AttackView(View):
                 'char2_hp': char2_hp,
                 'char2_id': char2_id,
                 'turn_player': next_turn_player,
+                'frase': "Prueba",
             })
 
         except Exception as e:
