@@ -52,6 +52,8 @@ urlpatterns = [
     path('character/<int:pk>/inventory/add_items/', views.InventoryAddItemsView.as_view(), name='inventory_add_items'),
     path('character/<int:pk>/equip_weapon/', views.EquipWeaponView.as_view(), name='equip_weapon'),
     path('character/<int:pk>/equip_armor/', views.EquipArmorView.as_view(), name='equip_armor'),
+    path('accounts/register/', views.RegisterView.as_view(), name='register'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

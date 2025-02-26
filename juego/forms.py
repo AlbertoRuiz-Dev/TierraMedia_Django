@@ -1,4 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.forms import ClearableFileInput
+
 from juego.models import *
 
 class FactionForm(forms.Form):
@@ -25,21 +28,32 @@ class EquipmentForm(forms.Form):
         required=False  # Hacemos el campo opcional
     )
 
+class NoClearableFileInput(ClearableFileInput):
+    """ Widget personalizado sin la opción de 'Clear' """
+    template_name = 'widgets/no_clearable_file_input.html'  # Template para renderizar
+
 class WeaponForm(forms.ModelForm):
     class Meta:
         model = Weapon
         fields = ['name', 'description', 'damage','image']
+        widgets = {
+            'image': NoClearableFileInput(),  # Asignamos el widget sin opción de limpiar
+        }
 
 class ArmorForm(forms.ModelForm):
     class Meta:
         model = Armor
         fields = ['name', 'description', 'defense', 'image']
-
+        widgets = {
+            'image': NoClearableFileInput(),  # Asignamos el widget sin opción de limpiar
+        }
 class CharacterForm(forms.ModelForm):
     class Meta:
         model = Character
         fields = ['name', 'location', 'faction', 'equipped_weapon', 'equipped_armor','image']
-
+        widgets = {
+            'image': NoClearableFileInput(),  # Asignamos el widget sin opción de limpiar
+        }
 class WeaponAddForm(forms.Form):
     weapon_id = forms.ModelChoiceField(
         queryset=Weapon.objects.all(),
@@ -122,3 +136,19 @@ class EquipArmorForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['armor'].queryset = inventory_armors
         self.fields['armor'].empty_label = "Ninguna"
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    error_messages = {
+        "password_mismatch": ("Las contraseñas no coinciden máquina, ESPABILA"),
+    }
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user

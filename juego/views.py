@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -257,7 +258,7 @@ class LocationUpdateView(LoginRequiredMixin, UpdateView):
 class WeaponListView(LoginRequiredMixin, ListView):
     model = Weapon
     template_name = 'juego/weapon.html'
-    context_object_name = 'weapons'
+    context_object_name = 'weapon_list'
 
 class WeaponDetailView(LoginRequiredMixin, DetailView):
     model = Weapon
@@ -284,7 +285,7 @@ class WeaponDeleteView(LoginRequiredMixin,DeleteView):
 class ArmorListView(LoginRequiredMixin, ListView, UserPassesTestMixin):
     model = Armor
     template_name = 'juego/armor.html'
-    context_object_name = 'armors'
+    context_object_name = 'armor_list'
 
 
 class ArmorDetailView(LoginRequiredMixin, DetailView):
@@ -413,7 +414,13 @@ class EquipArmorView(LoginRequiredMixin, FormView):
         character.save()
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['character'] = get_object_or_404(Character, pk=self.kwargs['pk'])
-        return context
+class RegisterView(FormView):
+    template_name = 'registration/register.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
+
