@@ -199,13 +199,16 @@ class BattleView(LoginRequiredMixin, View):
             # Establecer el turno de los personajes
             turn_player = char1.id  # Empezamos con el jugador 1
 
+            frase = "Que comience la batalla!"
+
             # Guardar el estado de la batalla en la sesión
             request.session['battle'] = {
                 'char1': char1.id,
                 'char2': char2.id,
-                'char1_hp': 100,
-                'char2_hp': 100,
+                'char1_hp': 1000,
+                'char2_hp': 1000,
                 'turn_player': turn_player,
+                'frase': frase,
             }
 
             # Pasar los personajes seleccionados y el turno al contexto para mostrarlos en la plantilla
@@ -266,8 +269,8 @@ class AttackView(View):
                 return JsonResponse({'error': 'No es tu turno'}, status=400)
 
             # Obtener los HP actuales de los personajes
-            char1_hp = battle_state.get('char1_hp', 100)
-            char2_hp = battle_state.get('char2_hp', 100)
+            char1_hp = battle_state.get('char1_hp', 1000)
+            char2_hp = battle_state.get('char2_hp', 1000)
 
             # Obtener el atacante y el defensor desde la base de datos
             attacker = get_object_or_404(Character, id=attacker_id)
@@ -289,6 +292,12 @@ class AttackView(View):
                 damage = damage - character1_defense if damage > character1_defense else 0
                 damage = damage if accuracy else 0
                 char1_hp -= damage
+                mostrar_danio = str(damage)
+                frase = f"{character2.name}" + " lanza un ataque y realiza " + mostrar_danio + " de daño!!"
+                if not accuracy:
+                    frase = f"{character2.name}" + " lanza un ataque y falla!!"
+                elif critic:
+                    frase = f"{character2.name}" + " lanza un ataque crítico y realiza " + mostrar_danio + " de daño!!"
             else:
                 accuracy = random.randint(0, 100) <= character1_accuracy
                 critic = random.randint(0, 100) <= character1_critic
@@ -296,15 +305,21 @@ class AttackView(View):
                 damage = damage - character2_defense if damage > character2_defense else 0
                 damage = damage if accuracy else 0
                 char2_hp -= damage
+                mostrar_danio = str(damage)
+                frase = f"{character1.name}" + " lanza un ataque y realiza " + mostrar_danio + " de daño!!"
+                if not accuracy:
+                    frase = f"{character1.name}" + " lanza un ataque y falla!!"
+                elif critic:
+                    frase = f"{character1.name}" + " lanza un ataque crítico y realiza " + mostrar_danio + " de daño!!"
 
             # Verificar si la batalla terminó
             if char1_hp <= 0:
                 request.session.pop('battle', None)  # Eliminar la batalla de la sesión
-                return JsonResponse({'char1_hp': 0, 'char2_hp': char2_hp, 'turn_player': None, 'winner': f'Jugador {char2_id}'})
+                return JsonResponse({'char1_hp': 0, 'char2_hp': char2_hp, 'turn_player': None, 'winner': f'{character2.name} gana la batalla!! 🏆'})
 
             if char2_hp <= 0:
                 request.session.pop('battle', None)
-                return JsonResponse({'char1_hp': char1_hp, 'char2_hp': 0, 'turn_player': None, 'winner': f'Jugador {char1_id}'})
+                return JsonResponse({'char1_hp': char1_hp, 'char2_hp': 0, 'turn_player': None, 'winner': f'{character1.name} gana la batalla!! 🏆'})
 
             # Cambiar el turno al otro jugador
             next_turn_player = defender_id
@@ -316,6 +331,7 @@ class AttackView(View):
                 'char1_hp': char1_hp,
                 'char2_hp': char2_hp,
                 'turn_player': next_turn_player,
+                'frase': frase,
             }
 
             # Devolver la nueva información de la batalla
@@ -325,6 +341,7 @@ class AttackView(View):
                 'char2_hp': char2_hp,
                 'char2_id': char2_id,
                 'turn_player': next_turn_player,
+                'frase': frase,
             })
 
         except Exception as e:
