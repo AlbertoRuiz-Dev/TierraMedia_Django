@@ -3,26 +3,36 @@ from django.db import migrations
 
 from juego.models import *
 
+# Función que elimina todos los datos de la base de datos de la aplicación
 def eliminar_datos(apps, schema_editor):
-    # Obtener los modelos
-    Faction = apps.get_model('juego', 'Faction')
-    Weapon = apps.get_model('juego', 'Weapon')
-    Armor = apps.get_model('juego', 'Armor')
-    Character = apps.get_model('juego', 'Character')
-    Inventory = apps.get_model('juego', 'Inventory')
-    Relationship = apps.get_model('juego', 'Relationship')
-    User = apps.get_model('auth', 'User')
+    # Obtener los modelos de la aplicación 'juego' y 'auth'
+    Faction = apps.get_model('juego', 'Faction')  # Modelo de Facción
+    Weapon = apps.get_model('juego', 'Weapon')  # Modelo de Arma
+    Armor = apps.get_model('juego', 'Armor')  # Modelo de Armadura
+    Character = apps.get_model('juego', 'Character')  # Modelo de Personaje
+    Inventory = apps.get_model('juego', 'Inventory')  # Modelo de Inventario
+    Relationship = apps.get_model('juego', 'Relationship')  # Modelo de Relación
+    User = apps.get_model('auth', 'User')  # Modelo de Usuario (de la app 'auth')
 
-    # Eliminar relaciones primero para evitar dependencias
+    # Eliminar las relaciones entre personajes primero para evitar dependencias al borrar personajes
     Relationship.objects.all().delete()
+    # Eliminar todos los inventarios
     Inventory.objects.all().delete()
+    # Eliminar todos los personajes
     Character.objects.all().delete()
+    # Eliminar todas las armas
     Weapon.objects.all().delete()
+    # Eliminar todas las armaduras
     Armor.objects.all().delete()
+    # Eliminar todas las facciones
     Faction.objects.all().delete()
+    # Eliminar los usuarios de prueba y admin
     User.objects.filter(username__in=['prueba', 'admin']).delete()
 
+
+# Función que pobla la base de datos con datos de prueba
 def poblar_datos(apps, schema_editor):
+    # Obtener los modelos de la aplicación 'juego'
     Faction = apps.get_model('juego', 'Faction')
     Weapon = apps.get_model('juego', 'Weapon')
     Armor = apps.get_model('juego', 'Armor')
@@ -37,7 +47,7 @@ def poblar_datos(apps, schema_editor):
         Faction(name="Los Renegados del Desierto", location="Tierras Áridas"),
         Faction(name="Los Centinelas del Caos", location="Ruinas Olvidadas")
     ]
-    Faction.objects.bulk_create(factions)
+    Faction.objects.bulk_create(factions)  # Guardar todas las facciones de una vez
 
     # Crear armas
     weapons = [
@@ -47,7 +57,7 @@ def poblar_datos(apps, schema_editor):
         Weapon(name="Arco del Cazador Nocturno", description="Un arco ligero con flechas que perforan la armadura.", damage=95),
         Weapon(name="Dagas de la Sombra", description="Un par de dagas envenenadas, perfectas para ataques rápidos.", damage=53)
     ]
-    Weapon.objects.bulk_create(weapons)
+    Weapon.objects.bulk_create(weapons)  # Guardar todas las armas de una vez
 
     # Crear armaduras
     armors = [
@@ -57,13 +67,13 @@ def poblar_datos(apps, schema_editor):
         Armor(name="Manto del Caos", description="Un manto que absorbe parte del daño mágico.", defense=10),
         Armor(name="Armadura del Cazador", description="Una armadura flexible que ofrece equilibrio entre defensa y agilidad.", defense=11)
     ]
-    Armor.objects.bulk_create(armors)
+    Armor.objects.bulk_create(armors)  # Guardar todas las armaduras de una vez
 
-    # Obtener referencias a facciones
+    # Obtener referencias a algunas facciones
     faction1 = Faction.objects.get(name="La Hermandad de Acero")
     faction2 = Faction.objects.get(name="Los Asesinos Fantasma")
 
-    # Crear personajes con equipo
+    # Crear personajes con equipo (arma y armadura)
     characters = [
         Character(
             name="Darius, el Destructor",
@@ -101,9 +111,9 @@ def poblar_datos(apps, schema_editor):
             equipped_armor=Armor.objects.get(name="Manto del Caos")
         )
     ]
-    Character.objects.bulk_create(characters)
+    Character.objects.bulk_create(characters)  # Guardar todos los personajes de una vez
 
-    # Crear personajes simples
+    # Crear personajes simples (sin equipo)
     characters_simple = [
         Character(name="Rogar, el Errante", location="Bosques Perdidos"),
         Character(name="Lyra, la Vengadora", location="Ciudad Sombría"),
@@ -111,20 +121,20 @@ def poblar_datos(apps, schema_editor):
         Character(name="Eryndor, el Hechicero", location="Ruinas Olvidadas"),
         Character(name="Astra, la Guardiana", location="Fortaleza del Hierro")
     ]
-    Character.objects.bulk_create(characters_simple)
+    Character.objects.bulk_create(characters_simple)  # Guardar todos los personajes simples
 
-    # Crear inventarios para TODOS los personajes (characters + characters_simple)
+    # Crear inventarios para TODOS los personajes (con equipo si aplica)
     all_characters = characters + characters_simple
     for character in all_characters:
-        inventory = Inventory(character=character)
-        inventory.save()
+        inventory = Inventory(character=character)  # Crear el inventario para el personaje
+        inventory.save()  # Guardar el inventario
         # Si tiene arma o armadura equipada, añadirlas al inventario
         if character.equipped_weapon:
-            inventory.weapons.add(character.equipped_weapon)
+            inventory.weapons.add(character.equipped_weapon)  # Añadir arma al inventario
         if character.equipped_armor:
-            inventory.armors.add(character.equipped_armor)
+            inventory.armors.add(character.equipped_armor)  # Añadir armadura al inventario
 
-    # Crear relaciones entre personajes
+    # Crear relaciones entre algunos personajes (amigos, enemigos, etc.)
     relationships = [
         Relationship(character1=characters[0], character2=characters[1], relationship_type='friend'),
         Relationship(character1=characters[1], character2=characters[2], relationship_type='enemy'),
@@ -132,18 +142,21 @@ def poblar_datos(apps, schema_editor):
         Relationship(character1=characters[3], character2=characters[4], relationship_type='rival'),
         Relationship(character1=characters[4], character2=characters[0], relationship_type='neutral')
     ]
-    Relationship.objects.bulk_create(relationships)
+    Relationship.objects.bulk_create(relationships)  # Guardar todas las relaciones de una vez
 
-    # Creación de usuarios
-    User.objects.create_user(username='prueba', password='prueba')
-    User.objects.create_superuser(username='admin', email='admin@example.com', password='admin')
+    # Creación de usuarios para la administración
+    User.objects.create_user(username='prueba', password='prueba')  # Crear un usuario normal
+    User.objects.create_superuser(username='admin', email='admin@example.com', password='admin')  # Crear un superusuario
 
+# Migración que ejecuta las funciones de poblar y eliminar datos
 class Migration(migrations.Migration):
 
+    # Dependencia de la migración anterior
     dependencies = [
         ('juego', '0005_armor_image_character_image_weapon_image'),
     ]
 
+    # Operaciones que se ejecutan: poblar los datos y definir cómo eliminarlos
     operations = [
-        migrations.RunPython(poblar_datos, reverse_code=eliminar_datos),
+        migrations.RunPython(poblar_datos, reverse_code=eliminar_datos),  # Función para poblar y eliminar datos
     ]
