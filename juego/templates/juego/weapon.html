@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista de Armas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Botón para añadir nueva arma -->
+    <div class="text-center mb-5">
+        <a href="{% url 'juego:weaponCreateView' %}" class="btn btn-danger btn-lg px-4 py-2">
+            <i class="fas fa-plus"></i> Añadir Nueva Arma
+        </a>
+    </div>
+
+    <!-- Lista de armas -->
+    <h1 class="text-center mb-5 text-light">Lista de Armas</h1>
+    {% if weapon_list %}
+        <div class="row justify-content-center">
+            {% for weapon in weapon_list %}
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 bg-dark text-light" style="min-height: 650px;">
+                        <!-- Foto del arma -->
+                        <img src="{{ weapon.image.url }}" class="card-img-top" alt="{{ weapon.name }}" style="height: 200px; object-fit: cover;">
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Datos del arma -->
+                            <h5 class="card-title pb-2 mb-3">{{ weapon.name }}</h5>
+                            <p class="card-text mb-3">
+                                <strong>Descripción:</strong> {{ weapon.description }}<br>
+                                <strong>Daño:</strong> {{ weapon.damage }}<br>
+                                <strong>Crítico:</strong> {{ weapon.critic|default:"N/A" }}<br>
+                                <strong>Precisión:</strong> {{ weapon.accuracy|default:"N/A" }}
+                            </p>
+
+                            <!-- Botones de acción -->
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+                                    <a href="{% url 'juego:weaponDetailView' weapon.pk %}" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                        <i class="fas fa-eye"></i> Ver Detalles
+                                    </a>
+                                    <a href="{% url 'juego:weaponUpdateView' weapon.pk %}" class="btn btn-outline-warning btn-sm flex-grow-1">
+                                        <i class="fas fa-edit"></i> Modificar
+                                    </a>
+                                    <a href="{% url 'juego:weaponDeleteView' weapon.pk %}" class="btn btn-outline-danger btn-sm flex-grow-1">
+                                        <i class="fas fa-trash"></i> Borrar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-dark text-center py-4 text-light">
+            No hay armas disponibles. ¡Añade una nueva!
+        </div>
+    {% endif %}
+</div>
+
+<!-- Estilos personalizados -->
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+    }
+    .btn-lg {
+        font-size: 1.25rem;
+    }
+    .btn-outline-primary {
+        color: #00b4ff;
+        border-color: #00b4ff;
+    }
+    .btn-outline-primary:hover {
+        background-color: #00b4ff;
+        border-color: #00b4ff;
+        color: white;
+    }
+    .btn-outline-warning {
+        color: #ffc107;
+        border-color: #ffc107;
+    }
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #212529;
+    }
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+    .card-title {
+        font-size: 1.5rem;
+    }
+    .card-text {
+        font-size: 1rem;
+    }
+    h6 {
+        font-size: 1.1rem;
+    }
+</style>
+
+<!-- FontAwesome -->
+{% endblock %}

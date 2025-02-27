@@ -1,4 +1,46 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>Inicio.</h1>
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center" style="height: 50vh; overflow: hidden;">
+        <div class="container text-center rounded p-4 pb-5 menu">
+            <h2 class="mb-5"><b>Menú principal</b></h2>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 mb-5 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:characterView' %}">Personaje</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:equipmentView' %}">Equipamiento</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:factionView' %}">Facción</a></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 mb-5 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:characterCreateView' %}">Crear personaje</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:weaponListView' %}">Armas</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:factionCreateView' %}">Crear facción</a></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:relationshipListView' %}">Relaciones</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:armorListView' %}">Armaduras</a></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg m-1 p-1 boton" style="width: 170px"><a class="nav-link px-2 text-white p-0 m-0" href="{% url 'juego:battleView' %}">Batalla</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

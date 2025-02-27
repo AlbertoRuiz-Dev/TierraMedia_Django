@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Eliminar facción{% endblock %}
+
+{% block content %}
+    
+<!-- Contenedor principal centrado con un mínimo de altura del 60% de la vista -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <!-- Contenedor de texto centrado -->
+    <div class="text-center">
+        <!-- Título principal de la página -->
+        <h1 class="text-light mb-4">Confirmar Eliminación</h1>
+
+        <!-- Formulario para confirmar la eliminación -->
+        <form method="post" class="p-4 border rounded-3 shadow-lg" style="background-color: rgba(0, 0, 0, 0.8); color: white; width: 400px;">
+            {% csrf_token %}
+            <!-- Mensaje de confirmación con el objeto a eliminar -->
+            <p class="text-light mb-4">¿Estás seguro de que quieres eliminar "{{ object }}"?</p>
+
+            <!-- Campos del formulario, renderizados como párrafos -->
+            {{ form.as_p }}
+
+            <!-- Botón para confirmar la eliminación -->
+            <div class="d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-danger w-100">Confirmar</button>
+            </div>
+        </form>
+
+        <!-- Botón de "Volver" para regresar a la vista de facciones -->
+        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary mt-3">Volver</a>
+    </div>
+</div>
+
+
+{% endblock %}

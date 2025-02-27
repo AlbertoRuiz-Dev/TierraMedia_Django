@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Facción / Tierra Media{% endblock %}
+{% block content %}
+    <!-- Contenedor principal de la página con margen superior e inferior -->
+    <div class="container my-5">
+
+    <!-- Botones centrados para filtrar personajes por facción y crear una nueva facción -->
+        <div class="d-flex justify-content-center mb-3">
+            <!-- Enlace para filtrar personajes por facción -->
+            <a href="{% url 'juego:factionCharacterFormView' %}" class="btn btn-primary mx-2">Filtrar personajes por facción</a>
+            <!-- Enlace para crear una nueva facción -->
+            <a href="{% url 'juego:factionCreateView' %}" class="btn btn-primary mx-2">Crear facción</a>
+        </div>
+        <!-- Título de la página de listas de facciones -->
+        <h1 class="text-center mb-4">Lista de Facciones</h1>
+
+        <!-- Contenedor para mostrar las facciones en un formato de tarjetas -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for f in faction_list %}
+                <!-- Columna para cada facción dentro de la fila -->
+                <div class="col">
+                    <!-- Tarjeta de Bootstrap con fondo oscuro para cada facción -->
+                    <div class="card text-light h-100" style="background-color: rgba(0,0,0,0.81)">
+                        <div class="card-body">
+                            <!-- Título de la tarjeta, que es el nombre de la facción -->
+                            <h5 class="card-title">{{ f.name }}</h5>
+                            <!-- Parrafo con la ubicación de la facción -->
+                            <p><strong>Ubicación:</strong> {{ f.location }}</p>
+                            <!-- Parrafo con el número de miembros de la facción -->
+                            <p><strong>Miembros:</strong> {{ f.members.all|length }}</p>
+                            <!-- Enlaces para editar, ver detalles y eliminar la facción -->
+                            <a href="{% url 'juego:factionUpdateView' f.id %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url 'juego:factionDetailView' f.id %}" class="btn btn-warning">Detalles</a>
+                            <a href="{% url 'juego:factionDeleteView' f.id %}" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sección para el gráfico de personajes por facción -->
+        <div class="mt-5">
+            <!-- Título del gráfico -->
+            <h2 class="text-center text-light mb-4">Personajes por Facción</h2>
+            <!-- Contenedor para el gráfico -->
+            <div class="mb-4">
+                <!-- Canvas donde se dibuja el gráfico -->
+                <canvas id="factionsChart" class="p-2" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0.6);"></canvas>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Incluir la librería Chart.js desde un CDN  -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Incluir archivo JavaScript adicional (para manejar la API del gráfico) -->
+    <script src="../../static/js/api.js"></script>
+
+{% endblock %}

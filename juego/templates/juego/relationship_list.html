@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Relaciones | Tierra Media{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white py-3">
+            <h1 class="text-center mb-0 fs-2">Lista de Relaciones</h1>
+        </div>
+
+        <div class="card-body bg-light">
+            <!-- Formulario para CREAR relaciones -->
+            <div class="form-container p-3 mb-4 rounded bg-white shadow-sm">
+                <h5 class="border-bottom pb-2 mb-3 text-primary">Nueva Relación</h5>
+                <form method="post" action="{% url 'juego:relationshipListView' %}">
+                    {% csrf_token %}
+
+                    <div class="form-inputs">
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                                {{ field}}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mt-2">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Relación
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de relaciones -->
+            <div class="relations-list p-3 rounded bg-white shadow-sm">
+                <h5 class="border-bottom pb-2 mb-3 text-primary">Relaciones Existentes</h5>
+
+                {% if relation_list %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Primer Personaje</th>
+                                    <th>Tipo de Relación</th>
+                                    <th>Segundo Personaje</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for relation in relation_list %}
+                                    <tr>
+                                        <td class="fw-bold">{{ relation.character1 }}</td>
+                                        <td><span class="badge bg-info text-dark">{{ relation.relationship_type }}</span></td>
+                                        <td class="fw-bold">{{ relation.character2 }}</td>
+                                        <td class="text-center">
+                                            <a href="{% url 'juego:relationshipDeleteView' relation.id %}"
+                                               class="btn btn-danger btn-sm"
+                                               onclick="return confirm('¿Estás seguro de eliminar esta relación?')">
+                                                <i class="fas fa-trash me-1"></i>Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>No hay relaciones registradas.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 3px solid #3498db;
+    }
+
+    .form-container, .relations-list {
+        transition: all 0.3s ease;
+    }
+
+    .form-container:hover, .relations-list:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.4em 0.8em;
+    }
+
+
+
+    .btn-danger {
+        background-color: #e74c3c;
+        border-color: #e74c3c;
+    }
+
+    .btn-danger:hover {
+        background-color: #c0392b;
+        border-color: #c0392b;
+    }
+
+    /* Animación para elementos nuevos */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    tr, .alert {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+</style>
+
+{% endblock %}

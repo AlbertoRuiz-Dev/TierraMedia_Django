@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de facciones{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid d-flex justify-content-center ">
+    <!-- Contenedor principal centrado -->
+    <div class="container-sm">
+        <!-- Formulario para filtrar personajes -->
+        <form method="post" class="my-3">
+            {% csrf_token %}
+            <!-- Campo de formulario (asumido que es para filtros) -->
+            <div class="mb-2">
+                {{ form.as_p }}  <!-- Renderiza los campos del formulario como párrafos -->
+            </div>
+            <!-- Botón de envío del formulario -->
+            <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+        </form>
+
+        <!-- Contenedor con sombra semitransparente -->
+        <div class="container-sm shadow-lg p-3" style="background-color: rgba(0, 0, 0, 0.5);">
+            <!-- Título de la sección de personajes -->
+            <h2 class="h4 text-light">Personajes</h2>
+            <!-- Lista de personajes -->
+            <ul class="list-group">
+                {% for character in characters %}
+                    <!-- Item de la lista de personajes -->
+                    <li class="d-flex align-items-center mb-3 p-2 border rounded-3" style="background-color: rgba(255, 255, 255, 0.2);">
+                        <div class="d-flex w-100 align-items-center">
+                            <!-- Imagen del personaje -->
+                            <img src="{{ character.image.url }}" class="me-2" alt="{{ character.name }}" style="height: 32px; width: 32px ">
+                            <!-- Nombre del personaje -->
+                            <span class="fw-bold">{{ character.name }}</span>
+                            <!-- Facción del personaje, alineado a la derecha -->
+                            <span class="ms-auto text-end">{{ character.faction.name }}</span>
+                        </div>
+                    </li>
+                {% empty %}
+                    <!-- Mensaje en caso de que no haya personajes para mostrar -->
+                    <li class="list-group-item py-2 text-center text-muted">No hay personajes para esta facción.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    <!-- Botón de volver a la vista de facciones, centrado -->
+    <div class="text-center mt-3">
+        <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary">Volver</a>
+    </div>
+</div>
+
+
+        <!-- Botón de volver a la vista de facciones, centrado -->
+        <div class="text-center mt-3">
+            <a href="{% url 'juego:factionView' %}" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
