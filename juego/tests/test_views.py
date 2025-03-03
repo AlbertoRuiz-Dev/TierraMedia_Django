@@ -667,11 +667,14 @@ class ArmorViewSetTest(APITestCase):
         self.armor = Armor.objects.create(name='Armadura de Hierro', defense=50, image='path/to/image.jpg')
         self.url = reverse('juego:armor-list')  # URL para listar las armaduras
         self.url_detail = reverse('juego:armor-detail', kwargs={'pk': self.armor.pk})  # URL para obtener detalles de una armadura
+        # Crear usuario de prueba para autenticación
+        self.user = User.objects.create_user(username='testuser', password='password123')
 
     def test_armor_list(self):
         """
         Verifica que se pueden listar las armaduras correctamente.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.get(self.url)  # Solicita la lista de armaduras
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Verifica que la respuesta sea exitosa
         self.assertEqual(len(response.data), 1)  # Verifica que la lista contiene una armadura
@@ -681,6 +684,7 @@ class ArmorViewSetTest(APITestCase):
         """
         Verifica que se pueden obtener los detalles de una armadura.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.get(self.url_detail)  # Solicita los detalles de una armadura específica
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Verifica que la respuesta sea exitosa
         self.assertEqual(response.data['name'], 'Armadura de Hierro')  # Verifica que los detalles son correctos
@@ -693,6 +697,7 @@ class ArmorViewSetTest(APITestCase):
             'name': 'Armadura de Acero',
             'defense': 60,
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.post(self.url, data, format='json')  # Realiza una solicitud POST para crear una armadura
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Verifica que la armadura se haya creado
         self.assertEqual(Armor.objects.count(), 2)  # Verifica que ahora haya dos armaduras en la base de datos
@@ -706,6 +711,7 @@ class ArmorViewSetTest(APITestCase):
             'name': 'Armadura de Oro',
             'defense': 80,
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.put(self.url_detail, data, format='json')  # Realiza una solicitud PUT para actualizar la armadura
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Verifica que la actualización sea exitosa
         self.armor.refresh_from_db()  # Refresca la armadura desde la base de datos
@@ -716,6 +722,7 @@ class ArmorViewSetTest(APITestCase):
         """
         Verifica que se puede eliminar una armadura existente.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.delete(self.url_detail)  # Realiza una solicitud DELETE para eliminar la armadura
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  # Verifica que la eliminación sea exitosa
         self.assertEqual(Armor.objects.count(), 0)  # Verifica que la base de datos ahora esté vacía de armaduras
@@ -855,6 +862,7 @@ class RelationshipViewSetTests(APITestCase):
             'relationship_type': 'friend'
         }
         client = APIClient()
+        self.client.login(username='testuser', password='password123')  # Inicia sesión
         response = client.post(self.url_list, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Verifica que la relación se haya creado
@@ -899,6 +907,7 @@ class RelationshipViewSetTests(APITestCase):
             'relationship_type': 'enemy'
         }
         client = APIClient()
+        self.client.login(username='testuser', password='password123')  # Inicia sesión
         response = client.put(f'{self.url_list}{relationship.id}/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)  # Verifica que la actualización sea exitosa
@@ -940,6 +949,8 @@ class CharacterViewSetTests(TestCase):
         # Elimina los personajes
         Character.objects.all().delete()
 
+        self.user = User.objects.create_user(username='testuser', password='password123')  # Crea un usuario de prueba
+
         # Crear personajes
         self.character = Character.objects.create(
             name="Darius",
@@ -956,6 +967,7 @@ class CharacterViewSetTests(TestCase):
         """
         Verifica que se puede obtener un personaje mediante una solicitud GET.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.get(self.url_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], "Darius")
@@ -968,6 +980,7 @@ class CharacterViewSetTests(TestCase):
             "name": "Nyx",
             "location": "Ciudad Sombría",
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.post(reverse("juego:character_info-list"), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -975,6 +988,7 @@ class CharacterViewSetTests(TestCase):
         """
         Verifica que no se puede actualizar un personaje mediante una solicitud PUT.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.put(self.url_list, data={})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -982,6 +996,7 @@ class CharacterViewSetTests(TestCase):
         """
         Verifica que no se puede eliminar un personaje mediante una solicitud DELETE.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.delete(self.url_list)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -1027,6 +1042,7 @@ class CharacterModifyViewSetTests(APITestCase):
 
         # Crear un cliente para las pruebas
         self.client = self.client_class()
+        self.user = User.objects.create_user(username='testuser', password='password123')  # Crea un usuario de prueba
 
         # Definir la URL de la vista para los personajes
         self.url = reverse("juego:character_modify-list")  # Asume que el URL es "character_modify-list"
@@ -1042,6 +1058,7 @@ class CharacterModifyViewSetTests(APITestCase):
             "location": "Ciudad Sombría",
             "faction": self.faction2.id  # Asignar una facción existente
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], "Nyx")
@@ -1052,6 +1069,7 @@ class CharacterModifyViewSetTests(APITestCase):
         """
         Verifica que se puede eliminar un personaje existente.
         """
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.delete(self.character_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # Verificar que el personaje fue eliminado
@@ -1066,6 +1084,7 @@ class CharacterModifyViewSetTests(APITestCase):
             "location": "Fortaleza del Hierro Actualizada",
             "faction": self.faction2.id  # Cambiar la facción a la segunda
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.put(self.character_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], "Darius, el Destructor")
@@ -1079,6 +1098,7 @@ class CharacterModifyViewSetTests(APITestCase):
         data = {
             "name": "Darius, el Destructor Actualizado"
         }
+        self.client.login(username='testuser', password='password123')  # Inicia sesión con el usuario de prueba
         response = self.client.patch(self.character_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], "Darius, el Destructor Actualizado")
