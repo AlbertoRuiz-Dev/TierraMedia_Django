@@ -196,6 +196,9 @@ class BattleView(LoginRequiredMixin, View):
             char1 = form.cleaned_data['character']
             char2 = form.cleaned_data['character2']
 
+            if char1.id == char2.id:
+                return render(request, "juego/battle.html" ,{'error': 'Un personaje no puede pelear contra si mismo'})
+
             # Establecer el turno de los personajes
             turn_player = char1.id  # Empezamos con el jugador 1
 
