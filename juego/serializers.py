@@ -213,15 +213,12 @@ class CharacterSerializerModify(serializers.ModelSerializer):
     # Relación con la armadura equipada, acepta el ID de la armadura equipada
     equipped_armor = serializers.PrimaryKeyRelatedField(queryset=Armor.objects.all(), required=False) # Permite modificar la armadura equipada del personaje. No es obligatorio.
 
-    # Relación con el inventario (debe usarse un serializador para crear/actualizar inventarios) # Permite modificar el inventario del personaje. No es obligatorio.
-    inventory = InventorySerializer(required=False)
-
 
     class Meta:
         model = Character  # Especifica que el modelo que estamos serializando es `Character`.
         fields = [
-            'id', 'name', 'location', 'image', 'faction',
-            'equipped_weapon', 'equipped_armor', 'inventory'
+            'id', 'name', 'location', 'faction',
+            'equipped_weapon', 'equipped_armor'
         ]  # Campos a mostrar del personaje, que incluyen `id`, `name`, `location`, `image`, etc.
 
     def get_relationships(self, obj):

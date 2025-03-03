@@ -145,7 +145,7 @@ class RelationshipViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar los inventarios de personajes usando el viewset
-class InventoryViewSet(viewsets.ModelViewSet):
+class InventoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Inventory. Usa el serializador InventorySerializer.
