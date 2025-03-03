@@ -11,7 +11,7 @@ class WeaponSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Weapon
-        fields = ['id', 'name', 'damage', 'critic', 'accuracy', 'image']  # Campos a mostrar: ID, nombre, daño, crítico, precisión e imagen
+        fields = ['id', 'name', 'damage', 'critic', 'accuracy']  # Campos a mostrar: ID, nombre, daño, crítico, precisión e imagen
 
 class ArmorSerializer(serializers.ModelSerializer):
     """
@@ -21,7 +21,7 @@ class ArmorSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Armor
-        fields = ['id', 'name', 'defense', 'image'] # Campos a mostrar: ID, nombre, daño, defensa e imagen
+        fields = ['id', 'name', 'defense'] # Campos a mostrar: ID, nombre, daño, defensa e imagen
 
 
 class CharacterMemberSerializer(serializers.ModelSerializer):
