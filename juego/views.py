@@ -96,7 +96,7 @@ def get_factions_member_count(request):
 
 
 # Vista para gestionar las facciones usando el viewset
-class FactionViewSet(viewsets.ModelViewSet):
+class FactionViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Faction. Usa el serializador FactionSerializer.
@@ -109,7 +109,7 @@ class FactionViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar las armaduras usando el viewset
-class ArmorViewSet(viewsets.ModelViewSet):
+class ArmorViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Armor. Usa el serializador ArmorSerializer.
@@ -121,7 +121,7 @@ class ArmorViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar las armas usando el viewset
-class WeaponViewSet(viewsets.ModelViewSet):
+class WeaponViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Weapon. Usa el serializador WeaponSerializer.
@@ -133,7 +133,7 @@ class WeaponViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar las relaciones entre personajes usando el viewset
-class RelationshipViewSet(viewsets.ModelViewSet):
+class RelationshipViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Relationship. Usa el serializador RelationshipSerializer.
@@ -145,7 +145,7 @@ class RelationshipViewSet(viewsets.ModelViewSet):
 
 
 # Vista para gestionar los inventarios de personajes usando el viewset
-class InventoryViewSet(viewsets.ReadOnlyModelViewSet):
+class InventoryViewSet(LoginRequiredMixin, viewsets.ReadOnlyModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Inventory. Usa el serializador InventorySerializer.
@@ -158,7 +158,7 @@ class InventoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 # Vista para gestionar los personajes usando el viewset
-class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
+class CharacterViewSet(LoginRequiredMixin, viewsets.ReadOnlyModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Character. Usa el serializador CharacterSerializer.
@@ -171,7 +171,7 @@ class CharacterViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 # Vista para gestionar los personajes usando el viewset
-class CharacterModifyViewSet(viewsets.ModelViewSet):
+class CharacterModifyViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     """
     ViewSet que maneja las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
     para el modelo Character. Usa el serializador CharacterSerializer.
